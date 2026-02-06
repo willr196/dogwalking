@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Icons } from "@/components/willswalks/Icons";
-import { theme } from "@/components/willswalks/theme";
 
 export function NavBar() {
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -17,154 +16,90 @@ export function NavBar() {
 
   return (
     <nav
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1000,
-        padding: "12px 20px",
-        transition: "all 0.3s ease",
-        background: scrolled ? "rgba(253,248,243,0.92)" : "transparent",
-        backdropFilter: scrolled ? "blur(16px)" : "none",
-        boxShadow: scrolled ? theme.shadow : "none",
-      }}
+      className={`fixed top-0 left-0 right-0 z-[1000] px-5 py-3 transition-all duration-300 ${
+        scrolled
+          ? "bg-ww-cream/92 backdrop-blur-2xl shadow-ww"
+          : "bg-transparent backdrop-blur-none shadow-none"
+      }`}
     >
-      <div
-        style={{
-          maxWidth: 1100,
-          margin: "0 auto",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <div className="max-w-[1100px] mx-auto flex justify-between items-center">
         <Link
           href="/"
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "1.4rem",
-            fontWeight: 700,
-            color: theme.deepGreen,
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            textDecoration: "none",
-          }}
+          className="font-serif text-[1.4rem] font-bold text-ww-deep-green flex items-center gap-2 no-underline"
         >
-          🐾 Will's Walks
+          🐾 Will&apos;s Walks
         </Link>
 
-        <div style={{ display: "flex", gap: 28, alignItems: "center" }} className="desktop-nav">
-          <a href="/#services" style={{ background: "none", border: "none", cursor: "pointer", fontSize: 15, fontWeight: 500, color: theme.text, fontFamily: "'Outfit', sans-serif", textDecoration: "none" }}>
+        <div className="flex gap-7 items-center desktop-nav">
+          <a
+            href="/#services"
+            className="text-[15px] font-medium text-ww-text font-sans no-underline hover:text-ww-deep-green transition-colors"
+          >
             Services
           </a>
-          <a href="/#about" style={{ background: "none", border: "none", cursor: "pointer", fontSize: 15, fontWeight: 500, color: theme.text, fontFamily: "'Outfit', sans-serif", textDecoration: "none" }}>
+          <a
+            href="/#about"
+            className="text-[15px] font-medium text-ww-text font-sans no-underline hover:text-ww-deep-green transition-colors"
+          >
             About
           </a>
-          <Link href="/reviews" style={{ background: "none", border: "none", cursor: "pointer", fontSize: 15, fontWeight: 500, color: theme.text, fontFamily: "'Outfit', sans-serif", textDecoration: "none" }}>
+          <Link
+            href="/reviews"
+            className="text-[15px] font-medium text-ww-text font-sans no-underline hover:text-ww-deep-green transition-colors"
+          >
             Reviews
           </Link>
           <Link
             href="/booking"
-            style={{
-              background: theme.green,
-              color: "white",
-              border: "none",
-              padding: "10px 24px",
-              borderRadius: 50,
-              fontWeight: 600,
-              fontSize: 14,
-              cursor: "pointer",
-              fontFamily: "'Outfit', sans-serif",
-              transition: "all 0.2s ease",
-              textDecoration: "none",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = theme.deepGreen;
-              e.currentTarget.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = theme.green;
-              e.currentTarget.style.transform = "none";
-            }}
+            className="bg-ww-green text-white px-6 py-2.5 rounded-full font-semibold text-sm font-sans no-underline hover:bg-ww-deep-green transition-colors"
           >
             Book a Walk
           </Link>
-          <Link
-            href="/admin"
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              opacity: 0.4,
-              display: "flex",
-              alignItems: "center",
-              padding: 4,
-            }}
-            title="Admin"
-          >
-            <Icons.Settings size={18} />
-          </Link>
         </div>
 
+        {/* Mobile menu button */}
         <button
+          className="hidden max-[768px]:block bg-transparent border-none cursor-pointer p-1"
           onClick={() => setMobileMenu(!mobileMenu)}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            display: "none",
-          }}
-          className="mobile-menu-btn"
+          aria-label="Toggle menu"
         >
           {mobileMenu ? <Icons.X size={24} /> : <Icons.Menu size={24} />}
         </button>
       </div>
 
+      {/* Mobile menu */}
       {mobileMenu && (
-        <div
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: 0,
-            right: 0,
-            background: "rgba(253,248,243,0.98)",
-            backdropFilter: "blur(20px)",
-            padding: 24,
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-            boxShadow: theme.shadowLg,
-          }}
-        >
-          <a href="/#services" onClick={() => setMobileMenu(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 17, fontWeight: 500, color: theme.text, textAlign: "left", padding: "8px 0", fontFamily: "'Outfit', sans-serif", textDecoration: "none" }}>
+        <div className="hidden max-[768px]:flex flex-col gap-4 mt-4 p-5 bg-ww-warm-white rounded-2xl shadow-ww-lg anim-fade-in">
+          <a
+            href="/#services"
+            onClick={() => setMobileMenu(false)}
+            className="text-[15px] font-medium text-ww-text font-sans no-underline py-2"
+          >
             Services
           </a>
-          <a href="/#about" onClick={() => setMobileMenu(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 17, fontWeight: 500, color: theme.text, textAlign: "left", padding: "8px 0", fontFamily: "'Outfit', sans-serif", textDecoration: "none" }}>
+          <a
+            href="/#about"
+            onClick={() => setMobileMenu(false)}
+            className="text-[15px] font-medium text-ww-text font-sans no-underline py-2"
+          >
             About
           </a>
-          <Link href="/reviews" onClick={() => setMobileMenu(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 17, fontWeight: 500, color: theme.text, textAlign: "left", padding: "8px 0", fontFamily: "'Outfit', sans-serif", textDecoration: "none" }}>
+          <Link
+            href="/reviews"
+            onClick={() => setMobileMenu(false)}
+            className="text-[15px] font-medium text-ww-text font-sans no-underline py-2"
+          >
             Reviews
           </Link>
-          <Link href="/booking" onClick={() => setMobileMenu(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 17, fontWeight: 500, color: theme.text, textAlign: "left", padding: "8px 0", fontFamily: "'Outfit', sans-serif", textDecoration: "none" }}>
+          <Link
+            href="/booking"
+            onClick={() => setMobileMenu(false)}
+            className="bg-ww-green text-white px-6 py-3 rounded-full font-semibold text-sm font-sans no-underline text-center hover:bg-ww-deep-green transition-colors"
+          >
             Book a Walk
-          </Link>
-          <Link href="/admin" onClick={() => setMobileMenu(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 17, fontWeight: 500, color: theme.text, textAlign: "left", padding: "8px 0", fontFamily: "'Outfit', sans-serif", textDecoration: "none" }}>
-            Admin
           </Link>
         </div>
       )}
-
-      <style>{`
-        @media (max-width: 768px) {
-          .desktop-nav { display: none !important; }
-          .mobile-menu-btn { display: flex !important; }
-        }
-      `}</style>
     </nav>
   );
 }

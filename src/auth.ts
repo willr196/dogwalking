@@ -17,7 +17,7 @@ export const {
   signOut,
 } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  session: { strategy: "database" },
+  session: { strategy: "jwt" },
   pages: {
     signIn: "/sign-in",
   },
@@ -41,6 +41,11 @@ export const {
         const valid = await compare(parsed.data.password, user.passwordHash);
         if (!valid) return null;
 
+        // ✅ Enforce email verification
+        if (!user.emailVerified) {
+          throw new Error("Please verify your email before signing in. Check your inbox for the verification link.");
+        }
+
         return {
           id: user.id,
           name: user.name,
@@ -51,10 +56,17 @@ export const {
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = (user as { role?: string }).role ?? "USER";
+      }
+      return token;
+    },
+    async session({ session, token }) {
       if (session.user) {
-        session.user.id = user.id;
-        session.user.role = (user as { role?: "USER" | "ADMIN" }).role ?? "USER";
+        session.user.id = token.id as string;
+        session.user.role = token.role as "USER" | "ADMIN";
       }
       return session;
     },

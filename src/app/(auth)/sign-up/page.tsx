@@ -1,19 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
 import { Icons } from "@/components/willswalks/Icons";
-import { theme } from "@/components/willswalks/theme";
 
 export default function SignUpPage() {
-  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const submit = async () => {
     setLoading(true);
@@ -23,86 +20,101 @@ export default function SignUpPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
     });
+    const data = await res.json().catch(() => ({}));
+    setLoading(false);
+
     if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
       setError(data.error || "Could not create account.");
-      setLoading(false);
       return;
     }
 
-    const signInResult = await signIn("credentials", { email, password, redirect: false });
-    setLoading(false);
-    if (signInResult?.error) {
-      router.push("/sign-in");
+    // ✅ Show verification message instead of auto-login
+    if (data.requiresVerification) {
+      setVerificationSent(true);
       return;
     }
-    router.push("/");
   };
 
+  if (verificationSent) {
+    return (
+      <div className="min-h-screen px-5 pt-[120px] pb-[60px] bg-ww-cream">
+        <div className="max-w-[420px] mx-auto">
+          <div className="bg-ww-warm-white rounded-3xl p-8 shadow-ww text-center">
+            <div className="text-5xl mb-4">📧</div>
+            <h1 className="ww-serif text-[1.9rem] mb-2">Check Your Email</h1>
+            <p className="text-ww-muted mb-6 leading-relaxed">
+              We've sent a verification link to <strong className="text-ww-text">{email}</strong>.
+              Click the link to activate your account.
+            </p>
+            <p className="text-ww-muted text-sm mb-6">
+              The link expires in 24 hours. Check your spam folder if you don't see it.
+            </p>
+            <Link
+              href="/sign-in"
+              className="inline-block bg-ww-green text-white border-none px-7 py-3.5 rounded-full font-semibold cursor-pointer font-sans no-underline hover:bg-ww-deep-green transition-colors"
+            >
+              Go to Sign In
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div style={{ minHeight: "100vh", padding: "120px 20px 60px", background: theme.cream }}>
-      <div style={{ maxWidth: 420, margin: "0 auto" }}>
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, color: theme.muted, textDecoration: "none", marginBottom: 24 }}>
+    <div className="min-h-screen px-5 pt-[120px] pb-[60px] bg-ww-cream">
+      <div className="max-w-[420px] mx-auto">
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-ww-muted no-underline mb-6 hover:text-ww-deep-green transition-colors"
+        >
           <Icons.ArrowLeft size={18} /> Home
         </Link>
-        <div style={{ background: theme.warmWhite, borderRadius: 24, padding: 32, boxShadow: theme.shadow }}>
-          <h1 className="ww-serif" style={{ fontSize: "1.9rem", marginBottom: 8 }}>
-            Create Account
-          </h1>
-          <p style={{ color: theme.muted, marginBottom: 24 }}>Book walks, leave reviews, and manage appointments.</p>
+        <div className="bg-ww-warm-white rounded-3xl p-8 shadow-ww">
+          <h1 className="ww-serif text-[1.9rem] mb-2">Create Account</h1>
+          <p className="text-ww-muted mb-6">
+            Book walks, leave reviews, and manage appointments.
+          </p>
 
           {error && (
-            <div style={{ background: "rgba(217,83,79,0.12)", color: theme.danger, padding: "10px 12px", borderRadius: 10, marginBottom: 14, fontSize: 14 }}>
+            <div className="bg-ww-danger/10 text-ww-danger px-3 py-2.5 rounded-[10px] mb-3.5 text-sm">
               {error}
             </div>
           )}
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div className="flex flex-col gap-3">
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Full name"
-              style={{ width: "100%", padding: "14px 18px", borderRadius: 14, border: "2px solid rgba(107,158,126,0.15)", background: "white", fontSize: 15, fontFamily: "'Outfit', sans-serif", outline: "none" }}
+              className="ww-input"
             />
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
-              style={{ width: "100%", padding: "14px 18px", borderRadius: 14, border: "2px solid rgba(107,158,126,0.15)", background: "white", fontSize: 15, fontFamily: "'Outfit', sans-serif", outline: "none" }}
+              className="ww-input"
             />
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password (min 8 chars)"
-              style={{ width: "100%", padding: "14px 18px", borderRadius: 14, border: "2px solid rgba(107,158,126,0.15)", background: "white", fontSize: 15, fontFamily: "'Outfit', sans-serif", outline: "none" }}
+              className="ww-input"
             />
             <button
               onClick={submit}
               disabled={loading}
-              style={{
-                background: theme.green,
-                color: "white",
-                border: "none",
-                padding: "14px 18px",
-                borderRadius: 50,
-                fontWeight: 600,
-                cursor: "pointer",
-                fontFamily: "'Outfit', sans-serif",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-              }}
+              className="bg-ww-green text-white border-none px-4.5 py-3.5 rounded-full font-semibold cursor-pointer font-sans flex items-center justify-center gap-2 hover:bg-ww-deep-green transition-colors disabled:opacity-50"
             >
               {loading ? <span className="spinner" /> : "Create Account"}
             </button>
           </div>
 
-          <p style={{ marginTop: 18, color: theme.muted, fontSize: 14 }}>
+          <p className="mt-4.5 text-ww-muted text-sm">
             Already have an account?{" "}
-            <Link href="/sign-in" style={{ color: theme.deepGreen, fontWeight: 600, textDecoration: "none" }}>
+            <Link href="/sign-in" className="text-ww-deep-green font-semibold no-underline hover:underline">
               Sign in
             </Link>
           </p>

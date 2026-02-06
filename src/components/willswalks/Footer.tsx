@@ -1,12 +1,16 @@
 import Link from "next/link";
-import { theme } from "@/components/willswalks/theme";
 
 export function Footer() {
   return (
-    <footer style={{ background: theme.text, color: "white", padding: "36px 20px", textAlign: "center" }}>
-      <p style={{ opacity: 0.6, fontSize: 14 }}>© 2026 Will's Walks · Dog Walking in Fulham, London</p>
-      <p style={{ opacity: 0.6, fontSize: 14, marginTop: 6 }}>
-        <Link href="mailto:hello@willswalks.co.uk" style={{ color: theme.green, textDecoration: "none" }}>
+    <footer className="bg-ww-text text-white py-9 px-5 text-center">
+      <p className="opacity-60 text-sm">
+        © 2026 Will&apos;s Walks · Dog Walking in Fulham, London
+      </p>
+      <p className="opacity-60 text-sm mt-1.5">
+        <Link
+          href="mailto:hello@willswalks.co.uk"
+          className="text-ww-green no-underline hover:underline"
+        >
           hello@willswalks.co.uk
         </Link>
       </p>

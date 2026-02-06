@@ -1,18 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { Icons } from "@/components/willswalks/Icons";
-import { theme } from "@/components/willswalks/theme";
 
 export default function SignInPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    searchParams.get("error") || null
+  );
+
+  const verified = searchParams.get("verified") === "true";
 
   const submit = async () => {
     setLoading(true);
@@ -31,63 +35,58 @@ export default function SignInPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", padding: "120px 20px 60px", background: theme.cream }}>
-      <div style={{ maxWidth: 420, margin: "0 auto" }}>
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, color: theme.muted, textDecoration: "none", marginBottom: 24 }}>
+    <div className="min-h-screen px-5 pt-[120px] pb-[60px] bg-ww-cream">
+      <div className="max-w-[420px] mx-auto">
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-ww-muted no-underline mb-6 hover:text-ww-deep-green transition-colors"
+        >
           <Icons.ArrowLeft size={18} /> Home
         </Link>
-        <div style={{ background: theme.warmWhite, borderRadius: 24, padding: 32, boxShadow: theme.shadow }}>
-          <h1 className="ww-serif" style={{ fontSize: "1.9rem", marginBottom: 8 }}>
-            Welcome Back
-          </h1>
-          <p style={{ color: theme.muted, marginBottom: 24 }}>Sign in to book walks and leave reviews.</p>
+        <div className="bg-ww-warm-white rounded-3xl p-8 shadow-ww">
+          <h1 className="ww-serif text-[1.9rem] mb-2">Welcome Back</h1>
+          <p className="text-ww-muted mb-6">Sign in to book walks and leave reviews.</p>
+
+          {/* ✅ Email verification success banner */}
+          {verified && (
+            <div className="bg-ww-green/10 text-ww-deep-green px-3 py-2.5 rounded-[10px] mb-3.5 text-sm font-medium">
+              ✅ Email verified successfully! You can now sign in.
+            </div>
+          )}
 
           {error && (
-            <div style={{ background: "rgba(217,83,79,0.12)", color: theme.danger, padding: "10px 12px", borderRadius: 10, marginBottom: 14, fontSize: 14 }}>
+            <div className="bg-ww-danger/10 text-ww-danger px-3 py-2.5 rounded-[10px] mb-3.5 text-sm">
               {error}
             </div>
           )}
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div className="flex flex-col gap-3">
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
-              style={{ width: "100%", padding: "14px 18px", borderRadius: 14, border: "2px solid rgba(107,158,126,0.15)", background: "white", fontSize: 15, fontFamily: "'Outfit', sans-serif", outline: "none" }}
+              className="ww-input"
             />
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              style={{ width: "100%", padding: "14px 18px", borderRadius: 14, border: "2px solid rgba(107,158,126,0.15)", background: "white", fontSize: 15, fontFamily: "'Outfit', sans-serif", outline: "none" }}
+              className="ww-input"
             />
             <button
               onClick={submit}
               disabled={loading}
-              style={{
-                background: theme.green,
-                color: "white",
-                border: "none",
-                padding: "14px 18px",
-                borderRadius: 50,
-                fontWeight: 600,
-                cursor: "pointer",
-                fontFamily: "'Outfit', sans-serif",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-              }}
+              className="bg-ww-green text-white border-none px-4.5 py-3.5 rounded-full font-semibold cursor-pointer font-sans flex items-center justify-center gap-2 hover:bg-ww-deep-green transition-colors disabled:opacity-50"
             >
               {loading ? <span className="spinner" /> : "Sign In"}
             </button>
           </div>
 
-          <p style={{ marginTop: 18, color: theme.muted, fontSize: 14 }}>
+          <p className="mt-4.5 text-ww-muted text-sm">
             No account yet?{" "}
-            <Link href="/sign-up" style={{ color: theme.deepGreen, fontWeight: 600, textDecoration: "none" }}>
+            <Link href="/sign-up" className="text-ww-deep-green font-semibold no-underline hover:underline">
               Create one
             </Link>
           </p>
