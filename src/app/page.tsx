@@ -4,7 +4,18 @@ export const dynamic = "force-dynamic";
 import { NavBar } from "@/components/willswalks/NavBar";
 import { Footer } from "@/components/willswalks/Footer";
 import { Icons } from "@/components/willswalks/Icons";
+import { FAQ } from "@/components/willswalks/FAQ";
 import { AREAS, WALK_PRICE } from "@/components/willswalks/constants";
+
+function StarRating({ count = 5 }: { count?: number }) {
+  return (
+    <span className="inline-flex gap-0.5">
+      {Array.from({ length: count }, (_, i) => (
+        <Icons.Star key={i} size={16} filled />
+      ))}
+    </span>
+  );
+}
 
 export default async function Home() {
   const reviewCount = await prisma.review.count();
@@ -15,35 +26,65 @@ export default async function Home() {
       <NavBar />
 
       {/* ── HERO ── */}
-      <section className="min-h-screen flex items-center px-5 pt-[100px] pb-[60px] relative overflow-hidden">
-        {/* Background blobs */}
-        <div className="absolute -top-[30%] -right-[15%] w-[60%] h-[120%] bg-[radial-gradient(ellipse,rgba(107,158,126,0.12)_0%,transparent_70%)] pointer-events-none" />
+      <section className="min-h-[90vh] flex items-center ww-hero relative overflow-hidden">
+        {/* Background depth — subtle gradient wash */}
+        <div className="absolute inset-0 bg-gradient-to-br from-ww-cream via-ww-warm-white to-ww-cream pointer-events-none" />
+        <div className="absolute -top-[30%] -right-[15%] w-[60%] h-[120%] bg-[radial-gradient(ellipse,rgba(90,143,110,0.12)_0%,transparent_70%)] pointer-events-none" />
         <div className="absolute -bottom-[20%] -left-[10%] w-1/2 h-[60%] bg-[radial-gradient(ellipse,rgba(232,149,106,0.08)_0%,transparent_70%)] pointer-events-none" />
 
-        <div className="max-w-[1100px] mx-auto grid grid-cols-2 gap-[60px] items-center relative z-[1] w-full hero-grid">
-          <div className="anim-fade-up">
-            <div className="inline-flex items-center gap-2 bg-ww-green/10 px-4 py-2 rounded-full text-[13px] font-semibold text-ww-deep-green mb-6">
-              🐕 Solo walks only · Fulham, SW6
+        <div className="ww-container grid grid-cols-2 gap-14 items-center relative z-[1] w-full hero-grid">
+          <div className="anim-fade-up max-w-[560px]">
+            {/* Star rating + review count badge */}
+            {reviewCount > 0 && (
+              <div className="inline-flex items-center gap-2 mb-4">
+                <StarRating />
+                <span className="text-[13px] font-medium text-ww-muted">
+                  {reviewCount} happy {reviewCount === 1 ? "owner" : "owners"}
+                </span>
+              </div>
+            )}
+
+            <div className="inline-flex items-center gap-2 bg-ww-green/10 px-4 py-2 rounded-full text-[13px] font-semibold text-ww-deep-green mb-5">
+              🐕 Solo walks only · Limited weekly slots
             </div>
-            <h1 className="ww-serif text-[clamp(2.4rem,5vw,3.8rem)] leading-[1.1] mb-5">
-              Happy dogs, <span className="text-ww-green italic">happy walks</span>
+
+            <h1 className="ww-serif text-[clamp(2.4rem,5vw,3.6rem)] leading-[1.08] mb-5">
+              Calm, one-on-one walks
               <br />
-              in Fulham
+              <span className="text-ww-green italic">your dog deserves</span>
             </h1>
-            <p className="text-[1.1rem] text-ww-muted max-w-[460px] mb-8 leading-relaxed">
-              Dedicated one-on-one walks for your furry best friend. Because every dog deserves
-              undivided attention and adventure.
+
+            <p className="ww-lede mb-6 max-w-[520px]">
+              No packs. No distractions. Just undivided attention, a calmer dog
+              when you get home, and photo updates so you never miss a moment.
             </p>
-            <div className="flex gap-3 flex-wrap">
+
+            {/* Trust signals — above the fold */}
+            <div className="flex flex-wrap gap-x-5 gap-y-2 mb-7 text-[13px] text-ww-muted font-medium">
+              <span className="flex items-center gap-1.5">
+                <Icons.Shield size={15} color="var(--green)" /> Fully insured
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Icons.Check size={15} color="var(--green)" /> DBS checked
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Icons.Camera size={15} color="var(--green)" /> Photo updates
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Icons.Heart size={15} filled /> Solo walks only
+              </span>
+            </div>
+
+            <div className="flex gap-3 flex-wrap items-center mt-2">
               <Link
                 href="/booking"
-                className="bg-ww-green text-white px-8 py-4 rounded-full font-semibold text-base font-sans flex items-center gap-2 no-underline shadow-[0_4px_16px_rgba(107,158,126,0.3)] hover:bg-ww-deep-green transition-colors"
+                className="ww-btn ww-btn-primary text-[16px]"
               >
-                <Icons.Calendar size={18} color="white" /> Book a Walk
+                <Icons.Calendar size={19} color="white" /> Book a Walk — £{WALK_PRICE}
               </Link>
               <Link
                 href="/contact"
-                className="bg-ww-warm-white text-ww-text border-2 border-ww-green/25 px-8 py-4 rounded-full font-semibold text-base font-sans no-underline hover:border-ww-green/50 transition-colors"
+                className="ww-btn ww-btn-secondary text-[16px]"
               >
                 Get in Touch
               </Link>
@@ -52,12 +93,13 @@ export default async function Home() {
 
           <div className="flex justify-center items-center relative hero-visual-col">
             <div
-              className="w-full max-w-[380px] aspect-square relative flex items-center justify-center"
+              className="w-full max-w-[420px] aspect-square relative flex items-center justify-center overflow-hidden"
               style={{
                 background: "linear-gradient(145deg, var(--green), var(--dark-green))",
                 animation: "blobMorph 8s ease-in-out infinite",
               }}
             >
+              {/* TODO: Replace with real photo — <Image src="/will-walking.jpg" alt="Will walking a happy dog in Fulham" fill className="object-cover" /> */}
               <span className="text-[7rem] drop-shadow-[0_10px_30px_rgba(0,0,0,0.15)]">🐕</span>
             </div>
             <div
@@ -80,18 +122,20 @@ export default async function Home() {
         @media (max-width: 900px) {
           .hero-grid { grid-template-columns: 1fr !important; text-align: center; }
           .hero-visual-col { order: -1 !important; }
-          .hero-visual-col > div:first-child { max-width: 260px !important; }
+          .hero-visual-col > div:first-child { max-width: 240px !important; }
           .hero-visual-col > div:not(:first-child) { display: none; }
         }
       `}</style>
 
       {/* ── SERVICES ── */}
-      <section id="services" className="py-20 px-5 bg-ww-warm-white">
-        <div className="max-w-[900px] mx-auto">
+      <section id="services" className="ww-section bg-ww-warm-white">
+        <div className="ww-container">
           <div className="text-center mb-12">
-            <h2 className="ww-serif text-[clamp(1.8rem,4vw,2.6rem)] mb-3">What I Offer</h2>
-            <p className="text-ww-muted text-[1.05rem]">
-              Quality time and exercise for your pup, with full attention on them
+            <div className="ww-kicker mb-3">Signature Service</div>
+            <h2 className="ww-serif ww-title mb-3">One Dog. One Walk. Total Focus.</h2>
+            <p className="ww-lede">
+              Your dog gets my undivided attention — no pack chaos, no rushed schedules.
+              Just a calm, enriching walk tailored to them.
             </p>
           </div>
 
@@ -105,13 +149,14 @@ export default async function Home() {
               🦮
             </div>
             <div>
-              <h3 className="ww-serif text-[1.4rem] mb-1.5">Solo Walks</h3>
+              <h3 className="ww-serif text-[1.4rem] mb-1.5">Solo Dog Walk</h3>
               <p className="text-ww-muted leading-relaxed">
-                One hour of dedicated one-on-one time. Your dog gets my complete attention — no
-                distractions, no pack dynamics, just quality exercise and enrichment.
+                A full hour of one-on-one time. Your dog gets proper exercise, mental
+                stimulation, and a calmer, happier return home. You&apos;ll receive photo
+                updates during the walk so you can see them enjoying every moment.
               </p>
               <div className="flex flex-wrap gap-2 mt-3.5">
-                {["60 minutes", "1-on-1 attention", "Photo updates", "Flexible scheduling"].map(
+                {["60 minutes", "1-on-1 only", "Photo updates", "GPS tracked route", "Flexible scheduling"].map(
                   (tag) => (
                     <span
                       key={tag}
@@ -128,6 +173,12 @@ export default async function Home() {
                 £{WALK_PRICE}
               </div>
               <div className="text-ww-muted text-sm">per walk</div>
+              <Link
+                href="/booking"
+                className="mt-3 inline-block ww-btn ww-btn-primary text-[13px] px-5 py-2"
+              >
+                Book Now
+              </Link>
             </div>
           </div>
 
@@ -135,44 +186,96 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* ── WHY SOLO? ── */}
+      <section className="ww-section-tight bg-ww-cream">
+        <div className="ww-container">
+          <h2 className="ww-serif ww-title text-center mb-10">
+            Why Solo Walks Make All the Difference
+          </h2>
+          <div className="grid grid-cols-3 gap-6 why-solo-grid">
+            {[
+              {
+                icon: "🧘",
+                title: "A Calmer Dog",
+                text: "No pack stress or overstimulation. Your dog comes home relaxed and content, not wired and anxious.",
+              },
+              {
+                icon: "👀",
+                title: "Undivided Attention",
+                text: "I notice the small things — a limp, a mood change, a new fear. Nothing gets missed when it's just us.",
+              },
+              {
+                icon: "🔒",
+                title: "Safer for Everyone",
+                text: "No risk of dog-on-dog incidents. Reactive dogs, nervous dogs, elderly dogs — all welcome and safe.",
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="bg-ww-warm-white rounded-[20px] p-6 text-center shadow-ww hover:shadow-ww-lg transition-shadow duration-300"
+              >
+                <div className="text-[2.4rem] mb-3">{item.icon}</div>
+                <h3 className="ww-serif text-[1.1rem] mb-2">{item.title}</h3>
+                <p className="text-ww-muted text-[14px] leading-relaxed">{item.text}</p>
+              </div>
+            ))}
+          </div>
+          <style>{`@media (max-width: 768px) { .why-solo-grid { grid-template-columns: 1fr !important; max-width: 400px; margin: 0 auto; } }`}</style>
+        </div>
+      </section>
+
       {/* ── ABOUT ── */}
-      <section id="about" className="py-20 px-5 bg-ww-cream">
-        <div className="max-w-[900px] mx-auto">
+      <section id="about" className="ww-section bg-ww-warm-white">
+        <div className="ww-container">
           <div
             className="grid grid-cols-[1fr_1.3fr] gap-12 items-center about-grid-layout"
           >
             <div>
+              {/* Image slot — replace with a real photo for maximum trust */}
               <div
-                className="w-full aspect-[4/5] rounded-[28px] flex items-center justify-center text-[5rem]"
+                className="w-full aspect-[4/5] rounded-[28px] flex items-center justify-center text-[5rem] overflow-hidden shadow-ww"
                 style={{ background: "linear-gradient(145deg, var(--orange), var(--deep-orange))" }}
               >
+                {/* <Image src="/will-photo.jpg" alt="Will, your Fulham dog walker" fill className="object-cover" /> */}
                 🧑
               </div>
             </div>
             <div>
-              <h2 className="ww-serif text-[clamp(1.6rem,3vw,2.2rem)] mb-4">
-                Hi, I&apos;m Will 👋
+              <div className="ww-kicker mb-3">Your Walker</div>
+              <h2 className="ww-serif ww-title mb-5">
+                Hi, I&apos;m Will
               </h2>
-              <p className="text-ww-muted mb-3 leading-relaxed">
-                I&apos;m a Fulham local with a genuine love for dogs. I believe every dog deserves
-                individual attention during their walks — that&apos;s why I only do solo walks.
+              <p className="text-ww-muted mb-4 leading-[1.7] max-w-[480px]">
+                I&apos;m a Fulham local who chose solo walking for a reason — I saw too
+                many pack walkers juggling six leads and a phone. Your dog deserves
+                better than being one of many.
               </p>
-              <p className="text-ww-muted mb-3 leading-relaxed">
-                When your dog is with me, they&apos;re not competing for attention in a pack. They
-                get dedicated exercise, mental stimulation, and plenty of fuss.
+              <p className="text-ww-muted mb-4 leading-[1.7] max-w-[480px]">
+                When your dog is with me, they get my full focus. I learn their
+                quirks, their favourite sniff spots, and what makes them happiest. I
+                send you photos mid-walk so you can see them thriving.
               </p>
-              <p className="text-ww-muted leading-relaxed">
-                I&apos;m fully insured, DBS checked, and treat every dog as if they were my own.
+              <p className="text-ww-muted leading-[1.7] max-w-[480px] font-medium">
+                Fully insured, DBS checked, and genuinely obsessed with giving
+                dogs the best hour of their day.
               </p>
-              <div className="flex gap-8 mt-7 pt-7 border-t border-ww-green/15">
+
+              {/* Trust credentials — visual strip */}
+              <div className="grid grid-cols-3 gap-5 mt-8 pt-8 border-t border-ww-green/12">
                 {[
-                  { icon: <Icons.Shield size={28} color="var(--green)" />, label: "Fully Insured" },
-                  { icon: <Icons.Check size={28} color="var(--green)" />, label: "DBS Checked" },
-                  { icon: <Icons.Camera size={28} color="var(--green)" />, label: "Photo Updates" },
+                  { icon: <Icons.Shield size={22} color="white" />, label: "Fully Insured" },
+                  { icon: <Icons.Check size={22} color="white" />, label: "DBS Checked" },
+                  { icon: <Icons.Camera size={22} color="white" />, label: "Photo Updates" },
                 ].map((stat, i) => (
-                  <div key={i} className="text-center">
-                    <div className="mb-1.5">{stat.icon}</div>
-                    <div className="text-[13px] text-ww-muted">{stat.label}</div>
+                  <div key={i} className="flex items-center gap-3">
+                    <div
+                      className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-ww-green"
+                    >
+                      {stat.icon}
+                    </div>
+                    <span className="text-[13px] font-semibold text-ww-text leading-tight">
+                      {stat.label}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -183,19 +286,19 @@ export default async function Home() {
       </section>
 
       {/* ── AREAS ── */}
-      <section className="py-20 px-5 bg-ww-dark-green text-white text-center">
-        <div className="max-w-[600px] mx-auto">
-          <h2 className="ww-serif text-[clamp(1.8rem,3vw,2.4rem)] mb-3">Areas I Cover</h2>
-          <p className="opacity-85 text-[1.05rem] mb-7">
+      <section className="ww-section bg-ww-dark-green text-white text-center">
+        <div className="ww-container">
+          <h2 className="ww-serif ww-title mb-3">Areas I Cover</h2>
+          <p className="ww-lede opacity-80 mb-8">
             Based in Fulham, I walk dogs across SW6 and surrounding areas
           </p>
-          <div className="flex flex-wrap justify-center gap-2.5">
+          <div className="flex flex-wrap justify-center gap-3">
             {AREAS.map((a) => (
               <span
                 key={a}
-                className="bg-white/10 px-5 py-2.5 rounded-full font-medium text-[15px]"
+                className="bg-white/12 backdrop-blur-sm px-6 py-3 rounded-full font-medium text-[15px] border border-white/10 hover:bg-white/20 transition-colors duration-250"
               >
-                {a}
+                📍 {a}
               </span>
             ))}
           </div>
@@ -203,40 +306,54 @@ export default async function Home() {
       </section>
 
       {/* ── REVIEWS CTA ── */}
-      <section className="py-20 px-5 bg-ww-warm-white text-center">
-        <div className="max-w-[600px] mx-auto">
-          <h2 className="ww-serif text-[clamp(1.8rem,3vw,2.4rem)] mb-3">
+      <section className="ww-section bg-ww-cream text-center">
+        <div className="ww-container">
+          <h2 className="ww-serif ww-title mb-3">
             Happy Pups & Owners
           </h2>
-          <p className="text-ww-muted mb-7">
+          {reviewCount > 0 && (
+            <div className="flex justify-center items-center gap-2 mb-3">
+              <StarRating />
+              <span className="text-ww-muted font-medium">
+                {reviewCount} review{reviewCount > 1 ? "s" : ""}
+              </span>
+            </div>
+          )}
+          <p className="text-ww-muted mb-8 max-w-[460px] mx-auto">
             {reviewCount > 0
-              ? `${reviewCount} review${reviewCount > 1 ? "s" : ""} and counting!`
+              ? "See what other Fulham dog owners have to say about their experience."
               : "Be the first to leave a review!"}
           </p>
           <Link
             href="/reviews"
-            className="bg-ww-green text-white px-7 py-3.5 rounded-full font-semibold text-[15px] font-sans no-underline hover:bg-ww-deep-green transition-colors"
+            className="ww-btn ww-btn-primary text-[15px]"
           >
             {reviewCount > 0 ? "Read Reviews" : "Leave a Review"} →
           </Link>
         </div>
       </section>
 
+      {/* ── FAQ ── */}
+      <FAQ />
+
       {/* ── BOOKING CTA ── */}
-      <section className="py-20 px-5 bg-ww-cream text-center">
+      <section className="ww-section bg-ww-cream text-center">
         <div
-          className="max-w-[600px] mx-auto rounded-[32px] p-[clamp(32px,5vw,56px)] text-white"
-          style={{ background: "linear-gradient(135deg, var(--green), var(--deep-green))" }}
+          className="ww-container ww-cta-card p-[clamp(32px,5vw,56px)] text-white"
+          style={{ background: "linear-gradient(135deg, var(--green), var(--dark-green))" }}
         >
-          <h2 className="ww-serif text-[clamp(1.6rem,3vw,2.2rem)] mb-3">
-            Ready to book a walk?
+          <h2 className="ww-serif ww-title mb-3">
+            Ready to give your dog the walk they deserve?
           </h2>
-          <p className="opacity-90 mb-7 leading-relaxed">
-            Your pup deserves the best. Let&apos;s get them moving!
+          <p className="ww-lede opacity-90 mb-3 max-w-[480px] mx-auto">
+            Limited slots each week to keep every walk personal. Book yours before they fill up.
+          </p>
+          <p className="opacity-70 text-sm mb-7">
+            £{WALK_PRICE} per walk · 60 minutes · Solo attention
           </p>
           <Link
             href="/booking"
-            className="bg-white text-ww-deep-green px-9 py-4 rounded-full font-bold text-base font-sans no-underline inline-block shadow-[0_4px_16px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.2)] transition-shadow"
+            className="ww-btn text-[17px] font-bold bg-white text-ww-deep-green shadow-[0_4px_16px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.2)]"
           >
             Book Now — £{WALK_PRICE}/walk
           </Link>
@@ -248,9 +365,10 @@ export default async function Home() {
         href="https://wa.me/44XXXXXXXXXX"
         target="_blank"
         rel="noopener"
-        className="fixed bottom-6 right-6 z-[999] bg-[#25D366] text-white px-5 py-3.5 rounded-full flex items-center gap-2.5 no-underline font-semibold text-[15px] shadow-[0_4px_20px_rgba(37,211,102,0.4)] font-sans hover:shadow-[0_6px_24px_rgba(37,211,102,0.5)] transition-shadow"
+        aria-label="Contact via WhatsApp"
+        className="fixed bottom-6 right-6 z-[999] bg-[#25D366] text-white px-5 py-3.5 rounded-full flex items-center gap-2.5 no-underline font-semibold text-[15px] shadow-[0_4px_20px_rgba(37,211,102,0.4)] font-sans hover:shadow-[0_6px_24px_rgba(37,211,102,0.5)] hover:-translate-y-0.5 transition-all duration-250"
       >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
         </svg>
         <span className="whatsapp-label">WhatsApp</span>

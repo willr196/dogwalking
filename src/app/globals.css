@@ -4,43 +4,43 @@
 /* Tailwind v4 uses @theme to register custom design tokens. */
 /* These become available as utility classes: bg-ww-cream, text-ww-green, etc. */
 @theme {
-  --color-ww-cream: #fdf8f3;
-  --color-ww-warm-white: #fffbf7;
-  --color-ww-green: #6b9e7e;
-  --color-ww-deep-green: #3d6b50;
-  --color-ww-dark-green: #2a4d38;
+  --color-ww-cream: #faf5ef;
+  --color-ww-warm-white: #fdf9f5;
+  --color-ww-green: #5a8f6e;
+  --color-ww-deep-green: #335c42;
+  --color-ww-dark-green: #243d2e;
   --color-ww-orange: #e8956a;
   --color-ww-deep-orange: #d47a52;
   --color-ww-brown: #8b7355;
   --color-ww-text: #2e2a25;
-  --color-ww-muted: #7a7168;
+  --color-ww-muted: #6d645b;
   --color-ww-light: #b8afa5;
   --color-ww-danger: #d9534f;
 
-  --shadow-ww: 0 4px 24px rgba(45, 50, 40, 0.07);
-  --shadow-ww-lg: 0 12px 40px rgba(45, 50, 40, 0.1);
+  --shadow-ww: 0 4px 24px rgba(45, 50, 40, 0.08);
+  --shadow-ww-lg: 0 12px 40px rgba(45, 50, 40, 0.12);
 
   --font-sans: "Outfit", "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
   --font-serif: "Playfair Display", "Georgia", "Times New Roman", serif;
 }
 
-/* ── Backwards-compatible CSS variables (used by theme.ts & some inline styles) ── */
+/* ── Backwards-compatible CSS variables (used by some inline styles) ── */
 :root {
-  --cream: #fdf8f3;
-  --warm-white: #fffbf7;
-  --green: #6b9e7e;
-  --deep-green: #3d6b50;
-  --dark-green: #2a4d38;
+  --cream: #faf5ef;
+  --warm-white: #fdf9f5;
+  --green: #5a8f6e;
+  --deep-green: #335c42;
+  --dark-green: #243d2e;
   --orange: #e8956a;
   --deep-orange: #d47a52;
   --brown: #8b7355;
   --text: #2e2a25;
-  --muted: #7a7168;
+  --muted: #6d645b;
   --light: #b8afa5;
   --danger: #d9534f;
   --white: #ffffff;
-  --shadow: 0 4px 24px rgba(45, 50, 40, 0.07);
-  --shadow-lg: 0 12px 40px rgba(45, 50, 40, 0.1);
+  --shadow: 0 4px 24px rgba(45, 50, 40, 0.08);
+  --shadow-lg: 0 12px 40px rgba(45, 50, 40, 0.12);
   --font-outfit: "Outfit", "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
   --font-playfair: "Playfair Display", "Georgia", "Times New Roman", serif;
 }
@@ -60,6 +60,155 @@ body {
   background: var(--cream);
   color: var(--text);
   font-family: var(--font-outfit), sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── Layout Helpers ── */
+.ww-container {
+  width: min(1200px, calc(100% - 48px));
+  margin-inline: auto;
+}
+
+.ww-container-mid {
+  width: min(960px, calc(100% - 48px));
+  margin-inline: auto;
+}
+
+.ww-container-narrow {
+  width: min(720px, calc(100% - 48px));
+  margin-inline: auto;
+}
+
+.ww-container-compact {
+  width: min(480px, calc(100% - 48px));
+  margin-inline: auto;
+}
+
+@media (max-width: 640px) {
+  .ww-container,
+  .ww-container-mid,
+  .ww-container-narrow,
+  .ww-container-compact {
+    width: calc(100% - 32px);
+  }
+}
+
+.ww-section {
+  padding-block: clamp(72px, 8vw, 112px);
+  padding-inline: 20px;
+}
+
+.ww-section-tight {
+  padding-block: clamp(60px, 7vw, 96px);
+  padding-inline: 20px;
+}
+
+.ww-hero {
+  padding-top: clamp(96px, 10vw, 140px);
+  padding-bottom: clamp(56px, 8vw, 96px);
+  padding-inline: 20px;
+}
+
+.ww-page {
+  min-height: 100vh;
+  padding-top: clamp(104px, 10vw, 132px);
+  padding-bottom: clamp(60px, 8vw, 96px);
+  padding-inline: 20px;
+  background: var(--cream);
+}
+
+@media (max-width: 640px) {
+  .ww-section,
+  .ww-section-tight,
+  .ww-hero,
+  .ww-page {
+    padding-inline: 16px;
+  }
+}
+
+.ww-title {
+  font-size: clamp(1.9rem, 3.8vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.ww-lede {
+  color: var(--muted);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.7;
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+.ww-kicker {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--deep-green);
+}
+
+.ww-card {
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  background: var(--warm-white);
+}
+
+.ww-cta-card {
+  border-radius: 32px;
+  box-shadow: var(--shadow-lg);
+}
+
+.ww-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-outfit), sans-serif;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 14px 28px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  text-decoration: none;
+}
+
+.ww-btn:active {
+  transform: translateY(1px);
+}
+
+.ww-btn-primary {
+  background: var(--green);
+  color: white;
+  box-shadow: 0 6px 18px rgba(90, 143, 110, 0.28);
+}
+
+.ww-btn-primary:hover {
+  background: var(--deep-green);
+  box-shadow: 0 10px 26px rgba(90, 143, 110, 0.36);
+}
+
+.ww-btn-secondary {
+  background: var(--warm-white);
+  color: var(--text);
+  border: 2px solid rgba(90, 143, 110, 0.18);
+}
+
+.ww-btn-secondary:hover {
+  border-color: rgba(90, 143, 110, 0.4);
+  background: var(--cream);
+}
+
+.ww-btn-ghost {
+  background: transparent;
+  color: var(--deep-green);
+  border: 1px solid rgba(90, 143, 110, 0.18);
+  padding: 10px 18px;
+  border-radius: 999px;
+}
+
+.ww-btn-ghost:hover {
+  border-color: rgba(90, 143, 110, 0.4);
+  background: rgba(90, 143, 110, 0.08);
 }
 
 /* ── Typography Helpers ── */
@@ -76,12 +225,12 @@ body {
   width: 100%;
   padding: 14px 18px;
   border-radius: 14px;
-  border: 2px solid rgba(107, 158, 126, 0.15);
+  border: 2px solid rgba(90, 143, 110, 0.15);
   background: white;
   font-size: 15px;
   font-family: "Outfit", sans-serif;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.25s ease;
 }
 
 .ww-input:focus {
@@ -155,6 +304,17 @@ body {
   }
 }
 
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .anim-fade-up {
   animation: fadeUp 0.6s ease-out both;
 }
@@ -165,6 +325,10 @@ body {
 
 .anim-slide-in {
   animation: slideIn 0.4s ease-out both;
+}
+
+.anim-slide-down {
+  animation: slideDown 0.3s ease-out both;
 }
 
 /* ── Grain Overlay ── */

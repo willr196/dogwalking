@@ -90,7 +90,7 @@ export function BookingClient() {
   };
 
   return (
-    <div className="min-h-screen px-5 pt-[100px] pb-[60px] bg-ww-cream">
+    <div className="ww-page">
       <div className="toast-container">
         {toasts.map((t) => (
           <div key={t.id} className={`toast ${t.type === "error" ? "error" : ""}`}>
@@ -100,15 +100,15 @@ export function BookingClient() {
         ))}
       </div>
 
-      <div className="max-w-[580px] mx-auto">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-ww-muted mb-6 font-sans text-[15px] no-underline hover:text-ww-deep-green transition-colors"
-        >
+      <div className="ww-container-narrow">
+        <Link href="/" className="ww-btn ww-btn-ghost text-sm mb-6">
           <Icons.ArrowLeft size={18} /> {step > 1 && step < 4 ? "Back" : "Home"}
         </Link>
 
-        <h1 className="ww-serif text-[clamp(1.8rem,4vw,2.4rem)] mb-2">Book a Walk</h1>
+        <h1 className="ww-serif ww-title mb-2">Book a Walk</h1>
+        <p className="ww-lede mb-6 text-left max-w-[520px]">
+          A few quick details and you&apos;re booked in. Solo walks only.
+        </p>
 
         {/* Progress bar */}
         {step < 4 && (
@@ -126,7 +126,7 @@ export function BookingClient() {
 
         {/* Step 1: Your Details */}
         {step === 1 && (
-          <div className="anim-fade-up">
+          <div className="anim-fade-up ww-card p-7">
             <h3 className="font-semibold text-lg mb-5">Your Details</h3>
             <div className="flex flex-col gap-3.5">
               <Input label="Your Name *" value={form.ownerName} onChange={(v) => update("ownerName", v)} placeholder="e.g. Sarah" />
@@ -138,7 +138,7 @@ export function BookingClient() {
 
         {/* Step 2: Dog Info */}
         {step === 2 && (
-          <div className="anim-fade-up">
+          <div className="anim-fade-up ww-card p-7">
             <h3 className="font-semibold text-lg mb-5">Tell Me About Your Dog</h3>
             <div className="flex flex-col gap-3.5">
               <Input label="Dog's Name *" value={form.dogName} onChange={(v) => update("dogName", v)} placeholder="e.g. Biscuit" />
@@ -169,7 +169,7 @@ export function BookingClient() {
 
         {/* Step 3: Date & Time */}
         {step === 3 && (
-          <div className="anim-fade-up">
+          <div className="anim-fade-up ww-card p-7">
             <h3 className="font-semibold text-lg mb-5">Pick a Date & Time</h3>
 
             <label className="text-sm font-medium mb-2.5 block">Date *</label>
@@ -229,7 +229,7 @@ export function BookingClient() {
 
         {/* Step 4: Confirmation */}
         {step === 4 && (
-          <div className="anim-fade-up text-center py-10">
+          <div className="anim-fade-up text-center py-10 ww-card p-8">
             <div className="w-20 h-20 rounded-full mx-auto mb-6 bg-ww-green/10 flex items-center justify-center text-[2.5rem]">
               🎉
             </div>
@@ -243,7 +243,7 @@ export function BookingClient() {
             <div className="flex gap-3 justify-center flex-wrap">
               <Link
                 href="/"
-                className="bg-ww-green text-white border-none px-7 py-3.5 rounded-full font-semibold cursor-pointer font-sans no-underline hover:bg-ww-deep-green transition-colors"
+                className="ww-btn ww-btn-primary"
               >
                 Back to Home
               </Link>
@@ -252,7 +252,7 @@ export function BookingClient() {
                   setStep(1);
                   setForm({ ownerName: "", email: "", phone: "", dogName: "", dogBreed: "", dogSize: "Medium", date: "", time: "", notes: "" });
                 }}
-                className="bg-ww-warm-white text-ww-text border-2 border-ww-green/20 px-7 py-3.5 rounded-full font-semibold cursor-pointer font-sans hover:border-ww-green/40 transition-colors"
+                className="ww-btn ww-btn-secondary"
               >
                 Book Another
               </button>
@@ -266,9 +266,9 @@ export function BookingClient() {
             <button
               onClick={() => (step === 3 ? submit() : setStep(step + 1))}
               disabled={!canProceed() || loading}
-              className={`border-none px-8 py-3.5 rounded-full font-semibold text-[15px] font-sans flex items-center gap-2 transition-all ${
+              className={`border-none ww-btn text-[15px] ${
                 canProceed()
-                  ? "bg-ww-green text-white cursor-pointer hover:bg-ww-deep-green"
+                  ? "ww-btn-primary cursor-pointer"
                   : "bg-ww-light text-white cursor-not-allowed opacity-50"
               }`}
             >

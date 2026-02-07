@@ -64,19 +64,17 @@ export function ReviewsClient() {
     : "—";
 
   return (
-    <div className="min-h-screen px-5 pt-[100px] pb-[60px] bg-ww-cream">
-      <div className="max-w-[640px] mx-auto">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-ww-muted mb-6 font-sans text-[15px] no-underline hover:text-ww-deep-green transition-colors"
-        >
+    <div className="ww-page">
+      <div className="ww-container-narrow">
+        <Link href="/" className="ww-btn ww-btn-ghost text-sm mb-6">
           <Icons.ArrowLeft size={18} /> Home
         </Link>
 
         <div className="flex justify-between items-start mb-9 flex-wrap gap-4">
           <div>
-            <h1 className="ww-serif text-[clamp(1.8rem,4vw,2.4rem)] mb-1">Reviews</h1>
-            <p className="text-ww-muted">
+            <div className="ww-kicker mb-3">Community</div>
+            <h1 className="ww-serif ww-title mb-1">Reviews</h1>
+            <p className="ww-lede text-left max-w-[520px]">
               {reviews.length > 0 ? (
                 <>
                   <span className="font-semibold text-ww-text">{avgRating}</span> avg ·{" "}
@@ -89,7 +87,7 @@ export function ReviewsClient() {
           </div>
           <button
             onClick={() => setShowForm(!showForm)}
-            className="bg-ww-green text-white border-none px-6 py-3 rounded-full font-semibold text-sm cursor-pointer font-sans hover:bg-ww-deep-green transition-colors"
+            className="ww-btn ww-btn-primary text-sm"
           >
             {showForm ? "Cancel" : "Leave a Review"}
           </button>
@@ -108,7 +106,7 @@ export function ReviewsClient() {
         )}
 
         {showForm && session?.user && (
-          <div className="anim-fade-up bg-ww-warm-white rounded-[20px] p-7 mb-7 shadow-ww">
+          <div className="anim-fade-up ww-card p-7 mb-7">
             <div className="flex flex-col gap-3.5">
               {error && <div className="text-ww-danger text-sm">{error}</div>}
               <Input
@@ -147,7 +145,7 @@ export function ReviewsClient() {
               <button
                 onClick={submit}
                 disabled={submitting}
-                className="bg-ww-green text-white border-none px-7 py-3.5 rounded-full font-semibold cursor-pointer font-sans self-end flex items-center gap-2 hover:bg-ww-deep-green transition-colors disabled:opacity-50"
+                className="ww-btn ww-btn-primary self-end disabled:opacity-50"
               >
                 {submitting ? <span className="spinner" /> : "Submit Review"}
               </button>
@@ -172,7 +170,7 @@ export function ReviewsClient() {
             {reviews.map((r) => (
               <div
                 key={r.id}
-                className="bg-ww-warm-white rounded-[20px] p-6 shadow-ww"
+                className="ww-card p-6"
               >
                 <div className="font-semibold mb-1">
                   {r.name}{" "}

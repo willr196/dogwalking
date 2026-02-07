@@ -35,17 +35,15 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen px-5 pt-[120px] pb-[60px] bg-ww-cream">
-      <div className="max-w-[420px] mx-auto">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-ww-muted no-underline mb-6 hover:text-ww-deep-green transition-colors"
-        >
+    <div className="ww-page">
+      <div className="ww-container-compact">
+        <Link href="/" className="ww-btn ww-btn-ghost text-sm mb-6">
           <Icons.ArrowLeft size={18} /> Home
         </Link>
-        <div className="bg-ww-warm-white rounded-3xl p-8 shadow-ww">
-          <h1 className="ww-serif text-[1.9rem] mb-2">Welcome Back</h1>
-          <p className="text-ww-muted mb-6">Sign in to book walks and leave reviews.</p>
+        <div className="ww-card p-8">
+          <div className="ww-kicker mb-3">Account</div>
+          <h1 className="ww-serif ww-title mb-2">Welcome Back</h1>
+          <p className="ww-lede mb-6 text-left">Sign in to book walks and leave reviews.</p>
 
           {/* ✅ Email verification success banner */}
           {verified && (
@@ -78,7 +76,7 @@ export default function SignInPage() {
             <button
               onClick={submit}
               disabled={loading}
-              className="bg-ww-green text-white border-none px-4.5 py-3.5 rounded-full font-semibold cursor-pointer font-sans flex items-center justify-center gap-2 hover:bg-ww-deep-green transition-colors disabled:opacity-50"
+              className="ww-btn ww-btn-primary w-full disabled:opacity-50"
             >
               {loading ? <span className="spinner" /> : "Sign In"}
             </button>

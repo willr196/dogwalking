@@ -32,21 +32,19 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen px-5 pt-[100px] pb-[60px] bg-ww-cream">
-      <div className="max-w-[520px] mx-auto">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-ww-muted mb-6 font-sans text-[15px] no-underline hover:text-ww-deep-green transition-colors"
-        >
+    <div className="ww-page">
+      <div className="ww-container-compact">
+        <Link href="/" className="ww-btn ww-btn-ghost text-sm mb-6">
           <Icons.ArrowLeft size={18} /> Home
         </Link>
 
-        <h1 className="ww-serif text-[clamp(1.8rem,4vw,2.4rem)] mb-2">Get in Touch</h1>
-        <p className="text-ww-muted mb-8 leading-relaxed">
+        <div className="ww-kicker mb-3">Contact</div>
+        <h1 className="ww-serif ww-title mb-2">Get in Touch</h1>
+        <p className="ww-lede mb-8 text-left max-w-[520px]">
           Have a question or want to learn more? Drop a message and we'll get back to you shortly.
         </p>
 
-        <div className="bg-ww-warm-white rounded-3xl p-[clamp(24px,4vw,36px)] shadow-ww">
+        <div className="ww-card p-[clamp(24px,4vw,36px)]">
           <div className="flex flex-col gap-4">
             {status && (
               <div
@@ -80,7 +78,7 @@ export default function ContactPage() {
             <button
               onClick={submit}
               disabled={submitting}
-              className="bg-ww-green text-white border-none px-7 py-3.5 rounded-full font-semibold cursor-pointer font-sans flex items-center justify-center gap-2 w-full text-[15px] hover:bg-ww-deep-green transition-colors disabled:opacity-50"
+              className="ww-btn ww-btn-primary w-full text-[15px] disabled:opacity-50"
             >
               {submitting ? (
                 <span className="spinner" />

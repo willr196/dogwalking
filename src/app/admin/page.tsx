@@ -101,18 +101,16 @@ export default async function AdminPage({
   };
 
   return (
-    <div className="min-h-screen px-5 pt-[100px] pb-[60px] bg-ww-cream">
-      <div className="max-w-[800px] mx-auto">
+    <div className="ww-page">
+      <div className="ww-container-mid">
         {/* Header */}
         <div className="flex justify-between items-center mb-7 flex-wrap gap-3">
           <div>
-            <Link
-              href="/"
-              className="flex items-center gap-2 text-ww-muted mb-2 font-sans text-sm no-underline hover:text-ww-deep-green transition-colors"
-            >
+            <Link href="/" className="ww-btn ww-btn-ghost text-sm mb-4">
               <Icons.ArrowLeft size={16} /> Home
             </Link>
-            <h1 className="ww-serif text-[clamp(1.6rem,4vw,2.2rem)]">Dashboard</h1>
+            <div className="ww-kicker mb-3">Admin</div>
+            <h1 className="ww-serif ww-title">Dashboard</h1>
           </div>
         </div>
 
@@ -124,10 +122,7 @@ export default async function AdminPage({
             { label: "Reviews", value: totalReviews, color: "text-ww-deep-green" },
             { label: "Revenue", value: `£${revenue}`, color: "text-ww-brown" },
           ].map((s, i) => (
-            <div
-              key={i}
-              className="bg-ww-warm-white rounded-[18px] p-5 shadow-ww text-center"
-            >
+            <div key={i} className="ww-card p-5 text-center">
               <div className={`ww-serif text-[1.8rem] font-bold ${s.color}`}>{s.value}</div>
               <div className="text-[13px] text-ww-muted mt-1">{s.label}</div>
             </div>
@@ -150,7 +145,7 @@ export default async function AdminPage({
                 bookings.map((b) => (
                   <div
                     key={b.id}
-                    className={`bg-ww-warm-white rounded-2xl p-5 shadow-ww ${b.status === "cancelled" ? "opacity-50" : ""}`}
+                    className={`ww-card p-5 ${b.status === "cancelled" ? "opacity-50" : ""}`}
                   >
                     <div className="flex justify-between items-start gap-3 flex-wrap">
                       <div>
@@ -217,7 +212,7 @@ export default async function AdminPage({
                 <Empty text="No reviews yet" />
               ) : (
                 reviews.map((r) => (
-                  <div key={r.id} className="bg-ww-warm-white rounded-2xl p-5 shadow-ww">
+                  <div key={r.id} className="ww-card p-5">
                     <div className="flex justify-between items-start">
                       <div>
                         <div className="font-semibold mb-1">
@@ -271,7 +266,7 @@ export default async function AdminPage({
                 <Empty text="No messages yet" />
               ) : (
                 messages.map((m) => (
-                  <div key={m.id} className="bg-ww-warm-white rounded-2xl p-5 shadow-ww">
+                  <div key={m.id} className="ww-card p-5">
                     <div className="flex justify-between items-start">
                       <div>
                         <div className="font-semibold mb-0.5">{m.name}</div>
@@ -326,12 +321,12 @@ function Pagination({
       {prevHref ? (
         <Link
           href={prevHref}
-          className="px-4 py-2 rounded-full text-sm font-semibold bg-ww-green/10 text-ww-deep-green no-underline hover:bg-ww-green/20 transition-colors"
+          className="ww-btn ww-btn-ghost text-sm"
         >
           ← Prev
         </Link>
       ) : (
-        <span className="px-4 py-2 rounded-full text-sm font-semibold text-ww-light">← Prev</span>
+        <span className="ww-btn ww-btn-ghost text-sm opacity-50">← Prev</span>
       )}
       <span className="text-sm text-ww-muted">
         {current} / {total}
@@ -339,12 +334,12 @@ function Pagination({
       {nextHref ? (
         <Link
           href={nextHref}
-          className="px-4 py-2 rounded-full text-sm font-semibold bg-ww-green/10 text-ww-deep-green no-underline hover:bg-ww-green/20 transition-colors"
+          className="ww-btn ww-btn-ghost text-sm"
         >
           Next →
         </Link>
       ) : (
-        <span className="px-4 py-2 rounded-full text-sm font-semibold text-ww-light">Next →</span>
+        <span className="ww-btn ww-btn-ghost text-sm opacity-50">Next →</span>
       )}
     </div>
   );

@@ -37,12 +37,12 @@ export default function SignUpPage() {
 
   if (verificationSent) {
     return (
-      <div className="min-h-screen px-5 pt-[120px] pb-[60px] bg-ww-cream">
-        <div className="max-w-[420px] mx-auto">
-          <div className="bg-ww-warm-white rounded-3xl p-8 shadow-ww text-center">
+      <div className="ww-page">
+        <div className="ww-container-compact">
+          <div className="ww-card p-8 text-center">
             <div className="text-5xl mb-4">📧</div>
-            <h1 className="ww-serif text-[1.9rem] mb-2">Check Your Email</h1>
-            <p className="text-ww-muted mb-6 leading-relaxed">
+            <h1 className="ww-serif ww-title mb-2">Check Your Email</h1>
+            <p className="ww-lede mb-6">
               We've sent a verification link to <strong className="text-ww-text">{email}</strong>.
               Click the link to activate your account.
             </p>
@@ -51,7 +51,7 @@ export default function SignUpPage() {
             </p>
             <Link
               href="/sign-in"
-              className="inline-block bg-ww-green text-white border-none px-7 py-3.5 rounded-full font-semibold cursor-pointer font-sans no-underline hover:bg-ww-deep-green transition-colors"
+              className="inline-block ww-btn ww-btn-primary"
             >
               Go to Sign In
             </Link>
@@ -62,17 +62,15 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen px-5 pt-[120px] pb-[60px] bg-ww-cream">
-      <div className="max-w-[420px] mx-auto">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-ww-muted no-underline mb-6 hover:text-ww-deep-green transition-colors"
-        >
+    <div className="ww-page">
+      <div className="ww-container-compact">
+        <Link href="/" className="ww-btn ww-btn-ghost text-sm mb-6">
           <Icons.ArrowLeft size={18} /> Home
         </Link>
-        <div className="bg-ww-warm-white rounded-3xl p-8 shadow-ww">
-          <h1 className="ww-serif text-[1.9rem] mb-2">Create Account</h1>
-          <p className="text-ww-muted mb-6">
+        <div className="ww-card p-8">
+          <div className="ww-kicker mb-3">Account</div>
+          <h1 className="ww-serif ww-title mb-2">Create Account</h1>
+          <p className="ww-lede mb-6 text-left">
             Book walks, leave reviews, and manage appointments.
           </p>
 
@@ -106,7 +104,7 @@ export default function SignUpPage() {
             <button
               onClick={submit}
               disabled={loading}
-              className="bg-ww-green text-white border-none px-4.5 py-3.5 rounded-full font-semibold cursor-pointer font-sans flex items-center justify-center gap-2 hover:bg-ww-deep-green transition-colors disabled:opacity-50"
+              className="ww-btn ww-btn-primary w-full disabled:opacity-50"
             >
               {loading ? <span className="spinner" /> : "Create Account"}
             </button>
