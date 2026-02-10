@@ -65,7 +65,7 @@ export function ReviewsClient() {
 
   return (
     <div className="ww-page">
-      <div className="ww-container-narrow">
+      <div className="ww-container">
         <Link href="/" className="ww-btn ww-btn-ghost text-sm mb-6">
           <Icons.ArrowLeft size={18} /> Home
         </Link>

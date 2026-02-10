@@ -65,22 +65,22 @@ body {
 
 /* ── Layout Helpers ── */
 .ww-container {
-  width: min(1200px, calc(100% - 48px));
+  width: min(1400px, calc(100% - 48px));
   margin-inline: auto;
 }
 
 .ww-container-mid {
-  width: min(960px, calc(100% - 48px));
+  width: min(1100px, calc(100% - 48px));
   margin-inline: auto;
 }
 
 .ww-container-narrow {
-  width: min(720px, calc(100% - 48px));
+  width: min(820px, calc(100% - 48px));
   margin-inline: auto;
 }
 
 .ww-container-compact {
-  width: min(480px, calc(100% - 48px));
+  width: min(560px, calc(100% - 48px));
   margin-inline: auto;
 }
 
@@ -94,36 +94,27 @@ body {
 }
 
 .ww-section {
-  padding-block: clamp(72px, 8vw, 112px);
-  padding-inline: 20px;
+  padding-block: clamp(84px, 8vw, 140px);
 }
 
 .ww-section-tight {
-  padding-block: clamp(60px, 7vw, 96px);
-  padding-inline: 20px;
+  padding-block: clamp(72px, 7vw, 120px);
 }
 
 .ww-hero {
-  padding-top: clamp(96px, 10vw, 140px);
-  padding-bottom: clamp(56px, 8vw, 96px);
-  padding-inline: 20px;
+  padding-top: clamp(116px, 10vw, 168px);
+  padding-bottom: clamp(72px, 8vw, 120px);
 }
 
 .ww-page {
   min-height: 100vh;
-  padding-top: clamp(104px, 10vw, 132px);
-  padding-bottom: clamp(60px, 8vw, 96px);
-  padding-inline: 20px;
+  padding-top: clamp(124px, 10vw, 164px);
+  padding-bottom: clamp(84px, 8vw, 132px);
   background: var(--cream);
 }
 
 @media (max-width: 640px) {
-  .ww-section,
-  .ww-section-tight,
-  .ww-hero,
-  .ww-page {
-    padding-inline: 16px;
-  }
+  /* Horizontal gutters are controlled via .ww-container on small screens. */
 }
 
 .ww-title {
@@ -218,6 +209,21 @@ body {
 
 .ww-sans {
   font-family: var(--font-outfit), sans-serif;
+}
+
+/* ── Longform Content ── */
+.prose-ww {
+  font-size: 1rem;
+}
+
+.prose-ww a {
+  color: var(--green);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose-ww h2 {
+  letter-spacing: -0.01em;
 }
 
 /* ── Shared Input Style ── */
@@ -407,19 +413,8 @@ body {
 
 /* ── Responsive Helpers ── */
 @media (max-width: 768px) {
-  .hero-grid {
-    grid-template-columns: 1fr !important;
-    text-align: center;
-  }
-  .hero-visual-col > div:not(:first-child) {
-    display: none;
-  }
   .desktop-nav {
     display: none !important;
-  }
-  .service-grid {
-    grid-template-columns: 1fr !important;
-    text-align: center;
   }
 }
 

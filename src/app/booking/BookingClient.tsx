@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Icons } from "@/components/willswalks/Icons";
 import { Input } from "@/components/willswalks/Input";
-import { DOG_SIZES, TIME_SLOTS, WALK_PRICE } from "@/components/willswalks/constants";
+import { DOG_SIZES, TIME_SLOTS } from "@/components/willswalks/constants";
 import { formatDate } from "@/components/willswalks/utils";
 
 type Toast = { id: number; msg: string; type: "success" | "error" };
@@ -100,14 +100,15 @@ export function BookingClient() {
         ))}
       </div>
 
-      <div className="ww-container-narrow">
+      <div className="ww-container">
         <Link href="/" className="ww-btn ww-btn-ghost text-sm mb-6">
           <Icons.ArrowLeft size={18} /> {step > 1 && step < 4 ? "Back" : "Home"}
         </Link>
 
-        <h1 className="ww-serif ww-title mb-2">Book a Walk</h1>
+        <h1 className="ww-serif ww-title mb-2">Book a Meet &amp; Greet</h1>
         <p className="ww-lede mb-6 text-left max-w-[520px]">
-          A few quick details and you&apos;re booked in. Solo walks only.
+          A short intro visit so I can meet your dog, understand their routine,
+          and recommend the right walk.
         </p>
 
         {/* Progress bar */}
@@ -220,7 +221,7 @@ export function BookingClient() {
               <div className="mt-6 p-5 bg-ww-green/5 rounded-2xl border border-ww-green/10">
                 <p className="font-semibold mb-1">Booking Summary</p>
                 <p className="text-ww-muted text-sm">
-                  {form.dogName || "Your dog"} · {formatDate(form.date)} at {form.time} · £{WALK_PRICE}
+                  {form.dogName || "Your dog"} · {formatDate(form.date)} at {form.time} · Free
                 </p>
               </div>
             )}
@@ -233,12 +234,13 @@ export function BookingClient() {
             <div className="w-20 h-20 rounded-full mx-auto mb-6 bg-ww-green/10 flex items-center justify-center text-[2.5rem]">
               🎉
             </div>
-            <h2 className="ww-serif text-[1.8rem] mb-3">Walk Booked!</h2>
+            <h2 className="ww-serif text-[1.8rem] mb-3">Meet &amp; Greet Booked!</h2>
             <p className="text-ww-muted mb-2 leading-relaxed">
-              {form.dogName}&apos;s walk is confirmed for {formatDate(form.date)} at {form.time}.
+              Your meet &amp; greet is confirmed for {formatDate(form.date)} at{" "}
+              {form.time}.
             </p>
             <p className="text-ww-muted mb-8 text-sm">
-              A confirmation has been saved. We&apos;ll reach out to confirm details.
+              A confirmation has been saved. I&apos;ll reach out to confirm details.
             </p>
             <div className="flex gap-3 justify-center flex-wrap">
               <Link

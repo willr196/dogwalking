@@ -3,13 +3,15 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import { Icons } from "@/components/willswalks/Icons";
-import { WALK_PRICE } from "@/components/willswalks/constants";
 
 const NAV_LINKS = [
-  { href: "/#services", label: "Services" },
-  { href: "/#about", label: "About" },
+  { href: "/services", label: "Services" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/areas", label: "Areas" },
   { href: "/reviews", label: "Reviews" },
-  { href: "/#faq", label: "FAQ" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/guides", label: "Guides" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function NavBar() {
@@ -36,7 +38,9 @@ export function NavBar() {
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = mobileMenu ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [mobileMenu]);
 
   const handleNavClick = useCallback(() => {
@@ -85,7 +89,7 @@ export function NavBar() {
             href="/booking"
             className="ww-btn ww-btn-primary text-sm px-6 py-2.5"
           >
-            Book a Walk — £{WALK_PRICE}
+            Book a Meet &amp; Greet
           </Link>
         </div>
 
@@ -145,7 +149,7 @@ export function NavBar() {
             className="ww-btn ww-btn-primary text-sm px-6 py-3.5 mt-2 text-center"
             tabIndex={mobileMenu ? 0 : -1}
           >
-            Book a Walk — £{WALK_PRICE}
+            Book a Meet &amp; Greet
           </Link>
         </div>
       </div>

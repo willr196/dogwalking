@@ -2,27 +2,32 @@
 
 import { useState } from "react";
 import { Icons } from "@/components/willswalks/Icons";
+import { siteConfig } from "@/lib/site.config";
 
 const FAQ_ITEMS = [
   {
     q: "How long is each walk?",
-    a: "Every walk is a full 60 minutes of one-on-one time with your dog. I never rush — your dog gets proper exercise and mental stimulation every single session.",
+    a: `Every walk is a full ${siteConfig.pricing.walkDuration} minutes. I never rush — your dog gets proper exercise and mental stimulation every session.`,
   },
   {
-    q: "Why solo walks instead of group walks?",
-    a: "Solo walks mean your dog gets my complete attention. No pack stress, no distractions, no risk of incidents with other dogs. It's safer, calmer, and far more enriching.",
+    q: "Do you offer solo and group walks?",
+    a: `Yes. I offer solo walks and carefully managed small-group walks (max ${siteConfig.pricing.maxDogsPerWalk} dogs). Every dog starts with a meet & greet so I can recommend the best option.`,
+  },
+  {
+    q: "Is a meet & greet required?",
+    a: "Yes. It keeps walks safe and stress-free. It lets me learn your dog's temperament, routine, and any handling notes before the first walk.",
   },
   {
     q: "Will I get updates during the walk?",
     a: "Absolutely! I send photo updates during every walk so you can see your dog enjoying themselves. You'll never have to wonder how their walk went.",
   },
   {
-    q: "Are you insured and DBS checked?",
-    a: "Yes — I'm fully insured for professional dog walking and have a clean DBS (criminal record) check. Happy to share documentation on request.",
+    q: "Are you insured?",
+    a: "I'm working on getting fully insured and will update my site as soon as it's in place. In the meantime, I take a safety-first approach on every walk.",
   },
   {
     q: "What areas do you cover?",
-    a: "I'm based in Fulham and cover SW6 and surrounding areas including Parsons Green, Walham Green, Sands End, Bishop's Park, and Hurlingham.",
+    a: `I'm based in Fulham and cover ${siteConfig.areasServed.map((a) => a.name).join(", ")}.`,
   },
 ];
 
@@ -56,7 +61,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 export function FAQ() {
   return (
     <section id="faq" className="ww-section bg-ww-warm-white">
-      <div className="ww-container-narrow">
+      <div className="ww-container">
         <h2 className="ww-serif ww-title text-center mb-3">
           Common Questions
         </h2>

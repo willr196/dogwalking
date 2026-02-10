@@ -1,12 +1,8 @@
-export const WALK_PRICE = 18;
-export const AREAS = [
-  "Fulham",
-  "Parsons Green",
-  "Walham Green",
-  "Sands End",
-  "Bishop's Park",
-  "Hurlingham",
-];
+import { siteConfig } from "@/lib/site.config";
+
+export const WALK_PRICE = siteConfig.pricing.introPrice;
+export const STANDARD_PRICE = siteConfig.pricing.standardPrice;
+export const AREAS = siteConfig.areasServed.map((a) => a.name);
 export const TIME_SLOTS = [
   "8:00 AM",
   "9:00 AM",

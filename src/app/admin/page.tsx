@@ -1,13 +1,15 @@
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import Link from "next/link";
-export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
-import { Icons } from "@/components/willswalks/Icons";
-import { Empty } from "@/components/willswalks/Empty";
-import { formatDate } from "@/components/willswalks/utils";
+import { auth } from "@/auth";
+import { siteConfig } from "@/lib/site.config";
+import { AdminTabs } from "./AdminTabs";
+import type {
+  Booking as PrismaBooking,
+  Review as PrismaReview,
+  Message as PrismaMessage,
+} from "@prisma/client";
 
-const PAGE_SIZE = 10;
+export const dynamic = "force-dynamic";
 
 async function cancelBooking(formData: FormData) {
   "use server";
@@ -36,10 +38,19 @@ async function deleteMessage(formData: FormData) {
   await prisma.message.delete({ where: { id } });
 }
 
+async function markMessageRead(formData: FormData) {
+  "use server";
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ADMIN") return;
+  const id = formData.get("id")?.toString();
+  if (!id) return;
+  await prisma.message.update({ where: { id }, data: { read: true } });
+}
+
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams: Promise<{ bp?: string; rp?: string; mp?: string }>;
+  searchParams: Promise<{ tab?: string; bp?: string; rp?: string; mp?: string }>;
 }) {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") {
@@ -47,300 +58,181 @@ export default async function AdminPage({
   }
 
   const params = await searchParams;
-  const bookingPage = Math.max(1, parseInt(params.bp || "1", 10) || 1);
-  const reviewPage = Math.max(1, parseInt(params.rp || "1", 10) || 1);
-  const messagePage = Math.max(1, parseInt(params.mp || "1", 10) || 1);
+  const activeTab = params.tab || "overview";
+  const bookingsPage = Math.max(1, parseInt(params.bp || "1"));
+  const reviewsPage = Math.max(1, parseInt(params.rp || "1"));
+  const messagesPage = Math.max(1, parseInt(params.mp || "1"));
+  const PER_PAGE = 10;
 
-  // Fetch totals for stats and pagination
-  const [totalBookings, totalReviews, totalMessages] = await Promise.all([
-    prisma.booking.count(),
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const todayEnd = new Date(todayStart.getTime() + 86400000);
+  const weekEnd = new Date(todayStart.getTime() + 7 * 86400000);
+
+  const [
+    totalConfirmedBookings,
+    upcomingCount,
+    todayBookings,
+    totalReviews,
+    totalMessages,
+    unreadMessages,
+    recentBookings,
+    recentMessages,
+    allBookingsPage,
+    allReviewsPage,
+    allMessagesPage,
+    scheduleBookings,
+    totalBookingsForPagination,
+  ] = await Promise.all([
+    prisma.booking.count({ where: { status: "confirmed" } }),
+    prisma.booking.count({
+      where: { status: "confirmed", date: { gte: todayStart } },
+    }),
+    prisma.booking.findMany({
+      where: { date: { gte: todayStart, lt: todayEnd }, status: "confirmed" },
+      orderBy: { timeSlot: "asc" },
+    }),
     prisma.review.count(),
     prisma.message.count(),
-  ]);
-
-  // Fetch paginated data
-  const [bookings, reviews, messages] = await Promise.all([
+    prisma.message.count({ where: { read: false } }),
     prisma.booking.findMany({
       orderBy: { createdAt: "desc" },
-      skip: (bookingPage - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
-    }),
-    prisma.review.findMany({
-      orderBy: { createdAt: "desc" },
-      skip: (reviewPage - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
+      take: 5,
     }),
     prisma.message.findMany({
       orderBy: { createdAt: "desc" },
-      skip: (messagePage - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
+      take: 5,
     }),
+    prisma.booking.findMany({
+      orderBy: { createdAt: "desc" },
+      skip: (bookingsPage - 1) * PER_PAGE,
+      take: PER_PAGE,
+    }),
+    prisma.review.findMany({
+      orderBy: { createdAt: "desc" },
+      skip: (reviewsPage - 1) * PER_PAGE,
+      take: PER_PAGE,
+    }),
+    prisma.message.findMany({
+      orderBy: { createdAt: "desc" },
+      skip: (messagesPage - 1) * PER_PAGE,
+      take: PER_PAGE,
+    }),
+    prisma.booking.findMany({
+      where: { date: { gte: todayStart, lt: weekEnd }, status: "confirmed" },
+      orderBy: [{ date: "asc" }, { timeSlot: "asc" }],
+    }),
+    prisma.booking.count(),
   ]);
 
-  // Stats queries (lightweight — just aggregates)
-  const upcomingCount = await prisma.booking.count({
-    where: { status: "confirmed", date: { gte: new Date() } },
-  });
-  const revenueResult = await prisma.booking.aggregate({
+  const confirmedBookings = await prisma.booking.findMany({
     where: { status: "confirmed" },
-    _sum: { price: true },
+    select: { price: true },
   });
-  const revenue = revenueResult._sum.price ?? 0;
+  const revenue = confirmedBookings.reduce(
+    (s, b) => s + (b.price ?? siteConfig.pricing.standardPrice),
+    0
+  );
 
-  const totalBookingPages = Math.ceil(totalBookings / PAGE_SIZE);
-  const totalReviewPages = Math.ceil(totalReviews / PAGE_SIZE);
-  const totalMessagePages = Math.ceil(totalMessages / PAGE_SIZE);
+  const avgRating =
+    totalReviews > 0
+      ? (
+          (await prisma.review.aggregate({ _avg: { rating: true } }))._avg
+            .rating || 0
+        ).toFixed(1)
+      : "—";
 
-  const buildUrl = (overrides: Record<string, number>) => {
-    const p = { bp: bookingPage, rp: reviewPage, mp: messagePage, ...overrides };
-    const qs = Object.entries(p)
-      .filter(([, v]) => v > 1)
-      .map(([k, v]) => `${k}=${v}`)
-      .join("&");
-    return `/admin${qs ? `?${qs}` : ""}`;
-  };
+  const totalReviewsForPagination = totalReviews;
+  const totalMessagesForPagination = totalMessages;
+
+  const scheduleDays: {
+    date: string;
+    dayName: string;
+    isToday: boolean;
+    bookings: typeof scheduleBookings;
+  }[] = [];
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(todayStart.getTime() + i * 86400000);
+    const iso = d.toISOString().split("T")[0];
+    scheduleDays.push({
+      date: iso,
+      dayName: d.toLocaleDateString("en-GB", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+      }),
+      isToday: i === 0,
+      bookings: scheduleBookings.filter(
+        (b) => b.date.toISOString().split("T")[0] === iso
+      ),
+    });
+  }
 
   return (
-    <div className="ww-page">
-      <div className="ww-container-mid">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-7 flex-wrap gap-3">
-          <div>
-            <Link href="/" className="ww-btn ww-btn-ghost text-sm mb-4">
-              <Icons.ArrowLeft size={16} /> Home
-            </Link>
-            <div className="ww-kicker mb-3">Admin</div>
-            <h1 className="ww-serif ww-title">Dashboard</h1>
-          </div>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3 mb-7">
-          {[
-            { label: "Total Bookings", value: totalBookings, color: "text-ww-green" },
-            { label: "Upcoming", value: upcomingCount, color: "text-ww-orange" },
-            { label: "Reviews", value: totalReviews, color: "text-ww-deep-green" },
-            { label: "Revenue", value: `£${revenue}`, color: "text-ww-brown" },
-          ].map((s, i) => (
-            <div key={i} className="ww-card p-5 text-center">
-              <div className={`ww-serif text-[1.8rem] font-bold ${s.color}`}>{s.value}</div>
-              <div className="text-[13px] text-ww-muted mt-1">{s.label}</div>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex flex-col gap-6">
-          {/* ── BOOKINGS ── */}
-          <section>
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="ww-serif text-[1.4rem]">Bookings</h2>
-              <span className="text-xs text-ww-muted">
-                Page {bookingPage} of {totalBookingPages || 1}
-              </span>
-            </div>
-            <div className="flex flex-col gap-3">
-              {bookings.length === 0 ? (
-                <Empty text="No bookings yet" />
-              ) : (
-                bookings.map((b) => (
-                  <div
-                    key={b.id}
-                    className={`ww-card p-5 ${b.status === "cancelled" ? "opacity-50" : ""}`}
-                  >
-                    <div className="flex justify-between items-start gap-3 flex-wrap">
-                      <div>
-                        <div className="font-semibold mb-1">
-                          {b.dogName}{" "}
-                          <span className="font-normal text-ww-muted">({b.dogBreed || b.dogSize})</span>
-                        </div>
-                        <div className="text-sm text-ww-muted">
-                          {b.ownerName} · {b.email} · {b.phone}
-                        </div>
-                        <div className="text-sm text-ww-deep-green font-medium mt-1.5">
-                          {formatDate(b.date.toISOString().split("T")[0])} at {b.timeSlot} · £
-                          {b.price || 18}
-                        </div>
-                        {b.notes && (
-                          <div className="text-[13px] text-ww-muted mt-1.5 italic">"{b.notes}"</div>
-                        )}
-                      </div>
-                      <div className="flex gap-2 items-center">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            b.status === "confirmed"
-                              ? "bg-ww-green/10 text-ww-deep-green"
-                              : "bg-ww-danger/10 text-ww-danger"
-                          }`}
-                        >
-                          {b.status}
-                        </span>
-                        {b.status === "confirmed" && (
-                          <form action={cancelBooking}>
-                            <input type="hidden" name="id" value={b.id} />
-                            <button
-                              title="Cancel booking"
-                              className="bg-transparent border-none cursor-pointer p-1 opacity-50 hover:opacity-100 transition-opacity"
-                            >
-                              <Icons.X size={16} />
-                            </button>
-                          </form>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-            <Pagination
-              current={bookingPage}
-              total={totalBookingPages}
-              prevHref={bookingPage > 1 ? buildUrl({ bp: bookingPage - 1 }) : undefined}
-              nextHref={bookingPage < totalBookingPages ? buildUrl({ bp: bookingPage + 1 }) : undefined}
-            />
-          </section>
-
-          {/* ── REVIEWS ── */}
-          <section>
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="ww-serif text-[1.4rem]">Reviews</h2>
-              <span className="text-xs text-ww-muted">
-                Page {reviewPage} of {totalReviewPages || 1}
-              </span>
-            </div>
-            <div className="flex flex-col gap-3">
-              {reviews.length === 0 ? (
-                <Empty text="No reviews yet" />
-              ) : (
-                reviews.map((r) => (
-                  <div key={r.id} className="ww-card p-5">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <div className="font-semibold mb-1">
-                          {r.name}{" "}
-                          {r.dogName && (
-                            <span className="font-normal text-ww-muted">· {r.dogName}</span>
-                          )}
-                        </div>
-                        <div className="flex gap-0.5 mb-2">
-                          {[1, 2, 3, 4, 5].map((s) => (
-                            <Icons.Star key={s} filled={s <= r.rating} size={14} />
-                          ))}
-                        </div>
-                        <p className="text-ww-muted text-sm leading-relaxed">{r.text}</p>
-                        <p className="text-ww-light text-xs mt-2">
-                          {new Date(r.createdAt).toLocaleDateString("en-GB")}
-                        </p>
-                      </div>
-                      <form action={deleteReview}>
-                        <input type="hidden" name="id" value={r.id} />
-                        <button
-                          title="Delete review"
-                          className="bg-transparent border-none cursor-pointer p-1 opacity-40 hover:opacity-100 transition-opacity"
-                        >
-                          <Icons.Trash size={16} />
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-            <Pagination
-              current={reviewPage}
-              total={totalReviewPages}
-              prevHref={reviewPage > 1 ? buildUrl({ rp: reviewPage - 1 }) : undefined}
-              nextHref={reviewPage < totalReviewPages ? buildUrl({ rp: reviewPage + 1 }) : undefined}
-            />
-          </section>
-
-          {/* ── MESSAGES ── */}
-          <section>
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="ww-serif text-[1.4rem]">Messages</h2>
-              <span className="text-xs text-ww-muted">
-                Page {messagePage} of {totalMessagePages || 1}
-              </span>
-            </div>
-            <div className="flex flex-col gap-3">
-              {messages.length === 0 ? (
-                <Empty text="No messages yet" />
-              ) : (
-                messages.map((m) => (
-                  <div key={m.id} className="ww-card p-5">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <div className="font-semibold mb-0.5">{m.name}</div>
-                        <div className="text-[13px] text-ww-muted mb-2">{m.email}</div>
-                        <p className="text-ww-muted text-sm leading-relaxed">{m.message}</p>
-                        <p className="text-ww-light text-xs mt-2">
-                          {new Date(m.createdAt).toLocaleDateString("en-GB")}
-                        </p>
-                      </div>
-                      <form action={deleteMessage}>
-                        <input type="hidden" name="id" value={m.id} />
-                        <button
-                          title="Delete message"
-                          className="bg-transparent border-none cursor-pointer p-1 opacity-40 hover:opacity-100 transition-opacity"
-                        >
-                          <Icons.Trash size={16} />
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-            <Pagination
-              current={messagePage}
-              total={totalMessagePages}
-              prevHref={messagePage > 1 ? buildUrl({ mp: messagePage - 1 }) : undefined}
-              nextHref={messagePage < totalMessagePages ? buildUrl({ mp: messagePage + 1 }) : undefined}
-            />
-          </section>
-        </div>
-      </div>
-    </div>
+    <AdminTabs
+      activeTab={activeTab}
+      stats={{
+        totalBookings: totalConfirmedBookings,
+        upcomingCount,
+        todayCount: todayBookings.length,
+        revenue,
+        totalReviews,
+        avgRating: String(avgRating),
+        totalMessages,
+        unreadMessages,
+      }}
+      todayBookings={todayBookings.map(serializeBooking)}
+      scheduleDays={scheduleDays.map((d) => ({
+        ...d,
+        bookings: d.bookings.map(serializeBooking),
+      }))}
+      recentBookings={recentBookings.map(serializeBooking)}
+      recentMessages={recentMessages.map(serializeMessage)}
+      allBookings={allBookingsPage.map(serializeBooking)}
+      allReviews={allReviewsPage.map(serializeReview)}
+      allMessages={allMessagesPage.map(serializeMessage)}
+      pagination={{
+        bookings: {
+          page: bookingsPage,
+          total: totalBookingsForPagination,
+          perPage: PER_PAGE,
+        },
+        reviews: {
+          page: reviewsPage,
+          total: totalReviewsForPagination,
+          perPage: PER_PAGE,
+        },
+        messages: {
+          page: messagesPage,
+          total: totalMessagesForPagination,
+          perPage: PER_PAGE,
+        },
+      }}
+      actions={{ cancelBooking, deleteReview, deleteMessage, markMessageRead }}
+    />
   );
 }
 
-/* ── Pagination Component ── */
-function Pagination({
-  current,
-  total,
-  prevHref,
-  nextHref,
-}: {
-  current: number;
-  total: number;
-  prevHref?: string;
-  nextHref?: string;
-}) {
-  if (total <= 1) return null;
-  return (
-    <div className="flex items-center justify-center gap-3 mt-4">
-      {prevHref ? (
-        <Link
-          href={prevHref}
-          className="ww-btn ww-btn-ghost text-sm"
-        >
-          ← Prev
-        </Link>
-      ) : (
-        <span className="ww-btn ww-btn-ghost text-sm opacity-50">← Prev</span>
-      )}
-      <span className="text-sm text-ww-muted">
-        {current} / {total}
-      </span>
-      {nextHref ? (
-        <Link
-          href={nextHref}
-          className="ww-btn ww-btn-ghost text-sm"
-        >
-          Next →
-        </Link>
-      ) : (
-        <span className="ww-btn ww-btn-ghost text-sm opacity-50">Next →</span>
-      )}
-    </div>
-  );
+function serializeBooking(b: PrismaBooking) {
+  return {
+    ...b,
+    date: b.date instanceof Date ? b.date.toISOString() : b.date,
+    createdAt: b.createdAt instanceof Date ? b.createdAt.toISOString() : b.createdAt,
+    updatedAt: b.updatedAt instanceof Date ? b.updatedAt.toISOString() : b.updatedAt,
+  };
+}
+
+function serializeReview(r: PrismaReview) {
+  return {
+    ...r,
+    createdAt: r.createdAt instanceof Date ? r.createdAt.toISOString() : r.createdAt,
+  };
+}
+
+function serializeMessage(m: PrismaMessage) {
+  return {
+    ...m,
+    createdAt: m.createdAt instanceof Date ? m.createdAt.toISOString() : m.createdAt,
+  };
 }

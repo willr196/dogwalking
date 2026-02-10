@@ -5,6 +5,7 @@ import { NavBar } from "@/components/willswalks/NavBar";
 import { Footer } from "@/components/willswalks/Footer";
 import { Icons } from "@/components/willswalks/Icons";
 import { FAQ } from "@/components/willswalks/FAQ";
+import { LocalBusinessSchema } from "@/components/willswalks/JsonLd";
 import { AREAS, WALK_PRICE } from "@/components/willswalks/constants";
 
 function StarRating({ count = 5 }: { count?: number }) {
@@ -24,6 +25,7 @@ export default async function Home() {
     <>
       <div className="grain-overlay" />
       <NavBar />
+      <LocalBusinessSchema />
 
       {/* ── HERO ── */}
       <section className="min-h-[90vh] flex items-center ww-hero relative overflow-hidden">
@@ -32,8 +34,8 @@ export default async function Home() {
         <div className="absolute -top-[30%] -right-[15%] w-[60%] h-[120%] bg-[radial-gradient(ellipse,rgba(90,143,110,0.12)_0%,transparent_70%)] pointer-events-none" />
         <div className="absolute -bottom-[20%] -left-[10%] w-1/2 h-[60%] bg-[radial-gradient(ellipse,rgba(232,149,106,0.08)_0%,transparent_70%)] pointer-events-none" />
 
-        <div className="ww-container grid grid-cols-2 gap-14 items-center relative z-[1] w-full hero-grid">
-          <div className="anim-fade-up max-w-[560px]">
+        <div className="ww-container grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-14 items-center relative z-[1] w-full">
+          <div className="anim-fade-up max-w-[560px] mx-auto lg:mx-0 text-center lg:text-left">
             {/* Star rating + review count badge */}
             {reviewCount > 0 && (
               <div className="inline-flex items-center gap-2 mb-4">
@@ -45,55 +47,50 @@ export default async function Home() {
             )}
 
             <div className="inline-flex items-center gap-2 bg-ww-green/10 px-4 py-2 rounded-full text-[13px] font-semibold text-ww-deep-green mb-5">
-              🐕 Solo walks only · Limited weekly slots
+              🐕 Personalised walks · Limited weekly slots
             </div>
 
             <h1 className="ww-serif text-[clamp(2.4rem,5vw,3.6rem)] leading-[1.08] mb-5">
-              Calm, one-on-one walks
+              Calm, personalised walks
               <br />
               <span className="text-ww-green italic">your dog deserves</span>
             </h1>
 
             <p className="ww-lede mb-6 max-w-[520px]">
-              No packs. No distractions. Just undivided attention, a calmer dog
-              when you get home, and photo updates so you never miss a moment.
+              Solo walks and carefully managed small groups (max 3) tailored to
+              your dog&apos;s pace and personality. Expect a calmer dog when you get
+              home, and photo updates so you never miss a moment.
             </p>
 
             {/* Trust signals — above the fold */}
-            <div className="flex flex-wrap gap-x-5 gap-y-2 mb-7 text-[13px] text-ww-muted font-medium">
+            <div className="flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 mb-7 text-[13px] text-ww-muted font-medium">
               <span className="flex items-center gap-1.5">
-                <Icons.Shield size={15} color="var(--green)" /> Fully insured
+                <Icons.Dog size={15} color="var(--green)" /> Max 3 dogs per walk
               </span>
               <span className="flex items-center gap-1.5">
-                <Icons.Check size={15} color="var(--green)" /> DBS checked
+                <Icons.Check size={15} color="var(--green)" /> Meet &amp; greet required
               </span>
               <span className="flex items-center gap-1.5">
                 <Icons.Camera size={15} color="var(--green)" /> Photo updates
               </span>
               <span className="flex items-center gap-1.5">
-                <Icons.Heart size={15} filled /> Solo walks only
+                <Icons.Shield size={15} color="var(--green)" /> Safety-first handling
               </span>
             </div>
 
-            <div className="flex gap-3 flex-wrap items-center mt-2">
-              <Link
-                href="/booking"
-                className="ww-btn ww-btn-primary text-[16px]"
-              >
-                <Icons.Calendar size={19} color="white" /> Book a Walk — £{WALK_PRICE}
+            <div className="flex gap-3 flex-wrap items-center justify-center lg:justify-start mt-2">
+              <Link href="/booking" className="ww-btn ww-btn-primary text-[16px]">
+                <Icons.Calendar size={19} color="white" /> Book a Meet &amp; Greet
               </Link>
-              <Link
-                href="/contact"
-                className="ww-btn ww-btn-secondary text-[16px]"
-              >
+              <Link href="/contact" className="ww-btn ww-btn-secondary text-[16px]">
                 Get in Touch
               </Link>
             </div>
           </div>
 
-          <div className="flex justify-center items-center relative hero-visual-col">
+          <div className="flex justify-center items-center relative order-first lg:order-none mb-10 lg:mb-0">
             <div
-              className="w-full max-w-[420px] aspect-square relative flex items-center justify-center overflow-hidden"
+              className="w-full max-w-[240px] sm:max-w-[320px] lg:max-w-[420px] aspect-square relative flex items-center justify-center overflow-hidden"
               style={{
                 background: "linear-gradient(145deg, var(--green), var(--dark-green))",
                 animation: "blobMorph 8s ease-in-out infinite",
@@ -103,13 +100,13 @@ export default async function Home() {
               <span className="text-[7rem] drop-shadow-[0_10px_30px_rgba(0,0,0,0.15)]">🐕</span>
             </div>
             <div
-              className="absolute top-[8%] right-[2%] bg-ww-warm-white px-4.5 py-3 rounded-[18px] shadow-ww-lg font-semibold text-sm"
+              className="hidden lg:block absolute top-[8%] right-[2%] bg-ww-warm-white px-4.5 py-3 rounded-[18px] shadow-ww-lg font-semibold text-sm"
               style={{ animation: "float 3s ease-in-out infinite" }}
             >
-              ⭐ Solo walks only
+              ⭐ Personal walks
             </div>
             <div
-              className="absolute bottom-[12%] left-[2%] bg-ww-warm-white px-4.5 py-3 rounded-[18px] shadow-ww-lg font-semibold text-sm"
+              className="hidden lg:block absolute bottom-[12%] left-[2%] bg-ww-warm-white px-4.5 py-3 rounded-[18px] shadow-ww-lg font-semibold text-sm"
               style={{ animation: "float 3s ease-in-out infinite 1.5s" }}
             >
               📍 Fulham, SW6
@@ -118,45 +115,35 @@ export default async function Home() {
         </div>
       </section>
 
-      <style>{`
-        @media (max-width: 900px) {
-          .hero-grid { grid-template-columns: 1fr !important; text-align: center; }
-          .hero-visual-col { order: -1 !important; }
-          .hero-visual-col > div:first-child { max-width: 240px !important; }
-          .hero-visual-col > div:not(:first-child) { display: none; }
-        }
-      `}</style>
-
       {/* ── SERVICES ── */}
       <section id="services" className="ww-section bg-ww-warm-white">
         <div className="ww-container">
           <div className="text-center mb-12">
             <div className="ww-kicker mb-3">Signature Service</div>
-            <h2 className="ww-serif ww-title mb-3">One Dog. One Walk. Total Focus.</h2>
+            <h2 className="ww-serif ww-title mb-3">Personalised Walks. Total Focus.</h2>
             <p className="ww-lede">
-              Your dog gets my undivided attention — no pack chaos, no rushed schedules.
-              Just a calm, enriching walk tailored to them.
+              Your dog gets my undivided attention — walks tailored to their needs and pace.
             </p>
           </div>
 
           <div
-            className="bg-ww-cream rounded-[28px] p-[clamp(24px,4vw,40px)] shadow-ww grid grid-cols-[auto_1fr_auto] gap-[clamp(16px,3vw,32px)] items-center transition-all duration-300 service-grid"
+            className="bg-ww-cream rounded-[28px] p-[clamp(24px,4vw,40px)] shadow-ww grid grid-cols-1 lg:grid-cols-[auto_1fr_auto] gap-[clamp(16px,3vw,32px)] items-center text-center lg:text-left transition-all duration-300"
           >
             <div
-              className="w-20 h-20 rounded-full flex items-center justify-center text-[2.2rem] shrink-0"
+              className="w-20 h-20 rounded-full flex items-center justify-center text-[2.2rem] shrink-0 mx-auto lg:mx-0"
               style={{ background: "linear-gradient(135deg, var(--green), var(--deep-green))" }}
             >
               🦮
             </div>
             <div>
-              <h3 className="ww-serif text-[1.4rem] mb-1.5">Solo Dog Walk</h3>
+              <h3 className="ww-serif text-[1.4rem] mb-1.5">Individual Dog Walk</h3>
               <p className="text-ww-muted leading-relaxed">
-                A full hour of one-on-one time. Your dog gets proper exercise, mental
+                A full hour of one‑on‑one time. Your dog gets proper exercise, mental
                 stimulation, and a calmer, happier return home. You&apos;ll receive photo
                 updates during the walk so you can see them enjoying every moment.
               </p>
-              <div className="flex flex-wrap gap-2 mt-3.5">
-                {["60 minutes", "1-on-1 only", "Photo updates", "GPS tracked route", "Flexible scheduling"].map(
+              <div className="flex flex-wrap justify-center lg:justify-start gap-2 mt-3.5">
+                {["60 minutes", "Individual attention", "Photo updates", "GPS tracked route", "Flexible scheduling"].map(
                   (tag) => (
                     <span
                       key={tag}
@@ -181,33 +168,31 @@ export default async function Home() {
               </Link>
             </div>
           </div>
-
-          <style>{`@media (max-width: 768px) { .service-grid { grid-template-columns: 1fr !important; text-align: center; justify-items: center; } }`}</style>
         </div>
       </section>
 
-      {/* ── WHY SOLO? ── */}
+      {/* ── WHY PERSONAL? ── */}
       <section className="ww-section-tight bg-ww-cream">
         <div className="ww-container">
           <h2 className="ww-serif ww-title text-center mb-10">
-            Why Solo Walks Make All the Difference
+            Why Personalised Walks Make All the Difference
           </h2>
-          <div className="grid grid-cols-3 gap-6 why-solo-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1280px] mx-auto">
             {[
               {
                 icon: "🧘",
                 title: "A Calmer Dog",
-                text: "No pack stress or overstimulation. Your dog comes home relaxed and content, not wired and anxious.",
+                text: "Fewer distractions. Your dog comes home relaxed and content.",
               },
               {
                 icon: "👀",
-                title: "Undivided Attention",
-                text: "I notice the small things — a limp, a mood change, a new fear. Nothing gets missed when it's just us.",
+                title: "Focused Care",
+                text: "One‑on‑one walks let me notice the small things — a limp, a mood change, a new fear. Nothing gets missed.",
               },
               {
                 icon: "🔒",
-                title: "Safer for Everyone",
-                text: "No risk of dog-on-dog incidents. Reactive dogs, nervous dogs, elderly dogs — all welcome and safe.",
+                title: "Tailored Safety",
+                text: "Individual walks mean a controlled environment that suits your dog’s needs, especially for reactive, nervous or elderly dogs.",
               },
             ].map((item) => (
               <div
@@ -220,17 +205,14 @@ export default async function Home() {
               </div>
             ))}
           </div>
-          <style>{`@media (max-width: 768px) { .why-solo-grid { grid-template-columns: 1fr !important; max-width: 400px; margin: 0 auto; } }`}</style>
         </div>
       </section>
 
       {/* ── ABOUT ── */}
       <section id="about" className="ww-section bg-ww-warm-white">
         <div className="ww-container">
-          <div
-            className="grid grid-cols-[1fr_1.3fr] gap-12 items-center about-grid-layout"
-          >
-            <div>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] gap-10 lg:gap-12 items-center">
+            <div className="max-w-[320px] sm:max-w-[380px] lg:max-w-none mx-auto lg:mx-0">
               {/* Image slot — replace with a real photo for maximum trust */}
               <div
                 className="w-full aspect-[4/5] rounded-[28px] flex items-center justify-center text-[5rem] overflow-hidden shadow-ww"
@@ -240,37 +222,33 @@ export default async function Home() {
                 🧑
               </div>
             </div>
-            <div>
+            <div className="text-center lg:text-left">
               <div className="ww-kicker mb-3">Your Walker</div>
               <h2 className="ww-serif ww-title mb-5">
                 Hi, I&apos;m Will
               </h2>
-              <p className="text-ww-muted mb-4 leading-[1.7] max-w-[480px]">
-                I&apos;m a Fulham local who chose solo walking for a reason — I saw too
-                many pack walkers juggling six leads and a phone. Your dog deserves
-                better than being one of many.
+              <p className="text-ww-muted mb-4 leading-[1.7] max-w-[480px] mx-auto lg:mx-0">
+                I&apos;m a Fulham local who keeps walks personal, solo walks and small
+                groups capped at 3 dogs. Each walk is paced and planned around
+                your dog&apos;s needs.
               </p>
-              <p className="text-ww-muted mb-4 leading-[1.7] max-w-[480px]">
-                When your dog is with me, they get my full focus. I learn their
-                quirks, their favourite sniff spots, and what makes them happiest. I
-                send you photos mid-walk so you can see them thriving.
+              <p className="text-ww-muted mb-4 leading-[1.7] max-w-[480px] mx-auto lg:mx-0">
+                When your dog is with me, they get my full focus. I learn their quirks, their favourite sniff spots, and what makes them happiest. I send you photos mid‑walk so you can see them thriving.
               </p>
-              <p className="text-ww-muted leading-[1.7] max-w-[480px] font-medium">
-                Fully insured, DBS checked, and genuinely obsessed with giving
-                dogs the best hour of their day.
+              <p className="text-ww-muted leading-[1.7] max-w-[480px] font-medium mx-auto lg:mx-0">
+                Meet &amp; greet required, clear safety rules, and genuinely obsessed
+                with giving dogs the best hour of their day.
               </p>
 
               {/* Trust credentials — visual strip */}
-              <div className="grid grid-cols-3 gap-5 mt-8 pt-8 border-t border-ww-green/12">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mt-8 pt-8 border-t border-ww-green/12">
                 {[
-                  { icon: <Icons.Shield size={22} color="white" />, label: "Fully Insured" },
-                  { icon: <Icons.Check size={22} color="white" />, label: "DBS Checked" },
+                  { icon: <Icons.Dog size={22} color="white" />, label: "Max 3 Dogs" },
+                  { icon: <Icons.Check size={22} color="white" />, label: "Meet & Greet" },
                   { icon: <Icons.Camera size={22} color="white" />, label: "Photo Updates" },
                 ].map((stat, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-ww-green"
-                    >
+                  <div key={i} className="flex items-center gap-3 justify-center sm:justify-start">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-ww-green">
                       {stat.icon}
                     </div>
                     <span className="text-[13px] font-semibold text-ww-text leading-tight">
@@ -281,7 +259,6 @@ export default async function Home() {
               </div>
             </div>
           </div>
-          <style>{`@media (max-width: 768px) { .about-grid-layout { grid-template-columns: 1fr !important; } .about-grid-layout > div:first-child { max-width: 280px; margin: 0 auto; } }`}</style>
         </div>
       </section>
 
@@ -349,13 +326,13 @@ export default async function Home() {
             Limited slots each week to keep every walk personal. Book yours before they fill up.
           </p>
           <p className="opacity-70 text-sm mb-7">
-            £{WALK_PRICE} per walk · 60 minutes · Solo attention
+            £{WALK_PRICE} per walk · 60 minutes · Individual attention
           </p>
           <Link
             href="/booking"
             className="ww-btn text-[17px] font-bold bg-white text-ww-deep-green shadow-[0_4px_16px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.2)]"
           >
-            Book Now — £{WALK_PRICE}/walk
+            Book a Meet &amp; Greet
           </Link>
         </div>
       </section>

@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
-import { WALK_PRICE } from "@/components/willswalks/constants";
 import { createRateLimiter, getIP } from "@/lib/rate-limit";
 import { Prisma } from "@prisma/client";
 
@@ -21,8 +20,18 @@ const bookingSchema = z.object({
   notes: z.string().max(500).optional().or(z.literal("")),
 });
 
+// Simple sanitization helper to escape HTML special characters.
+function sanitizeString(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export async function GET() {
-  // ✅ FIX: Only return the minimal data needed for the booking form to
+  // Only return the minimal data needed for the booking form to
   // show which slots are taken — no status, no other booking details.
   const today = new Date();
   const bookings = await prisma.booking.findMany({
@@ -36,7 +45,7 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  // ✅ FIX: Rate limiting
+  // Rate limiting
   const ip = getIP(req);
   if (!limiter.check(ip)) {
     return NextResponse.json(
@@ -46,9 +55,6 @@ export async function POST(req: Request) {
   }
 
   const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
 
   const body = await req.json().catch(() => null);
   const parsed = bookingSchema.safeParse(body);
@@ -57,35 +63,39 @@ export async function POST(req: Request) {
   }
 
   const data = parsed.data;
+  // Sanitize free‑text fields to prevent HTML/JS injection.
+  const sanitizedData = {
+    ...data,
+    ownerName: sanitizeString(data.ownerName),
+    dogName: sanitizeString(data.dogName),
+    dogBreed: data.dogBreed ? sanitizeString(data.dogBreed) : data.dogBreed,
+    notes: data.notes ? sanitizeString(data.notes) : data.notes,
+  };
 
-  // ✅ FIX: Use explicit UTC midnight to avoid timezone-dependent parsing.
-  // The original `new Date(`${date}T00:00:00`)` parses in the server's
-  // local timezone, which causes off-by-one date bugs when deployed to
-  // cloud providers running in UTC.
+  // Use explicit UTC midnight to avoid timezone-dependent parsing.
   const date = new Date(`${data.date}T00:00:00.000Z`);
 
   try {
     const booking = await prisma.booking.create({
       data: {
-        ownerName: data.ownerName,
-        email: data.email,
-        phone: data.phone,
-        dogName: data.dogName,
-        dogBreed: data.dogBreed || null,
-        dogSize: data.dogSize,
+        ownerName: sanitizedData.ownerName,
+        email: sanitizedData.email,
+        phone: sanitizedData.phone,
+        dogName: sanitizedData.dogName,
+        dogBreed: sanitizedData.dogBreed || null,
+        dogSize: sanitizedData.dogSize,
         date,
-        timeSlot: data.timeSlot,
-        notes: data.notes || null,
-        // ✅ FIX: Use the shared constant instead of a hardcoded value.
-        price: WALK_PRICE,
+        timeSlot: sanitizedData.timeSlot,
+        notes: sanitizedData.notes || null,
+        // Meet & greet booking (free). Actual walk pricing is agreed after.
+        price: 0,
         status: "confirmed",
-        userId: session.user.id,
+        userId: session?.user?.id ?? null,
       },
     });
     return NextResponse.json({ ok: true, booking });
   } catch (err) {
-    // ✅ FIX: Discriminate between unique constraint violations (= slot
-    // already booked) and unexpected errors (= something else went wrong).
+    // Discriminate between unique constraint violations (= slot already booked) and unexpected errors.
     if (
       err instanceof Prisma.PrismaClientKnownRequestError &&
       err.code === "P2002"

@@ -38,16 +38,17 @@ export default function SignUpPage() {
   if (verificationSent) {
     return (
       <div className="ww-page">
-        <div className="ww-container-compact">
+        <div className="ww-container">
           <div className="ww-card p-8 text-center">
             <div className="text-5xl mb-4">📧</div>
             <h1 className="ww-serif ww-title mb-2">Check Your Email</h1>
             <p className="ww-lede mb-6">
-              We've sent a verification link to <strong className="text-ww-text">{email}</strong>.
+              We&apos;ve sent a verification link to{" "}
+              <strong className="text-ww-text">{email}</strong>.
               Click the link to activate your account.
             </p>
             <p className="text-ww-muted text-sm mb-6">
-              The link expires in 24 hours. Check your spam folder if you don't see it.
+              The link expires in 24 hours. Check your spam folder if you don&apos;t see it.
             </p>
             <Link
               href="/sign-in"
@@ -63,7 +64,7 @@ export default function SignUpPage() {
 
   return (
     <div className="ww-page">
-      <div className="ww-container-compact">
+      <div className="ww-container">
         <Link href="/" className="ww-btn ww-btn-ghost text-sm mb-6">
           <Icons.ArrowLeft size={18} /> Home
         </Link>
