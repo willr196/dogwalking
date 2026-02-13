@@ -1,64 +1,76 @@
-import { NavBar } from "@/components/willswalks/NavBar";
-import { Footer } from "@/components/willswalks/Footer";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { siteConfig } from "@/lib/site.config";
+import {
+  PageLayout,
+  Section,
+  Breadcrumbs,
+} from "@/components/willswalks/PageLayout";
+import { getDogBreedsForDictionary } from "@/lib/dog-breeds.server";
+import { BreedDictionary } from "./BreedDictionary";
 
-/**
- * DogBreedsPage provides educational information on small, medium and large dog breeds.
- * Each section lists examples, typical characteristics and exercise recommendations.
- */
-export default function DogBreedsPage() {
+export const metadata: Metadata = {
+  title: `Dog Breed Dictionary | ${siteConfig.brandName}`,
+  description:
+    "An editable dog breed dictionary with a large breed list, rare-breed category, and click-open detail bubbles.",
+  alternates: { canonical: `${siteConfig.siteUrl}/dog-breeds` },
+  openGraph: {
+    title: `Dog Breed Dictionary | ${siteConfig.brandName}`,
+    description:
+      "Explore a large, filterable breed dictionary and open quick profile bubbles for each breed.",
+    url: `${siteConfig.siteUrl}/dog-breeds`,
+    type: "website",
+    locale: siteConfig.seo.locale,
+  },
+};
+
+export const revalidate = 60;
+
+export default async function DogBreedsPage() {
+  const breeds = await getDogBreedsForDictionary();
+
   return (
-    <>
-      <NavBar />
-      <main className="ww-page">
-        <section className="ww-container space-y-16">
-          <h1 className="font-serif text-4xl font-bold text-ww-deep-green">
-            Dog Breed Guide
-          </h1>
-          {/* Small breeds */}
-          <div>
-            <h2 className="font-serif text-3xl font-semibold text-ww-deep-green mb-2">
-              Small Breeds
-            </h2>
-            <p className="text-ww-text mb-3">
-              Typical examples include Chihuahua, Pomeranian and Dachshund.
-              These compact companions are lively and alert — perfect for urban living — but they still need regular exercise.
-            </p>
-            <ul className="list-disc pl-6 text-ww-text">
-              <li>Characteristics: small size, often vocal, affectionate</li>
-              <li>Exercise: daily walks of 20–30 minutes plus playtime</li>
-            </ul>
+    <PageLayout>
+      <Section>
+        <Breadcrumbs
+          items={[{ label: "Home", href: "/" }, { label: "Dog Breeds" }]}
+        />
+
+        <h1 className="ww-serif text-[clamp(2rem,4vw,2.8rem)] leading-tight mb-4">
+          Dog Breed Dictionary
+        </h1>
+        <p className="text-[var(--muted)] text-lg leading-relaxed max-w-[720px] mb-8">
+          Browse a large dog-breed dictionary with quick filters and search.
+          Click any breed card to pop open a detail bubble with temperament,
+          exercise, and care notes, then jump into full breed profile pages.
+        </p>
+
+        <BreedDictionary breeds={breeds} />
+
+        <div className="mt-14 rounded-2xl bg-[var(--cream)] p-8">
+          <h2 className="ww-serif text-2xl font-semibold mb-3">
+            Need help choosing the right walk style?
+          </h2>
+          <p className="text-[var(--muted)] mb-6 max-w-[680px]">
+            Every dog is different. A quick meet and greet helps us plan the
+            right pace, duration, and routine for your dog.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/booking"
+              className="inline-flex items-center gap-2 bg-[var(--green)] text-white px-7 py-3 rounded-full font-semibold hover:opacity-90 transition-opacity"
+            >
+              Book a Meet &amp; Greet
+            </Link>
+            <Link
+              href="/services"
+              className="inline-flex items-center gap-2 bg-white text-[var(--text)] border-2 border-[var(--green)]/20 px-7 py-3 rounded-full font-semibold hover:border-[var(--green)]/40 transition-colors"
+            >
+              View Services
+            </Link>
           </div>
-          {/* Medium breeds */}
-          <div>
-            <h2 className="font-serif text-3xl font-semibold text-ww-deep-green mb-2">
-              Medium Breeds
-            </h2>
-            <p className="text-ww-text mb-3">
-              Popular medium-sized dogs include the Beagle, Border Collie and Cocker Spaniel. They are energetic, intelligent and make great family pets.
-            </p>
-            <ul className="list-disc pl-6 text-ww-text">
-              <li>Characteristics: athletic, intelligent, eager to please</li>
-              <li>Exercise: 45–60 minute walks plus mental stimulation (puzzle toys, fetch)</li>
-            </ul>
-          </div>
-          {/* Large breeds */}
-          <div>
-            <h2 className="font-serif text-3xl font-semibold text-ww-deep-green mb-2">
-              Large Breeds
-            </h2>
-            <p className="text-ww-text mb-3">
-              Large dogs like the Labrador Retriever, German Shepherd and Great Dane are known for their strength and gentle nature.
-              They require more space and consistent training.
-            </p>
-            <ul className="list-disc pl-6 text-ww-text">
-              <li>Characteristics: strong, loyal, often work or service breeds</li>
-              <li>Exercise: 60–90 minute walks and varied activities (swimming, hiking)</li>
-              <li>Note: avoid high-impact running for very young or senior dogs to protect joints</li>
-            </ul>
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </>
+        </div>
+      </Section>
+    </PageLayout>
   );
 }

@@ -11,16 +11,13 @@ export async function createVerificationToken(email: string): Promise<string> {
   const token = randomBytes(32).toString("hex");
   const expires = new Date(Date.now() + VERIFICATION_EXPIRY_HOURS * 60 * 60 * 1000);
 
-  // Upsert: if there's already a pending token for this email, replace it
-  await prisma.verificationToken.upsert({
-    where: { identifier_token: { identifier: email, token } },
-    create: { identifier: email, token, expires },
-    update: { token, expires },
+  // Keep only one active token per email to avoid stale-link confusion.
+  await prisma.verificationToken.deleteMany({
+    where: { identifier: email },
   });
 
-  // Clean up any other expired tokens for this identifier
-  await prisma.verificationToken.deleteMany({
-    where: { identifier: email, expires: { lt: new Date() } },
+  await prisma.verificationToken.create({
+    data: { identifier: email, token, expires },
   });
 
   return token;

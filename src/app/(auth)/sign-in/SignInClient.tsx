@@ -5,13 +5,18 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { Icons } from "@/components/willswalks/Icons";
+import { getSignInErrorMessage } from "@/lib/sign-in-errors";
 
 export function SignInClient({
   initialError,
   verified,
+  registered,
+  registeredAccountType,
 }: {
   initialError?: string | null;
   verified?: boolean;
+  registered?: boolean;
+  registeredAccountType?: "owner" | "walker";
 }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -22,75 +27,95 @@ export function SignInClient({
   const submit = async () => {
     setLoading(true);
     setError(null);
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-    setLoading(false);
-    if (result?.error) {
-      setError("Invalid email or password.");
-      return;
+    try {
+      const result = await signIn("credentials", {
+        email: email.trim(),
+        password,
+        redirect: false,
+      });
+      if (result?.error) {
+        setError(getSignInErrorMessage(result.error, result.code));
+        return;
+      }
+      router.push("/");
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    router.push("/");
   };
 
   return (
-    <div className="ww-page">
-      <div className="ww-container">
-        <Link href="/" className="ww-btn ww-btn-ghost text-sm mb-6">
+    <div className="min-h-screen px-5 pt-[120px] pb-[60px] bg-[var(--cream)]">
+      <div className="max-w-[420px] mx-auto">
+        <Link href="/" className="flex items-center gap-2 text-[var(--muted)] mb-6 no-underline hover:text-[var(--deep-green)] transition-colors">
           <Icons.ArrowLeft size={18} /> Home
         </Link>
-        <div className="ww-card p-8">
-          <div className="ww-kicker mb-3">Account</div>
-          <h1 className="ww-serif ww-title mb-2">Welcome Back</h1>
-          <p className="ww-lede mb-6 text-left">
+
+        <div className="bg-[var(--warm-white)] rounded-3xl p-8 shadow-[var(--shadow)]">
+          <h1 className="ww-serif text-[1.9rem] mb-2">Welcome Back</h1>
+          <p className="text-[var(--muted)] mb-6">
             Sign in to book walks and leave reviews.
           </p>
 
           {verified && (
-            <div className="bg-ww-green/10 text-ww-deep-green px-3 py-2.5 rounded-[10px] mb-3.5 text-sm font-medium">
-              ✅ Email verified successfully! You can now sign in.
+            <div className="bg-[rgba(107,158,126,0.12)] text-[var(--deep-green)] px-4 py-3 rounded-2xl text-sm mb-4">
+              Email verified. You can sign in now.
+            </div>
+          )}
+
+          {registered && (
+            <div className="bg-[rgba(107,158,126,0.12)] text-[var(--deep-green)] px-4 py-3 rounded-2xl text-sm mb-4">
+              {registeredAccountType === "walker"
+                ? "Walker account created. Check your email to verify your address before signing in."
+                : "Account created. Check your email to verify your address before signing in."}
             </div>
           )}
 
           {error && (
-            <div className="bg-ww-danger/10 text-ww-danger px-3 py-2.5 rounded-[10px] mb-3.5 text-sm">
+            <div className="bg-[rgba(217,83,79,0.08)] text-[var(--danger)] px-4 py-3 rounded-2xl text-sm mb-4">
               {error}
             </div>
           )}
 
-          <div className="flex flex-col gap-3">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              className="ww-input"
-            />
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              className="ww-input"
-            />
-            <button
-              onClick={submit}
-              disabled={loading}
-              className="ww-btn ww-btn-primary w-full disabled:opacity-50"
-            >
-              {loading ? <span className="spinner" /> : "Sign In"}
-            </button>
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-[var(--text)]">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--light)] bg-[var(--cream)] text-[var(--text)] text-sm transition-colors duration-200 focus:border-[var(--green)] focus:outline-none"
+                autoComplete="email"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2 text-[var(--text)]">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--light)] bg-[var(--cream)] text-[var(--text)] text-sm transition-colors duration-200 focus:border-[var(--green)] focus:outline-none"
+                autoComplete="current-password"
+                onKeyDown={(e) => e.key === "Enter" && submit()}
+              />
+            </div>
           </div>
 
-          <p className="mt-4.5 text-ww-muted text-sm">
-            No account yet?{" "}
-            <Link
-              href="/sign-up"
-              className="text-ww-deep-green font-semibold no-underline hover:underline"
-            >
-              Create one
+          <button
+            onClick={submit}
+            disabled={loading}
+            className="mt-6 w-full bg-[var(--green)] text-white py-[14px] rounded-full font-semibold text-[15px] transition-all duration-200 hover:bg-[var(--deep-green)] cursor-pointer border-none disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {loading ? <span className="spinner" /> : "Sign In"}
+          </button>
+
+          <p className="text-center text-sm text-[var(--muted)] mt-5">
+            Don&apos;t have an account?{" "}
+            <Link href="/sign-up" className="text-[var(--green)] font-semibold no-underline hover:underline">
+              Sign Up
             </Link>
           </p>
         </div>

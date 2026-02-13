@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site.config";
+import { getDogBreedsForDictionary } from "@/lib/dog-breeds.server";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.siteUrl;
   const lastModified = new Date();
 
@@ -12,6 +13,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/services/small-group-dog-walking`, lastModified, changeFrequency: "monthly" as const, priority: 0.8 },
     { url: `${baseUrl}/pricing`, lastModified, changeFrequency: "monthly" as const, priority: 0.8 },
     { url: `${baseUrl}/about`, lastModified, changeFrequency: "monthly" as const, priority: 0.7 },
+    { url: `${baseUrl}/walkers`, lastModified, changeFrequency: "weekly" as const, priority: 0.7 },
+    { url: `${baseUrl}/dog-breeds`, lastModified, changeFrequency: "monthly" as const, priority: 0.7 },
     { url: `${baseUrl}/reviews`, lastModified, changeFrequency: "weekly" as const, priority: 0.7 },
     { url: `${baseUrl}/faq`, lastModified, changeFrequency: "monthly" as const, priority: 0.7 },
     { url: `${baseUrl}/contact`, lastModified, changeFrequency: "monthly" as const, priority: 0.7 },
@@ -30,6 +33,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...areaPages];
-}
+  const breeds = await getDogBreedsForDictionary();
+  const breedPages = breeds.map((breed) => ({
+    url: `${baseUrl}/dog-breeds/${breed.slug}`,
+    lastModified,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
 
+  return [...staticPages, ...areaPages, ...breedPages];
+}

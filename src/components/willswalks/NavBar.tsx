@@ -40,6 +40,8 @@ export function NavBar() {
         {/* Desktop Navigation */}
         <div className="flex gap-7 items-center desktop-nav">
           <Link href="/#services" className={navLinkClasses}>Services</Link>
+          <Link href="/walkers" className={navLinkClasses}>Find a Walker</Link>
+          <Link href="/dog-breeds" className={navLinkClasses}>Dog Breeds</Link>
           <Link href="/#about" className={navLinkClasses}>About</Link>
           <Link href="/reviews" className={navLinkClasses}>Reviews</Link>
           <Link
@@ -78,6 +80,8 @@ export function NavBar() {
           role="menu"
         >
           <Link href="/#services" onClick={closeMenu} className={mobileNavLinkClasses} role="menuitem">Services</Link>
+          <Link href="/walkers" onClick={closeMenu} className={mobileNavLinkClasses} role="menuitem">Find a Walker</Link>
+          <Link href="/dog-breeds" onClick={closeMenu} className={mobileNavLinkClasses} role="menuitem">Dog Breeds</Link>
           <Link href="/#about" onClick={closeMenu} className={mobileNavLinkClasses} role="menuitem">About</Link>
           <Link href="/reviews" onClick={closeMenu} className={mobileNavLinkClasses} role="menuitem">Reviews</Link>
           <Link href="/booking" onClick={closeMenu} className={mobileNavLinkClasses} role="menuitem">Book a Walk</Link>
