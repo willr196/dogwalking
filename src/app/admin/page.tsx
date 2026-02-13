@@ -1,20 +1,16 @@
-import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
-import { siteConfig } from "@/lib/site.config";
-import { AdminTabs } from "./AdminTabs";
-import type {
-  Booking as PrismaBooking,
-  Review as PrismaReview,
-  Message as PrismaMessage,
-} from "@prisma/client";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+import { Icons } from "@/components/willswalks/Icons";
+import { Empty } from "@/components/willswalks/Empty";
+import { formatDate } from "@/components/willswalks/utils";
 
+// Admin is always dynamic (auth-gated)
 export const dynamic = "force-dynamic";
 
 async function cancelBooking(formData: FormData) {
   "use server";
-  const session = await auth();
-  if (!session?.user || session.user.role !== "ADMIN") return;
   const id = formData.get("id")?.toString();
   if (!id) return;
   await prisma.booking.update({ where: { id }, data: { status: "cancelled" } });
@@ -22,8 +18,6 @@ async function cancelBooking(formData: FormData) {
 
 async function deleteReview(formData: FormData) {
   "use server";
-  const session = await auth();
-  if (!session?.user || session.user.role !== "ADMIN") return;
   const id = formData.get("id")?.toString();
   if (!id) return;
   await prisma.review.delete({ where: { id } });
@@ -31,208 +25,187 @@ async function deleteReview(formData: FormData) {
 
 async function deleteMessage(formData: FormData) {
   "use server";
-  const session = await auth();
-  if (!session?.user || session.user.role !== "ADMIN") return;
   const id = formData.get("id")?.toString();
   if (!id) return;
   await prisma.message.delete({ where: { id } });
 }
 
-async function markMessageRead(formData: FormData) {
-  "use server";
-  const session = await auth();
-  if (!session?.user || session.user.role !== "ADMIN") return;
-  const id = formData.get("id")?.toString();
-  if (!id) return;
-  await prisma.message.update({ where: { id }, data: { read: true } });
-}
-
-export default async function AdminPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ tab?: string; bp?: string; rp?: string; mp?: string }>;
-}) {
+export default async function AdminPage() {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") {
     redirect("/sign-in");
   }
 
-  const params = await searchParams;
-  const activeTab = params.tab || "overview";
-  const bookingsPage = Math.max(1, parseInt(params.bp || "1"));
-  const reviewsPage = Math.max(1, parseInt(params.rp || "1"));
-  const messagesPage = Math.max(1, parseInt(params.mp || "1"));
-  const PER_PAGE = 10;
-
-  const now = new Date();
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const todayEnd = new Date(todayStart.getTime() + 86400000);
-  const weekEnd = new Date(todayStart.getTime() + 7 * 86400000);
-
-  const [
-    totalConfirmedBookings,
-    upcomingCount,
-    todayBookings,
-    totalReviews,
-    totalMessages,
-    unreadMessages,
-    recentBookings,
-    recentMessages,
-    allBookingsPage,
-    allReviewsPage,
-    allMessagesPage,
-    scheduleBookings,
-    totalBookingsForPagination,
-  ] = await Promise.all([
-    prisma.booking.count({ where: { status: "confirmed" } }),
-    prisma.booking.count({
-      where: { status: "confirmed", date: { gte: todayStart } },
-    }),
-    prisma.booking.findMany({
-      where: { date: { gte: todayStart, lt: todayEnd }, status: "confirmed" },
-      orderBy: { timeSlot: "asc" },
-    }),
-    prisma.review.count(),
-    prisma.message.count(),
-    prisma.message.count({ where: { read: false } }),
-    prisma.booking.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 5,
-    }),
-    prisma.message.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 5,
-    }),
-    prisma.booking.findMany({
-      orderBy: { createdAt: "desc" },
-      skip: (bookingsPage - 1) * PER_PAGE,
-      take: PER_PAGE,
-    }),
-    prisma.review.findMany({
-      orderBy: { createdAt: "desc" },
-      skip: (reviewsPage - 1) * PER_PAGE,
-      take: PER_PAGE,
-    }),
-    prisma.message.findMany({
-      orderBy: { createdAt: "desc" },
-      skip: (messagesPage - 1) * PER_PAGE,
-      take: PER_PAGE,
-    }),
-    prisma.booking.findMany({
-      where: { date: { gte: todayStart, lt: weekEnd }, status: "confirmed" },
-      orderBy: [{ date: "asc" }, { timeSlot: "asc" }],
-    }),
-    prisma.booking.count(),
+  const [bookings, reviews, messages] = await Promise.all([
+    prisma.booking.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
+    prisma.review.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
+    prisma.message.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
   ]);
 
-  const confirmedBookings = await prisma.booking.findMany({
-    where: { status: "confirmed" },
-    select: { price: true },
-  });
-  const revenue = confirmedBookings.reduce(
-    (s, b) => s + (b.price ?? siteConfig.pricing.standardPrice),
-    0
-  );
+  const upcomingBookings = bookings.filter((b) => b.status === "confirmed" && b.date >= new Date());
+  const revenue = bookings.filter((b) => b.status === "confirmed").reduce((s, b) => s + (b.price || 18), 0);
 
-  const avgRating =
-    totalReviews > 0
-      ? (
-          (await prisma.review.aggregate({ _avg: { rating: true } }))._avg
-            .rating || 0
-        ).toFixed(1)
-      : "—";
-
-  const totalReviewsForPagination = totalReviews;
-  const totalMessagesForPagination = totalMessages;
-
-  const scheduleDays: {
-    date: string;
-    dayName: string;
-    isToday: boolean;
-    bookings: typeof scheduleBookings;
-  }[] = [];
-
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(todayStart.getTime() + i * 86400000);
-    const iso = d.toISOString().split("T")[0];
-    scheduleDays.push({
-      date: iso,
-      dayName: d.toLocaleDateString("en-GB", {
-        weekday: "short",
-        day: "numeric",
-        month: "short",
-      }),
-      isToday: i === 0,
-      bookings: scheduleBookings.filter(
-        (b) => b.date.toISOString().split("T")[0] === iso
-      ),
-    });
-  }
+  const stats = [
+    { label: "Total Bookings", value: bookings.length, color: "text-[var(--green)]" },
+    { label: "Upcoming", value: upcomingBookings.length, color: "text-[var(--orange)]" },
+    { label: "Reviews", value: reviews.length, color: "text-[var(--deep-green)]" },
+    { label: "Revenue", value: `£${revenue}`, color: "text-[var(--brown)]" },
+  ];
 
   return (
-    <AdminTabs
-      activeTab={activeTab}
-      stats={{
-        totalBookings: totalConfirmedBookings,
-        upcomingCount,
-        todayCount: todayBookings.length,
-        revenue,
-        totalReviews,
-        avgRating: String(avgRating),
-        totalMessages,
-        unreadMessages,
-      }}
-      todayBookings={todayBookings.map(serializeBooking)}
-      scheduleDays={scheduleDays.map((d) => ({
-        ...d,
-        bookings: d.bookings.map(serializeBooking),
-      }))}
-      recentBookings={recentBookings.map(serializeBooking)}
-      recentMessages={recentMessages.map(serializeMessage)}
-      allBookings={allBookingsPage.map(serializeBooking)}
-      allReviews={allReviewsPage.map(serializeReview)}
-      allMessages={allMessagesPage.map(serializeMessage)}
-      pagination={{
-        bookings: {
-          page: bookingsPage,
-          total: totalBookingsForPagination,
-          perPage: PER_PAGE,
-        },
-        reviews: {
-          page: reviewsPage,
-          total: totalReviewsForPagination,
-          perPage: PER_PAGE,
-        },
-        messages: {
-          page: messagesPage,
-          total: totalMessagesForPagination,
-          perPage: PER_PAGE,
-        },
-      }}
-      actions={{ cancelBooking, deleteReview, deleteMessage, markMessageRead }}
-    />
+    <div className="min-h-screen px-5 pt-[100px] pb-[60px] bg-[var(--cream)]">
+      <div className="max-w-[800px] mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-7 flex-wrap gap-3">
+          <div>
+            <Link href="/" className="flex items-center gap-2 text-[var(--muted)] mb-2 text-sm no-underline hover:text-[var(--deep-green)] transition-colors">
+              <Icons.ArrowLeft size={16} /> Home
+            </Link>
+            <h1 className="ww-serif text-[clamp(1.6rem,4vw,2.2rem)]">Dashboard</h1>
+          </div>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3 mb-7">
+          {stats.map((s, i) => (
+            <div key={i} className="bg-[var(--warm-white)] rounded-[18px] p-5 shadow-[var(--shadow)] text-center">
+              <div className={`ww-serif text-[1.8rem] font-bold ${s.color}`}>{s.value}</div>
+              <div className="text-[13px] text-[var(--muted)] mt-1">{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Sections */}
+        <div className="flex flex-col gap-6">
+          {/* Bookings */}
+          <section>
+            <h2 className="ww-serif text-[1.4rem] mb-3">Bookings</h2>
+            <div className="flex flex-col gap-3">
+              {bookings.length === 0 ? (
+                <Empty text="No bookings yet" />
+              ) : (
+                bookings.map((b) => (
+                  <div
+                    key={b.id}
+                    className={`bg-[var(--warm-white)] rounded-2xl p-5 shadow-[var(--shadow)] ${b.status === "cancelled" ? "opacity-50" : ""}`}
+                  >
+                    <div className="flex justify-between items-start gap-3 flex-wrap">
+                      <div>
+                        <div className="font-semibold mb-1">
+                          {b.dogName}{" "}
+                          <span className="font-normal text-[var(--muted)]">
+                            ({b.dogBreed || b.dogSize})
+                          </span>
+                        </div>
+                        <div className="text-sm text-[var(--muted)]">
+                          {b.ownerName} · {b.email} · {b.phone}
+                        </div>
+                        <div className="text-sm text-[var(--deep-green)] font-medium mt-1.5">
+                          {formatDate(b.date.toISOString().split("T")[0])} at {b.timeSlot} · £{b.price || 18}
+                        </div>
+                        {b.notes && (
+                          <div className="text-[13px] text-[var(--muted)] mt-1.5 italic">&ldquo;{b.notes}&rdquo;</div>
+                        )}
+                      </div>
+                      <div className="flex gap-2 items-center">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            b.status === "confirmed"
+                              ? "bg-[rgba(107,158,126,0.12)] text-[var(--green)]"
+                              : "bg-[rgba(200,100,100,0.1)] text-[var(--danger)]"
+                          }`}
+                        >
+                          {b.status}
+                        </span>
+                        {b.status === "confirmed" && (
+                          <form action={cancelBooking}>
+                            <input type="hidden" name="id" value={b.id} />
+                            <button
+                              type="submit"
+                              className="text-xs text-[var(--danger)] bg-transparent border-none cursor-pointer hover:underline"
+                            >
+                              Cancel
+                            </button>
+                          </form>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </section>
+
+          {/* Reviews */}
+          <section>
+            <h2 className="ww-serif text-[1.4rem] mb-3">Reviews</h2>
+            <div className="flex flex-col gap-3">
+              {reviews.length === 0 ? (
+                <Empty text="No reviews yet" />
+              ) : (
+                reviews.map((r) => (
+                  <div key={r.id} className="bg-[var(--warm-white)] rounded-2xl p-5 shadow-[var(--shadow)]">
+                    <div className="flex justify-between items-start gap-3">
+                      <div>
+                        <div className="font-semibold mb-1">
+                          {r.name}
+                          {r.dogName && <span className="text-[var(--muted)] font-normal"> · 🐕 {r.dogName}</span>}
+                        </div>
+                        <div className="text-sm mb-1">{"⭐".repeat(r.rating)}</div>
+                        <p className="text-sm text-[var(--muted)] leading-relaxed">{r.text}</p>
+                      </div>
+                      <form action={deleteReview}>
+                        <input type="hidden" name="id" value={r.id} />
+                        <button
+                          type="submit"
+                          className="text-xs text-[var(--danger)] bg-transparent border-none cursor-pointer hover:underline"
+                        >
+                          Delete
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </section>
+
+          {/* Messages */}
+          <section>
+            <h2 className="ww-serif text-[1.4rem] mb-3">Messages</h2>
+            <div className="flex flex-col gap-3">
+              {messages.length === 0 ? (
+                <Empty text="No messages yet" />
+              ) : (
+                messages.map((m) => (
+                  <div key={m.id} className="bg-[var(--warm-white)] rounded-2xl p-5 shadow-[var(--shadow)]">
+                    <div className="flex justify-between items-start gap-3">
+                      <div>
+                        <div className="font-semibold mb-1">
+                          {m.name} <span className="text-[var(--muted)] font-normal text-sm">· {m.email}</span>
+                        </div>
+                        <p className="text-sm text-[var(--muted)] leading-relaxed">{m.message}</p>
+                        <p className="text-xs text-[var(--light)] mt-2">
+                          {m.createdAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                        </p>
+                      </div>
+                      <form action={deleteMessage}>
+                        <input type="hidden" name="id" value={m.id} />
+                        <button
+                          type="submit"
+                          className="text-xs text-[var(--danger)] bg-transparent border-none cursor-pointer hover:underline"
+                        >
+                          Delete
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
   );
-}
-
-function serializeBooking(b: PrismaBooking) {
-  return {
-    ...b,
-    date: b.date instanceof Date ? b.date.toISOString() : b.date,
-    createdAt: b.createdAt instanceof Date ? b.createdAt.toISOString() : b.createdAt,
-    updatedAt: b.updatedAt instanceof Date ? b.updatedAt.toISOString() : b.updatedAt,
-  };
-}
-
-function serializeReview(r: PrismaReview) {
-  return {
-    ...r,
-    createdAt: r.createdAt instanceof Date ? r.createdAt.toISOString() : r.createdAt,
-  };
-}
-
-function serializeMessage(m: PrismaMessage) {
-  return {
-    ...m,
-    createdAt: m.createdAt instanceof Date ? m.createdAt.toISOString() : m.createdAt,
-  };
 }

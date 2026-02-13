@@ -1,356 +1,90 @@
 @import "tailwindcss";
 
-/* ── Custom Theme Tokens ── */
-/* Tailwind v4 uses @theme to register custom design tokens. */
-/* These become available as utility classes: bg-ww-cream, text-ww-green, etc. */
-@theme {
-  --color-ww-cream: #faf5ef;
-  --color-ww-warm-white: #fdf9f5;
-  --color-ww-green: #5a8f6e;
-  --color-ww-deep-green: #335c42;
-  --color-ww-dark-green: #243d2e;
-  --color-ww-orange: #e8956a;
-  --color-ww-deep-orange: #d47a52;
-  --color-ww-brown: #8b7355;
-  --color-ww-text: #2e2a25;
-  --color-ww-muted: #6d645b;
-  --color-ww-light: #b8afa5;
-  --color-ww-danger: #d9534f;
-
-  --shadow-ww: 0 4px 24px rgba(45, 50, 40, 0.08);
-  --shadow-ww-lg: 0 12px 40px rgba(45, 50, 40, 0.12);
-
-  --font-sans: "Outfit", "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
-  --font-serif: "Playfair Display", "Georgia", "Times New Roman", serif;
-}
-
-/* ── Backwards-compatible CSS variables (used by some inline styles) ── */
+/* ─── Design Tokens ─── */
 :root {
-  --cream: #faf5ef;
-  --warm-white: #fdf9f5;
-  --green: #5a8f6e;
-  --deep-green: #335c42;
-  --dark-green: #243d2e;
+  --font-playfair: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  --font-outfit: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --cream: #fdf8f3;
+  --warm-white: #fffbf7;
+  --green: #6b9e7e;
+  --deep-green: #3d6b50;
+  --dark-green: #2a4d38;
   --orange: #e8956a;
   --deep-orange: #d47a52;
   --brown: #8b7355;
   --text: #2e2a25;
-  --muted: #6d645b;
+  --muted: #7a7168;
   --light: #b8afa5;
   --danger: #d9534f;
   --white: #ffffff;
-  --shadow: 0 4px 24px rgba(45, 50, 40, 0.08);
-  --shadow-lg: 0 12px 40px rgba(45, 50, 40, 0.12);
-  --font-outfit: "Outfit", "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
-  --font-playfair: "Playfair Display", "Georgia", "Times New Roman", serif;
+  --shadow: 0 4px 24px rgba(45, 50, 40, 0.07);
+  --shadow-lg: 0 12px 40px rgba(45, 50, 40, 0.1);
 }
 
-/* ── Base Styles ── */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* ─── Base Reset ─── */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--cream); color: var(--text); font-family: var(--font-outfit); }
 
-html {
-  scroll-behavior: smooth;
-}
+/* ─── Typography Utilities ─── */
+.ww-serif { font-family: var(--font-playfair); }
+.ww-sans { font-family: var(--font-outfit); }
 
-body {
-  background: var(--cream);
-  color: var(--text);
-  font-family: var(--font-outfit), sans-serif;
-  overflow-x: hidden;
-}
-
-/* ── Layout Helpers ── */
-.ww-container {
-  width: min(1400px, calc(100% - 48px));
-  margin-inline: auto;
-}
-
-.ww-container-mid {
-  width: min(1100px, calc(100% - 48px));
-  margin-inline: auto;
-}
-
-.ww-container-narrow {
-  width: min(820px, calc(100% - 48px));
-  margin-inline: auto;
-}
-
-.ww-container-compact {
-  width: min(560px, calc(100% - 48px));
-  margin-inline: auto;
-}
-
-@media (max-width: 640px) {
-  .ww-container,
-  .ww-container-mid,
-  .ww-container-narrow,
-  .ww-container-compact {
-    width: calc(100% - 32px);
-  }
-}
-
-.ww-section {
-  padding-block: clamp(84px, 8vw, 140px);
-}
-
-.ww-section-tight {
-  padding-block: clamp(72px, 7vw, 120px);
-}
-
-.ww-hero {
-  padding-top: clamp(116px, 10vw, 168px);
-  padding-bottom: clamp(72px, 8vw, 120px);
-}
-
-.ww-page {
-  min-height: 100vh;
-  padding-top: clamp(124px, 10vw, 164px);
-  padding-bottom: clamp(84px, 8vw, 132px);
-  background: var(--cream);
-}
-
-@media (max-width: 640px) {
-  /* Horizontal gutters are controlled via .ww-container on small screens. */
-}
-
-.ww-title {
-  font-size: clamp(1.9rem, 3.8vw, 2.6rem);
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-}
-
-.ww-lede {
-  color: var(--muted);
-  font-size: clamp(1rem, 1.4vw, 1.15rem);
-  line-height: 1.7;
-  max-width: 560px;
-  margin-inline: auto;
-}
-
-.ww-kicker {
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: var(--deep-green);
-}
-
-.ww-card {
-  border-radius: 24px;
-  box-shadow: var(--shadow);
-  background: var(--warm-white);
-}
-
-.ww-cta-card {
-  border-radius: 32px;
-  box-shadow: var(--shadow-lg);
-}
-
-.ww-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-family: var(--font-outfit), sans-serif;
-  font-weight: 600;
-  border-radius: 999px;
-  padding: 14px 28px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-  text-decoration: none;
-}
-
-.ww-btn:active {
-  transform: translateY(1px);
-}
-
-.ww-btn-primary {
-  background: var(--green);
-  color: white;
-  box-shadow: 0 6px 18px rgba(90, 143, 110, 0.28);
-}
-
-.ww-btn-primary:hover {
-  background: var(--deep-green);
-  box-shadow: 0 10px 26px rgba(90, 143, 110, 0.36);
-}
-
-.ww-btn-secondary {
-  background: var(--warm-white);
-  color: var(--text);
-  border: 2px solid rgba(90, 143, 110, 0.18);
-}
-
-.ww-btn-secondary:hover {
-  border-color: rgba(90, 143, 110, 0.4);
-  background: var(--cream);
-}
-
-.ww-btn-ghost {
-  background: transparent;
-  color: var(--deep-green);
-  border: 1px solid rgba(90, 143, 110, 0.18);
-  padding: 10px 18px;
-  border-radius: 999px;
-}
-
-.ww-btn-ghost:hover {
-  border-color: rgba(90, 143, 110, 0.4);
-  background: rgba(90, 143, 110, 0.08);
-}
-
-/* ── Typography Helpers ── */
-.ww-serif {
-  font-family: var(--font-playfair), serif;
-}
-
-.ww-sans {
-  font-family: var(--font-outfit), sans-serif;
-}
-
-/* ── Longform Content ── */
-.prose-ww {
-  font-size: 1rem;
-}
-
-.prose-ww a {
-  color: var(--green);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.prose-ww h2 {
-  letter-spacing: -0.01em;
-}
-
-/* ── Shared Input Style ── */
-.ww-input {
-  width: 100%;
-  padding: 14px 18px;
-  border-radius: 14px;
-  border: 2px solid rgba(90, 143, 110, 0.15);
-  background: white;
-  font-size: 15px;
-  font-family: "Outfit", sans-serif;
-  outline: none;
-  transition: border-color 0.25s ease;
-}
-
-.ww-input:focus {
-  border-color: var(--green);
-}
-
-/* ── Animations ── */
+/* ─── Animations ─── */
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
-
 @keyframes blobMorph {
-  0%,
-  100% {
-    border-radius: 62% 38% 52% 48% / 48% 52% 38% 62%;
-  }
-  25% {
-    border-radius: 48% 62% 38% 52% / 38% 48% 62% 52%;
-  }
-  50% {
-    border-radius: 38% 52% 62% 48% / 62% 38% 52% 48%;
-  }
-  75% {
-    border-radius: 52% 48% 48% 62% / 52% 62% 48% 38%;
-  }
+  0%, 100% { border-radius: 62% 38% 52% 48% / 48% 52% 38% 62%; }
+  25% { border-radius: 48% 62% 38% 52% / 38% 48% 62% 52%; }
+  50% { border-radius: 38% 52% 62% 48% / 62% 38% 52% 48%; }
+  75% { border-radius: 52% 48% 48% 62% / 52% 62% 48% 38%; }
 }
-
 @keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
-
 @keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
 }
-
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.anim-fade-up { animation: fadeUp 0.6s ease-out both; }
+.anim-fade-in { animation: fadeIn 0.5s ease-out both; }
+.anim-slide-in { animation: slideIn 0.4s ease-out both; }
+
+/* ─── Accessibility: Respect reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-  to {
-    transform: rotate(360deg);
-  }
+  .grain-overlay { display: none !important; }
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.anim-fade-up {
-  animation: fadeUp 0.6s ease-out both;
-}
-
-.anim-fade-in {
-  animation: fadeIn 0.5s ease-out both;
-}
-
-.anim-slide-in {
-  animation: slideIn 0.4s ease-out both;
-}
-
-.anim-slide-down {
-  animation: slideDown 0.3s ease-out both;
-}
-
-/* ── Grain Overlay ── */
+/* ─── Grain Overlay (lighter for perf) ─── */
 .grain-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   pointer-events: none;
   z-index: 9999;
   opacity: 0.025;
+  will-change: auto;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* ── Toast Notifications ── */
+/* ─── Toast System ─── */
 .toast-container {
   position: fixed;
   top: 24px;
@@ -360,10 +94,9 @@ body {
   flex-direction: column;
   gap: 8px;
 }
-
 .toast {
   background: var(--dark-green);
-  color: white;
+  color: var(--white);
   padding: 14px 24px;
   border-radius: 14px;
   font-size: 14px;
@@ -374,12 +107,9 @@ body {
   align-items: center;
   gap: 10px;
 }
+.toast.error { background: var(--danger); }
 
-.toast.error {
-  background: var(--danger);
-}
-
-/* ── Spinner ── */
+/* ─── Spinner ─── */
 .spinner {
   width: 24px;
   height: 24px;
@@ -390,36 +120,28 @@ body {
   display: inline-block;
 }
 
-/* ── Scrollbar ── */
-::-webkit-scrollbar {
-  width: 8px;
-}
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--green); border-radius: 4px; }
 
-::-webkit-scrollbar-track {
-  background: var(--cream);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--green);
-  border-radius: 4px;
-}
-
-/* ── Focus ── */
+/* ─── Focus ─── */
 :focus-visible {
   outline: 2px solid var(--green);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* ── Responsive Helpers ── */
-@media (max-width: 768px) {
-  .desktop-nav {
-    display: none !important;
-  }
+/* ─── Responsive Breakpoints ─── */
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr !important; text-align: center; }
+  .hero-visual-col { order: -1 !important; }
+  .hero-visual-col > div:first-child { max-width: 260px !important; }
+  .hero-visual-col > div:not(:first-child) { display: none; }
+  .service-grid { grid-template-columns: 1fr !important; text-align: center; }
 }
-
-@media (max-width: 600px) {
-  .whatsapp-label {
-    display: none;
-  }
+@media (max-width: 768px) {
+  .desktop-nav { display: none !important; }
+  .mobile-menu-btn { display: flex !important; }
+  .whatsapp-label { display: none; }
 }

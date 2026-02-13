@@ -2,29 +2,23 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
-import { createRateLimiter, getIP } from "@/lib/rate-limit";
-
-// ✅ FIX: Rate limit — 5 messages per 15 minutes per IP.
-const limiter = createRateLimiter({ windowMs: 15 * 60_000, max: 5 });
 
 const messageSchema = z.object({
-  name: z.string().min(2).max(80),
-  email: z.string().email(),
-  message: z.string().min(5).max(1500),
+  name: z.string().min(2).max(80).trim(),
+  email: z.string().email().max(200).trim().toLowerCase(),
+  message: z.string().min(5).max(1500).trim(),
 });
 
 export async function POST(req: Request) {
-  // ✅ FIX: Rate limiting
-  const ip = getIP(req);
-  if (!limiter.check(ip)) {
-    return NextResponse.json(
-      { error: "Too many messages. Please try again later." },
-      { status: 429 }
-    );
+  const session = await auth();
+
+  let body;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const session = await auth();
-  const body = await req.json().catch(() => null);
   const parsed = messageSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid input" }, { status: 400 });
@@ -39,5 +33,5 @@ export async function POST(req: Request) {
     },
   });
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true }, { status: 201 });
 }

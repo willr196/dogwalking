@@ -2,41 +2,40 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
-import { createRateLimiter, getIP } from "@/lib/rate-limit";
-
-// ✅ FIX: Rate limit — 10 review submissions per hour per IP.
-const limiter = createRateLimiter({ windowMs: 60 * 60_000, max: 10 });
 
 const reviewSchema = z.object({
-  name: z.string().min(2).max(80),
+  name: z.string().min(2).max(80).trim(),
   dogName: z.string().max(80).optional().or(z.literal("")),
   rating: z.number().int().min(1).max(5),
-  text: z.string().min(5).max(1000),
+  text: z.string().min(5).max(1000).trim(),
 });
 
 export async function GET() {
   const reviews = await prisma.review.findMany({
     orderBy: { createdAt: "desc" },
+    take: 100,
   });
-  return NextResponse.json(reviews);
+
+  return NextResponse.json(reviews, {
+    headers: {
+      "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60",
+    },
+  });
 }
 
 export async function POST(req: Request) {
-  // ✅ FIX: Rate limiting
-  const ip = getIP(req);
-  if (!limiter.check(ip)) {
-    return NextResponse.json(
-      { error: "Too many requests. Please try again later." },
-      { status: 429 }
-    );
-  }
-
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await req.json().catch(() => null);
+  let body;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
   const parsed = reviewSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid input" }, { status: 400 });
@@ -52,5 +51,5 @@ export async function POST(req: Request) {
     },
   });
 
-  return NextResponse.json({ ok: true, review });
+  return NextResponse.json({ ok: true, review }, { status: 201 });
 }

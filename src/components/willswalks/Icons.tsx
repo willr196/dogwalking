@@ -39,6 +39,7 @@ export const Icons = {
     </svg>
   ),
   ArrowLeft: (p: IconProps) => <Icon d="M19 12H5M12 19l-7-7 7-7" {...p} />,
+  ArrowRight: (p: IconProps) => <Icon d="M5 12h14M12 5l7 7-7 7" {...p} />,
   Send: (p: IconProps) => <Icon d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" {...p} />,
   Dog: (p: IconProps) => (
     <Icon

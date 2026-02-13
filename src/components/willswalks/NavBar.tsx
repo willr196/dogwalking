@@ -1,23 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { Icons } from "@/components/willswalks/Icons";
-
-const NAV_LINKS = [
-  { href: "/services", label: "Services" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/areas", label: "Areas" },
-  { href: "/reviews", label: "Reviews" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/guides", label: "Guides" },
-  { href: "/contact", label: "Contact" },
-];
 
 export function NavBar() {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -25,142 +14,75 @@ export function NavBar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close on Escape
-  useEffect(() => {
-    if (!mobileMenu) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMobileMenu(false);
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [mobileMenu]);
+  const closeMenu = useCallback(() => setMobileMenu(false), []);
 
-  // Lock body scroll when mobile menu is open
-  useEffect(() => {
-    document.body.style.overflow = mobileMenu ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileMenu]);
-
-  const handleNavClick = useCallback(() => {
-    setMobileMenu(false);
-  }, []);
+  const navLinkClasses = "text-[15px] font-medium text-[var(--text)] no-underline transition-colors duration-200 hover:text-[var(--deep-green)]";
+  const mobileNavLinkClasses = "text-[17px] font-medium text-[var(--text)] text-left py-2 no-underline transition-colors duration-200 hover:text-[var(--deep-green)]";
 
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-[1000] px-5 py-3 transition-all duration-300 ${
         scrolled
-          ? "bg-ww-cream/95 backdrop-blur-2xl shadow-ww"
+          ? "bg-[rgba(253,248,243,0.92)] backdrop-blur-[16px] shadow-[var(--shadow)]"
           : "bg-transparent backdrop-blur-none shadow-none"
       }`}
       role="navigation"
       aria-label="Main navigation"
     >
-      <div className="ww-container flex justify-between items-center">
+      <div className="max-w-[1100px] mx-auto flex justify-between items-center">
         <Link
           href="/"
-          className="font-serif text-[1.4rem] font-bold text-ww-deep-green flex items-center gap-2 no-underline"
+          className="ww-serif text-[1.4rem] font-bold text-[var(--deep-green)] flex items-center gap-2 no-underline"
         >
           🐾 Will&apos;s Walks
         </Link>
 
+        {/* Desktop Navigation */}
         <div className="flex gap-7 items-center desktop-nav">
-          {NAV_LINKS.map((link) =>
-            link.href.startsWith("/#") ? (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-[15px] font-medium text-ww-text font-sans no-underline hover:text-ww-deep-green transition-colors duration-200"
-              >
-                {link.label}
-              </a>
-            ) : (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-[15px] font-medium text-ww-text font-sans no-underline hover:text-ww-deep-green transition-colors duration-200"
-              >
-                {link.label}
-              </Link>
-            )
-          )}
+          <Link href="/#services" className={navLinkClasses}>Services</Link>
+          <Link href="/#about" className={navLinkClasses}>About</Link>
+          <Link href="/reviews" className={navLinkClasses}>Reviews</Link>
           <Link
             href="/booking"
-            className="ww-btn ww-btn-primary text-sm px-6 py-2.5"
+            className="bg-[var(--green)] text-white px-6 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 hover:bg-[var(--deep-green)] hover:-translate-y-0.5 no-underline"
           >
-            Book a Meet &amp; Greet
+            Book a Walk
+          </Link>
+          <Link
+            href="/admin"
+            className="opacity-40 flex items-center p-1 transition-opacity duration-200 hover:opacity-70"
+            title="Admin"
+            aria-label="Admin dashboard"
+          >
+            <Icons.Settings size={18} />
           </Link>
         </div>
 
-        {/* Mobile menu button */}
+        {/* Mobile Menu Button */}
         <button
-          className="hidden max-[768px]:flex items-center justify-center bg-transparent border-none cursor-pointer p-2 rounded-lg transition-colors duration-200 hover:bg-ww-green/10"
           onClick={() => setMobileMenu(!mobileMenu)}
-          aria-label={mobileMenu ? "Close menu" : "Open menu"}
+          className="hidden mobile-menu-btn bg-transparent border-none cursor-pointer p-1"
           aria-expanded={mobileMenu}
           aria-controls="mobile-menu"
+          aria-label={mobileMenu ? "Close menu" : "Open menu"}
         >
-          <span
-            className="transition-transform duration-250"
-            style={{ transform: mobileMenu ? "rotate(90deg)" : "rotate(0deg)" }}
-          >
-            {mobileMenu ? <Icons.X size={24} /> : <Icons.Menu size={24} />}
-          </span>
+          {mobileMenu ? <Icons.X size={24} /> : <Icons.Menu size={24} />}
         </button>
       </div>
 
-      {/* Mobile menu */}
-      <div
-        id="mobile-menu"
-        ref={menuRef}
-        className={`hidden max-[768px]:block overflow-hidden transition-all duration-300 ease-in-out ${
-          mobileMenu ? "max-h-[400px] opacity-100 mt-4" : "max-h-0 opacity-0 mt-0"
-        }`}
-        aria-hidden={!mobileMenu}
-      >
-        <div className="flex flex-col gap-1 p-5 bg-ww-warm-white rounded-2xl shadow-ww-lg">
-          {NAV_LINKS.map((link) =>
-            link.href.startsWith("/#") ? (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={handleNavClick}
-                className="text-[15px] font-medium text-ww-text font-sans no-underline py-3 px-3 rounded-xl hover:bg-ww-green/8 transition-colors duration-200"
-                tabIndex={mobileMenu ? 0 : -1}
-              >
-                {link.label}
-              </a>
-            ) : (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={handleNavClick}
-                className="text-[15px] font-medium text-ww-text font-sans no-underline py-3 px-3 rounded-xl hover:bg-ww-green/8 transition-colors duration-200"
-                tabIndex={mobileMenu ? 0 : -1}
-              >
-                {link.label}
-              </Link>
-            )
-          )}
-          <Link
-            href="/booking"
-            onClick={handleNavClick}
-            className="ww-btn ww-btn-primary text-sm px-6 py-3.5 mt-2 text-center"
-            tabIndex={mobileMenu ? 0 : -1}
-          >
-            Book a Meet &amp; Greet
-          </Link>
-        </div>
-      </div>
-
-      {/* Backdrop overlay for mobile menu */}
+      {/* Mobile Menu */}
       {mobileMenu && (
         <div
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm -z-10 hidden max-[768px]:block"
-          onClick={() => setMobileMenu(false)}
-          aria-hidden="true"
-        />
+          id="mobile-menu"
+          className="absolute top-full left-0 right-0 bg-[rgba(253,248,243,0.98)] backdrop-blur-[20px] p-6 flex flex-col gap-4 shadow-[var(--shadow-lg)] anim-fade-in"
+          role="menu"
+        >
+          <Link href="/#services" onClick={closeMenu} className={mobileNavLinkClasses} role="menuitem">Services</Link>
+          <Link href="/#about" onClick={closeMenu} className={mobileNavLinkClasses} role="menuitem">About</Link>
+          <Link href="/reviews" onClick={closeMenu} className={mobileNavLinkClasses} role="menuitem">Reviews</Link>
+          <Link href="/booking" onClick={closeMenu} className={mobileNavLinkClasses} role="menuitem">Book a Walk</Link>
+          <Link href="/admin" onClick={closeMenu} className={mobileNavLinkClasses} role="menuitem">Admin</Link>
+        </div>
       )}
     </nav>
   );

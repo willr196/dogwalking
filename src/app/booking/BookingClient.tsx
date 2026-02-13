@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { Icons } from "@/components/willswalks/Icons";
 import { Input } from "@/components/willswalks/Input";
-import { DOG_SIZES, TIME_SLOTS } from "@/components/willswalks/constants";
+import { DOG_SIZES, TIME_SLOTS, WALK_PRICE } from "@/components/willswalks/constants";
 import { formatDate } from "@/components/willswalks/utils";
 
 type Toast = { id: number; msg: string; type: "success" | "error" };
@@ -26,11 +26,11 @@ export function BookingClient() {
     notes: "",
   });
 
-  const addToast = (msg: string, type: "success" | "error" = "success") => {
+  const addToast = useCallback((msg: string, type: "success" | "error" = "success") => {
     const id = Date.now();
     setToasts((t) => [...t, { id, msg, type }]);
     setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 3500);
-  };
+  }, []);
 
   const dates = Array.from({ length: 14 }, (_, i) => {
     const d = new Date();
@@ -39,17 +39,25 @@ export function BookingClient() {
   });
 
   useEffect(() => {
+    const controller = new AbortController();
     const load = async () => {
-      const res = await fetch("/api/bookings");
-      if (!res.ok) return;
-      const data: { date: string; timeSlot: string }[] = await res.json();
-      const slots = data.map((b) => {
-        const iso = new Date(b.date).toISOString().split("T")[0];
-        return `${iso}-${b.timeSlot}`;
-      });
-      setBookedSlots(slots);
+      try {
+        const res = await fetch("/api/bookings", { signal: controller.signal });
+        if (!res.ok) return;
+        const data: { date: string; timeSlot: string; status: string }[] = await res.json();
+        const slots = data
+          .filter((b) => b.status !== "cancelled")
+          .map((b) => {
+            const iso = new Date(b.date).toISOString().split("T")[0];
+            return `${iso}-${b.timeSlot}`;
+          });
+        setBookedSlots(slots);
+      } catch {
+        // Aborted or network error
+      }
     };
     load();
+    return () => controller.abort();
   }, []);
 
   const isSlotBooked = (date: string, time: string) => bookedSlots.includes(`${date}-${time}`);
@@ -57,132 +65,144 @@ export function BookingClient() {
 
   const submit = async () => {
     setLoading(true);
-    const res = await fetch("/api/bookings", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ownerName: form.ownerName,
-        email: form.email,
-        phone: form.phone,
-        dogName: form.dogName,
-        dogBreed: form.dogBreed,
-        dogSize: form.dogSize,
-        date: form.date,
-        timeSlot: form.time,
-        notes: form.notes,
-      }),
-    });
-    setLoading(false);
-    if (res.ok) {
-      addToast("Walk booked successfully! 🐾");
-      setStep(4);
-    } else {
-      const data = await res.json().catch(() => ({}));
-      addToast(data.error || "Something went wrong. Please try again.", "error");
+    try {
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ownerName: form.ownerName,
+          email: form.email,
+          phone: form.phone,
+          dogName: form.dogName,
+          dogBreed: form.dogBreed,
+          dogSize: form.dogSize,
+          date: form.date,
+          timeSlot: form.time,
+          notes: form.notes,
+        }),
+      });
+      if (res.ok) {
+        addToast("Walk booked successfully! 🐾");
+        setStep(4);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        addToast(data.error || "Something went wrong. Please try again.", "error");
+      }
+    } catch {
+      addToast("Network error. Please try again.", "error");
     }
-  };
-
-  const canProceed = () => {
-    if (step === 1) return form.ownerName && form.email && form.phone;
-    if (step === 2) return form.dogName && form.dogSize;
-    if (step === 3) return form.date && form.time;
-    return false;
+    setLoading(false);
   };
 
   return (
-    <div className="ww-page">
-      <div className="toast-container">
-        {toasts.map((t) => (
-          <div key={t.id} className={`toast ${t.type === "error" ? "error" : ""}`}>
-            {t.type === "success" ? <Icons.Check size={16} color="white" /> : null}
-            {t.msg}
-          </div>
-        ))}
-      </div>
-
-      <div className="ww-container">
-        <Link href="/" className="ww-btn ww-btn-ghost text-sm mb-6">
-          <Icons.ArrowLeft size={18} /> {step > 1 && step < 4 ? "Back" : "Home"}
+    <div className="min-h-screen px-5 pt-[100px] pb-[60px] bg-[var(--cream)]">
+      <div className="max-w-[640px] mx-auto">
+        <Link href="/" className="flex items-center gap-2 text-[var(--muted)] mb-6 text-[15px] no-underline hover:text-[var(--deep-green)] transition-colors">
+          <Icons.ArrowLeft size={18} /> Home
         </Link>
 
-        <h1 className="ww-serif ww-title mb-2">Book a Meet &amp; Greet</h1>
-        <p className="ww-lede mb-6 text-left max-w-[520px]">
-          A short intro visit so I can meet your dog, understand their routine,
-          and recommend the right walk.
+        <h1 className="ww-serif text-[clamp(1.8rem,4vw,2.4rem)] mb-2">Book a Walk</h1>
+        <p className="text-[var(--muted)] mb-8">
+          £{WALK_PRICE} per solo walk · 1 hour of dedicated one-on-one time
         </p>
 
-        {/* Progress bar */}
-        {step < 4 && (
-          <div className="flex gap-2 mb-9 mt-4">
-            {[1, 2, 3].map((s) => (
-              <div
-                key={s}
-                className={`flex-1 h-1 rounded-sm transition-colors duration-300 ${
-                  s <= step ? "bg-ww-green" : "bg-ww-green/15"
-                }`}
-              />
-            ))}
-          </div>
-        )}
+        {/* Step indicators */}
+        <div className="flex gap-2 mb-8" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={4}>
+          {[1, 2, 3, 4].map((s) => (
+            <div
+              key={s}
+              className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
+                s <= step ? "bg-[var(--green)]" : "bg-[var(--light)]"
+              }`}
+            />
+          ))}
+        </div>
 
         {/* Step 1: Your Details */}
         {step === 1 && (
-          <div className="anim-fade-up ww-card p-7">
-            <h3 className="font-semibold text-lg mb-5">Your Details</h3>
-            <div className="flex flex-col gap-3.5">
-              <Input label="Your Name *" value={form.ownerName} onChange={(v) => update("ownerName", v)} placeholder="e.g. Sarah" />
-              <Input label="Email *" type="email" value={form.email} onChange={(v) => update("email", v)} placeholder="sarah@email.com" />
-              <Input label="Phone *" type="tel" value={form.phone} onChange={(v) => update("phone", v)} placeholder="07XXX XXXXXX" />
+          <div className="bg-[var(--warm-white)] rounded-3xl p-8 shadow-[var(--shadow)] anim-fade-up">
+            <h2 className="ww-serif text-[1.3rem] mb-6">Your Details</h2>
+            <div className="flex flex-col gap-4">
+              <Input label="Your Name *" value={form.ownerName} onChange={(v) => update("ownerName", v)} placeholder="e.g. Sarah Johnson" />
+              <Input label="Email *" type="email" value={form.email} onChange={(v) => update("email", v)} placeholder="sarah@example.com" />
+              <Input label="Phone *" type="tel" value={form.phone} onChange={(v) => update("phone", v)} placeholder="07123 456789" />
             </div>
+            <button
+              onClick={() => {
+                if (!form.ownerName || !form.email || !form.phone) {
+                  addToast("Please fill in all required fields.", "error");
+                  return;
+                }
+                setStep(2);
+              }}
+              className="mt-6 w-full bg-[var(--green)] text-white py-[14px] rounded-full font-semibold text-[15px] transition-all duration-200 hover:bg-[var(--deep-green)] cursor-pointer border-none"
+            >
+              Next →
+            </button>
           </div>
         )}
 
-        {/* Step 2: Dog Info */}
+        {/* Step 2: Dog Details */}
         {step === 2 && (
-          <div className="anim-fade-up ww-card p-7">
-            <h3 className="font-semibold text-lg mb-5">Tell Me About Your Dog</h3>
-            <div className="flex flex-col gap-3.5">
-              <Input label="Dog's Name *" value={form.dogName} onChange={(v) => update("dogName", v)} placeholder="e.g. Biscuit" />
-              <Input label="Breed" value={form.dogBreed} onChange={(v) => update("dogBreed", v)} placeholder="e.g. Labrador" />
+          <div className="bg-[var(--warm-white)] rounded-3xl p-8 shadow-[var(--shadow)] anim-fade-up">
+            <h2 className="ww-serif text-[1.3rem] mb-6">About Your Dog</h2>
+            <div className="flex flex-col gap-4">
+              <Input label="Dog's Name *" value={form.dogName} onChange={(v) => update("dogName", v)} placeholder="e.g. Bella" />
+              <Input label="Breed" value={form.dogBreed} onChange={(v) => update("dogBreed", v)} placeholder="e.g. Labrador (optional)" />
               <div>
-                <label className="text-sm font-medium mb-2 block">Size *</label>
-                <div className="flex gap-2.5">
+                <label className="block text-sm font-medium mb-2 text-[var(--text)]">Dog Size *</label>
+                <div className="flex gap-2 flex-wrap">
                   {DOG_SIZES.map((size) => (
                     <button
                       key={size}
                       onClick={() => update("dogSize", size)}
-                      className={`flex-1 py-3.5 rounded-[14px] border-2 font-semibold text-[15px] font-sans cursor-pointer transition-all ${
+                      className={`px-5 py-2.5 rounded-full text-sm font-medium border-2 transition-all duration-200 cursor-pointer ${
                         form.dogSize === size
-                          ? "border-ww-green bg-ww-green/10 text-ww-deep-green"
-                          : "border-ww-green/15 bg-white text-ww-muted hover:border-ww-green/30"
+                          ? "bg-[var(--green)] text-white border-[var(--green)]"
+                          : "bg-transparent text-[var(--text)] border-[var(--light)] hover:border-[var(--green)]"
                       }`}
                     >
-                      {size === "Small" ? "🐕 " : size === "Medium" ? "🦮 " : "🐕‍🦺 "}
                       {size}
                     </button>
                   ))}
                 </div>
               </div>
-              <Input label="Special Notes" value={form.notes} onChange={(v) => update("notes", v)} placeholder="Allergies, favourite toys, etc." multiline />
+            </div>
+            <div className="flex gap-3 mt-6">
+              <button onClick={() => setStep(1)} className="flex-1 py-[14px] rounded-full font-semibold text-[15px] border-2 border-[var(--light)] text-[var(--muted)] bg-transparent cursor-pointer transition-colors hover:border-[var(--green)]">
+                ← Back
+              </button>
+              <button
+                onClick={() => {
+                  if (!form.dogName) {
+                    addToast("Please enter your dog's name.", "error");
+                    return;
+                  }
+                  setStep(3);
+                }}
+                className="flex-1 bg-[var(--green)] text-white py-[14px] rounded-full font-semibold text-[15px] transition-all duration-200 hover:bg-[var(--deep-green)] cursor-pointer border-none"
+              >
+                Next →
+              </button>
             </div>
           </div>
         )}
 
         {/* Step 3: Date & Time */}
         {step === 3 && (
-          <div className="anim-fade-up ww-card p-7">
-            <h3 className="font-semibold text-lg mb-5">Pick a Date & Time</h3>
+          <div className="bg-[var(--warm-white)] rounded-3xl p-8 shadow-[var(--shadow)] anim-fade-up">
+            <h2 className="ww-serif text-[1.3rem] mb-6">Choose Date & Time</h2>
 
-            <label className="text-sm font-medium mb-2.5 block">Date *</label>
+            <label className="block text-sm font-medium mb-3 text-[var(--text)]">Date *</label>
             <div className="grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-2 mb-6">
               {dates.map((d) => (
                 <button
                   key={d}
                   onClick={() => update("date", d)}
-                  className={`py-3 px-2 rounded-xl border-2 font-medium text-[13px] font-sans cursor-pointer transition-all ${
+                  className={`py-3 px-2 rounded-2xl text-sm font-medium transition-all duration-200 cursor-pointer border-2 ${
                     form.date === d
-                      ? "border-ww-green bg-ww-green/10 text-ww-deep-green"
-                      : "border-ww-green/10 bg-white text-ww-text hover:border-ww-green/30"
+                      ? "bg-[var(--green)] text-white border-[var(--green)]"
+                      : "bg-[var(--cream)] text-[var(--text)] border-transparent hover:border-[var(--green)]"
                   }`}
                 >
                   {formatDate(d)}
@@ -192,8 +212,8 @@ export function BookingClient() {
 
             {form.date && (
               <>
-                <label className="text-sm font-medium mb-2.5 block">Time *</label>
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-2">
+                <label className="block text-sm font-medium mb-3 text-[var(--text)]">Time *</label>
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-2 mb-6">
                   {TIME_SLOTS.map((t) => {
                     const booked = isSlotBooked(form.date, t);
                     return (
@@ -201,12 +221,12 @@ export function BookingClient() {
                         key={t}
                         onClick={() => !booked && update("time", t)}
                         disabled={booked}
-                        className={`py-3 px-2 rounded-xl border-2 font-medium text-sm font-sans transition-all ${
+                        className={`py-3 px-2 rounded-2xl text-sm font-medium transition-all duration-200 border-2 ${
                           booked
-                            ? "border-ww-danger/15 bg-ww-danger/5 text-ww-light cursor-not-allowed line-through opacity-50"
+                            ? "bg-[var(--cream)] text-[var(--light)] border-transparent cursor-not-allowed line-through"
                             : form.time === t
-                              ? "border-ww-green bg-ww-green/10 text-ww-deep-green cursor-pointer"
-                              : "border-ww-green/10 bg-white text-ww-text cursor-pointer hover:border-ww-green/30"
+                            ? "bg-[var(--green)] text-white border-[var(--green)] cursor-pointer"
+                            : "bg-[var(--cream)] text-[var(--text)] border-transparent hover:border-[var(--green)] cursor-pointer"
                         }`}
                       >
                         {t}
@@ -217,68 +237,59 @@ export function BookingClient() {
               </>
             )}
 
-            {form.date && form.time && (
-              <div className="mt-6 p-5 bg-ww-green/5 rounded-2xl border border-ww-green/10">
-                <p className="font-semibold mb-1">Booking Summary</p>
-                <p className="text-ww-muted text-sm">
-                  {form.dogName || "Your dog"} · {formatDate(form.date)} at {form.time} · Free
-                </p>
-              </div>
-            )}
-          </div>
-        )}
+            <Input label="Notes (optional)" value={form.notes} onChange={(v) => update("notes", v)} placeholder="Anything I should know?" />
 
-        {/* Step 4: Confirmation */}
-        {step === 4 && (
-          <div className="anim-fade-up text-center py-10 ww-card p-8">
-            <div className="w-20 h-20 rounded-full mx-auto mb-6 bg-ww-green/10 flex items-center justify-center text-[2.5rem]">
-              🎉
-            </div>
-            <h2 className="ww-serif text-[1.8rem] mb-3">Meet &amp; Greet Booked!</h2>
-            <p className="text-ww-muted mb-2 leading-relaxed">
-              Your meet &amp; greet is confirmed for {formatDate(form.date)} at{" "}
-              {form.time}.
-            </p>
-            <p className="text-ww-muted mb-8 text-sm">
-              A confirmation has been saved. I&apos;ll reach out to confirm details.
-            </p>
-            <div className="flex gap-3 justify-center flex-wrap">
-              <Link
-                href="/"
-                className="ww-btn ww-btn-primary"
-              >
-                Back to Home
-              </Link>
+            <div className="flex gap-3 mt-6">
+              <button onClick={() => setStep(2)} className="flex-1 py-[14px] rounded-full font-semibold text-[15px] border-2 border-[var(--light)] text-[var(--muted)] bg-transparent cursor-pointer transition-colors hover:border-[var(--green)]">
+                ← Back
+              </button>
               <button
                 onClick={() => {
-                  setStep(1);
-                  setForm({ ownerName: "", email: "", phone: "", dogName: "", dogBreed: "", dogSize: "Medium", date: "", time: "", notes: "" });
+                  if (!form.date || !form.time) {
+                    addToast("Please select a date and time.", "error");
+                    return;
+                  }
+                  submit();
                 }}
-                className="ww-btn ww-btn-secondary"
+                disabled={loading}
+                className="flex-1 bg-[var(--green)] text-white py-[14px] rounded-full font-semibold text-[15px] transition-all duration-200 hover:bg-[var(--deep-green)] cursor-pointer border-none disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Book Another
+                {loading ? <span className="spinner" /> : `Confirm · £${WALK_PRICE}`}
               </button>
             </div>
           </div>
         )}
 
-        {/* Navigation button */}
-        {step < 4 && (
-          <div className="flex justify-end mt-8">
-            <button
-              onClick={() => (step === 3 ? submit() : setStep(step + 1))}
-              disabled={!canProceed() || loading}
-              className={`border-none ww-btn text-[15px] ${
-                canProceed()
-                  ? "ww-btn-primary cursor-pointer"
-                  : "bg-ww-light text-white cursor-not-allowed opacity-50"
-              }`}
+        {/* Step 4: Confirmation */}
+        {step === 4 && (
+          <div className="bg-[var(--warm-white)] rounded-3xl p-8 shadow-[var(--shadow)] text-center anim-fade-up">
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="ww-serif text-[1.6rem] mb-3">Walk Booked!</h2>
+            <p className="text-[var(--muted)] mb-2">
+              <strong>{form.dogName}</strong> is booked for{" "}
+              <strong>{formatDate(form.date)}</strong> at <strong>{form.time}</strong>
+            </p>
+            <p className="text-[var(--muted)] mb-6 text-sm">A confirmation has been sent to {form.email}</p>
+            <Link
+              href="/"
+              className="inline-block bg-[var(--green)] text-white px-7 py-[14px] rounded-full font-semibold text-[15px] transition-all duration-200 hover:bg-[var(--deep-green)] no-underline"
             >
-              {loading ? <span className="spinner" /> : step === 3 ? "Confirm Booking" : "Continue →"}
-            </button>
+              Back to Home
+            </Link>
           </div>
         )}
       </div>
+
+      {/* Toasts */}
+      {toasts.length > 0 && (
+        <div className="toast-container" role="status" aria-live="polite">
+          {toasts.map((t) => (
+            <div key={t.id} className={`toast ${t.type === "error" ? "error" : ""}`}>
+              {t.type === "error" ? "⚠️" : "✅"} {t.msg}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
