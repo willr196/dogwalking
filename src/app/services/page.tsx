@@ -1,132 +1,136 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site.config";
-import { PageLayout, Section, Breadcrumbs } from "@/components/willswalks/PageLayout";
-import { ServiceSchema } from "@/components/willswalks/JsonLd";
-import { PageShell } from "@/components/PageShell";
-import { SidebarCTA } from "@/components/SidebarCTA";
-import { Icons } from "@/components/willswalks/Icons";
+import { Container } from "@/components/Container";
+import { Nav } from "@/components/Nav";
+import { FAQAccordion } from "@/components/FAQAccordion";
 
 export const metadata: Metadata = {
-  title: `Dog Walking Services in Fulham | ${siteConfig.brandName}`,
-  description: `Solo and small-group dog walking in Fulham, SW6. Max ${siteConfig.pricing.maxDogsPerWalk} dogs per walk. Meet & greet required. From £${siteConfig.pricing.introPrice} per walk.`,
+  title: "Services",
+  description:
+    "Solo and small-group 60-minute dog walks in Fulham and SW6. Founding rate £13, clear updates, and meet and greet required.",
   alternates: { canonical: `${siteConfig.siteUrl}/services` },
   openGraph: {
-    title: `Dog Walking Services | ${siteConfig.brandName}`,
-    description: `Professional dog walking in Fulham. Solo walks and small groups (max ${siteConfig.pricing.maxDogsPerWalk} dogs).`,
+    title: "Will's Walks Services",
+    description: "Solo and small-group walks in Fulham, with max three dogs per group and clear updates.",
     url: `${siteConfig.siteUrl}/services`,
     type: "website",
-    locale: siteConfig.seo.locale,
   },
 };
 
+const faqItems = [
+  {
+    question: "Do all new dogs need a meet and greet?",
+    answer: "Yes. It is required before first booking so I can assess temperament, routine, and handling preferences.",
+  },
+  {
+    question: "How many dogs are in small-group walks?",
+    answer: "A strict maximum of three dogs, matched by temperament and pace.",
+  },
+  {
+    question: "Do I get updates after each walk?",
+    answer: "Yes. Every walk includes a short message and photo update.",
+  },
+] as const;
+
 export default function ServicesPage() {
   return (
-    <PageLayout>
-      <ServiceSchema
-        name="Dog Walking Services"
-        description={`Solo and small-group dog walking in Fulham, SW6. Max ${siteConfig.pricing.maxDogsPerWalk} dogs per walk.`}
-        url="/services"
-      />
+    <>
+      <Nav />
 
-      <Section className="px-0">
-        <PageShell sidebar={<SidebarCTA />}>
-          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Services" }]} />
-
-          <h1 className="ww-serif mb-4 text-[clamp(2.05rem,4.2vw,3.1rem)] leading-tight">
-            Dog Walking Services
-          </h1>
-          <p className="mb-10 max-w-[680px] text-lg leading-relaxed text-[var(--muted)]">
-            Choose between one-to-one or carefully managed small-group walks. Every plan starts with a
-            meet &amp; greet so your dog gets the right fit from day one.
-          </p>
-
-          <div className="grid gap-5 md:grid-cols-2">
-            {siteConfig.services.map((service) => (
-              <article key={service.slug} className="ww-card p-6 md:p-7">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--deep-green)]/72">
-                      {service.shortName}
-                    </p>
-                    <h2 className="ww-serif mt-2 text-[1.6rem] leading-tight text-[var(--text)]">
-                      {service.name}
-                    </h2>
-                  </div>
-                  <span className="text-xl" aria-hidden="true">
-                    {service.slug === "solo-dog-walking" ? "🐕" : "🐕‍🦺"}
-                  </span>
-                </div>
-
-                <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">{service.description}</p>
-
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {service.features.slice(0, 3).map((feature) => (
-                    <span
-                      key={feature}
-                      className="rounded-full border border-[var(--line)] bg-white px-3 py-1 text-xs font-semibold text-[var(--deep-green)]"
-                    >
-                      {feature}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="mt-6 flex items-end justify-between gap-4">
-                  <div>
-                    <p className="ww-serif text-[1.95rem] leading-none text-[var(--deep-green)]">
-                      £{siteConfig.pricing.introPrice}
-                    </p>
-                    <p className="mt-1 text-sm text-[var(--muted)]">per {service.duration} walk</p>
-                  </div>
-                  <Link
-                    href={`/services/${service.slug}`}
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--deep-green)] no-underline"
-                  >
-                    View details
-                    <Icons.ArrowRight size={15} />
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-10 rounded-[28px] border border-[var(--line)] bg-white p-7 md:p-8">
-            <h2 className="ww-serif mb-6 text-[1.6rem] leading-tight text-[var(--text)]">How It Works</h2>
-            <ol className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {siteConfig.howItWorks.map((step) => (
-                <li key={step.step} className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[linear-gradient(132deg,var(--green),var(--deep-green))] text-sm font-bold text-white">
-                    {step.step}
-                  </span>
-                  <h3 className="mt-3 text-sm font-semibold text-[var(--text)]">{step.title}</h3>
-                  <p className="mt-2 text-xs leading-relaxed text-[var(--muted)]">{step.description}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          <div className="mt-10 rounded-[28px] bg-[linear-gradient(140deg,var(--orange),var(--deep-green))] p-8 text-white">
-            <h2 className="ww-serif text-[1.9rem] leading-tight">Not sure which service is best?</h2>
-            <p className="mt-2 max-w-[620px] leading-relaxed text-white/88">
-              We can decide together at the meet &amp; greet based on your dog&apos;s behaviour, energy, and confidence.
+      <main>
+        <section className="py-16 sm:py-20">
+          <Container>
+            <h1 className="text-4xl leading-tight text-slate-900 sm:text-5xl">Walk services built around your dog.</h1>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
+              Solo or small-group 60-minute walks across Fulham and SW6. Every plan starts with a meet and greet.
             </p>
-            <div className="mt-5 flex flex-wrap gap-3">
-              <Link
-                href="/booking"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold text-[var(--deep-green)] no-underline"
-              >
-                Book a Meet &amp; Greet
-              </Link>
-              <Link
-                href="/pricing"
-                className="inline-flex items-center gap-2 rounded-full border border-white/36 bg-white/10 px-7 py-3 text-sm font-semibold text-white no-underline"
-              >
-                View Pricing
-              </Link>
+          </Container>
+        </section>
+
+        <section className="py-16">
+          <Container>
+            <div className="grid gap-5 md:grid-cols-2">
+              <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <h2 className="text-2xl text-slate-900">Solo Walk</h2>
+                <p className="mt-3 text-sm leading-6 text-slate-600">
+                  One-to-one sessions for dogs that do best with focused, calm handling.
+                </p>
+                <p className="mt-4 text-sm font-semibold text-slate-800">60 min · £13</p>
+                <ul className="mt-4 space-y-2 text-sm text-slate-600">
+                  <li>Individual route and pace</li>
+                  <li>Photo update after every walk</li>
+                  <li>Routine-focused handling</li>
+                </ul>
+              </article>
+
+              <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <h2 className="text-2xl text-slate-900">Small Group Walk (max 3)</h2>
+                <p className="mt-3 text-sm leading-6 text-slate-600">
+                  Social walks with carefully matched dogs and close supervision.
+                </p>
+                <p className="mt-4 text-sm font-semibold text-slate-800">60 min · £13</p>
+                <ul className="mt-4 space-y-2 text-sm text-slate-600">
+                  <li>Strict max of three dogs</li>
+                  <li>Compatibility checked first</li>
+                  <li>Photo update after every walk</li>
+                </ul>
+              </article>
             </div>
-          </div>
-        </PageShell>
-      </Section>
-    </PageLayout>
+          </Container>
+        </section>
+
+        <section className="py-16">
+          <Container>
+            <h2 className="text-3xl leading-tight text-slate-900">Pricing</h2>
+            <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+              <table className="w-full border-collapse text-left text-sm text-slate-700">
+                <thead className="bg-slate-50 text-slate-600">
+                  <tr>
+                    <th className="px-5 py-3 font-semibold">Service</th>
+                    <th className="px-5 py-3 font-semibold">Duration</th>
+                    <th className="px-5 py-3 font-semibold">Rate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-t border-slate-200">
+                    <td className="px-5 py-3">Solo Walk</td>
+                    <td className="px-5 py-3">60 min</td>
+                    <td className="px-5 py-3">£13 (founding rate)</td>
+                  </tr>
+                  <tr className="border-t border-slate-200">
+                    <td className="px-5 py-3">Small Group Walk</td>
+                    <td className="px-5 py-3">60 min</td>
+                    <td className="px-5 py-3">£13 (founding rate)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-4 text-sm text-slate-600">Meet and greet required before first booking.</p>
+          </Container>
+        </section>
+
+        <section className="py-16">
+          <Container>
+            <h2 className="text-3xl leading-tight text-slate-900">FAQ</h2>
+            <div className="mt-6">
+              <FAQAccordion items={[...faqItems]} />
+            </div>
+          </Container>
+        </section>
+
+        <section className="py-16 sm:py-20">
+          <Container>
+            <h2 className="text-3xl leading-tight text-slate-900">Book a free meet and greet.</h2>
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600">
+              We will confirm fit, routine, and the right walk style for your dog.
+            </p>
+            <Link href="/book" className="btn-primary mt-6">
+              Book now
+            </Link>
+          </Container>
+        </section>
+      </main>
+    </>
   );
 }

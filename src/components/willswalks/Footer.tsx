@@ -4,69 +4,62 @@ import { siteConfig } from "@/lib/site.config";
 export function Footer() {
   const quickLinks = [
     { href: "/services", label: "Services" },
+    { href: "/about", label: "About" },
     { href: "/pricing", label: "Pricing" },
-    { href: "/areas", label: "Areas" },
     { href: "/reviews", label: "Reviews" },
-    { href: "/booking", label: "Booking" },
+    { href: "/contact", label: "Contact" },
   ];
 
   return (
-    <footer className="px-5 pb-8 pt-5">
+    <footer className="px-5 py-12 md:py-14">
       <div className="mx-auto w-full max-w-[1240px]">
-        <div className="rounded-[30px] border border-[rgba(255,255,255,0.16)] bg-[linear-gradient(155deg,var(--dark-green),var(--deep-green))] p-7 text-white shadow-[var(--shadow-lg)] md:p-10">
-          <div className="grid gap-8 md:grid-cols-[1.25fr_0.75fr_0.9fr]">
+        <div className="rounded-[30px] border border-[var(--line)] bg-[linear-gradient(155deg,rgba(255,255,255,0.93),rgba(244,250,247,0.82))] px-6 py-8 shadow-[0_18px_44px_rgba(11,34,50,0.1)] md:px-8 md:py-9">
+          <div className="grid gap-7 md:grid-cols-[1.2fr_0.9fr_1fr] md:items-start">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/66">
+              <p className="ww-serif text-[1.72rem] leading-none tracking-[-0.02em] text-[var(--deep-green)]">
                 Will&apos;s Walks
               </p>
-              <h2 className="ww-serif mt-2 text-[clamp(1.7rem,3vw,2.25rem)] leading-tight text-white">
-                Structured dog walks with clear updates and calm handling.
-              </h2>
-              <p className="mt-3 max-w-[450px] text-[15px] leading-relaxed text-white/78">
-                Solo and small-group walks around Fulham for dogs that benefit from consistency,
-                safety, and proper one-to-one attention.
+              <p className="mt-2.5 max-w-[38ch] text-sm text-[var(--muted)]">
+                Calm, personal dog walking for Fulham and SW6 with a small regular client list.
               </p>
+              <div className="mt-5 flex flex-wrap gap-2.5">
+                <span className="home-chip">Max 3 dogs</span>
+                <span className="home-chip">Photo updates</span>
+                <span className="home-chip">Meet &amp; greet first</span>
+              </div>
             </div>
 
-            <div>
-              <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.13em] text-white/60">
-                Explore
-              </p>
-              <ul className="grid grid-cols-2 gap-x-3 gap-y-2 text-[15px]">
-                {quickLinks.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-white/86 no-underline transition-colors hover:text-white"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <nav aria-label="Footer" className="grid content-start gap-2 text-sm">
+              {quickLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="inline-flex w-fit rounded-full px-2 py-1 font-semibold text-[var(--text)] no-underline transition-colors hover:text-[var(--deep-green)]"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
 
-            <div>
-              <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.13em] text-white/60">
-                Contact
-              </p>
+            <div className="md:justify-self-end">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">Contact</p>
               <Link
                 href={`mailto:${siteConfig.owner.email}`}
-                className="inline-flex rounded-full border border-white/30 bg-white/8 px-4 py-2 text-[14px] font-semibold text-white no-underline transition-colors hover:bg-white/15"
+                className="mt-1.5 inline-flex text-sm font-semibold text-[var(--deep-green)] no-underline hover:text-[var(--green)]"
               >
                 {siteConfig.owner.email}
               </Link>
-
-              <p className="mt-3 text-sm text-white/74">
-                Serving {siteConfig.areasServed.slice(0, 3).map((area) => area.name).join(", ")} and nearby SW6 areas.
-              </p>
-              <p className="mt-1 text-sm text-white/65">Open seven days, 7:00 to 19:00.</p>
+              <div className="mt-4">
+                <Link href="/booking" className="ww-btn ww-btn-primary px-4 py-2 text-[12px]">
+                  Book meet &amp; greet
+                </Link>
+              </div>
             </div>
           </div>
 
-          <div className="mt-8 border-t border-white/18 pt-4 text-[13px] text-white/68">
+          <p className="mt-7 border-t border-[var(--line)] pt-4 text-xs text-[var(--light)]">
             © {new Date().getFullYear()} {siteConfig.brandName}
-          </div>
+          </p>
         </div>
       </div>
     </footer>

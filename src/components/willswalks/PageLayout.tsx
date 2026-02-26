@@ -11,10 +11,10 @@ export function PageLayout({ children }: { children: React.ReactNode }) {
       <div className="relative flex min-h-screen flex-col overflow-hidden">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[280px] bg-[linear-gradient(180deg,rgba(255,255,255,0.58),transparent)]"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[340px] bg-[linear-gradient(180deg,rgba(255,255,255,0.68),rgba(255,255,255,0.16),transparent)]"
         />
         <NavBar />
-        <main className="relative z-[1] flex-1 pb-16 pt-28">{children}</main>
+        <main className="relative z-[1] flex-1 pb-20 pt-32 md:pt-36">{children}</main>
         <Footer />
       </div>
     </>
@@ -34,7 +34,7 @@ export function Section({
   id?: string;
 }) {
   return (
-    <section id={id} className={`w-full px-5 py-16 md:py-20 ${bg} ${className}`}>
+    <section id={id} className={`w-full px-5 py-20 md:py-24 ${bg} ${className}`}>
       <div className="mx-auto w-full max-w-[1240px]">{children}</div>
     </section>
   );

@@ -1,0 +1,33 @@
+<svg width="480" height="480" viewBox="0 0 480 480" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Will portrait placeholder</title>
+  <desc id="desc">A simple portrait illustration placeholder for Will, local dog walker.</desc>
+  <defs>
+    <linearGradient id="bg" x1="240" y1="0" x2="240" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E8F3FA"/>
+      <stop offset="1" stop-color="#CFE0EC"/>
+    </linearGradient>
+    <linearGradient id="shirt" x1="240" y1="262" x2="240" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#21556F"/>
+      <stop offset="1" stop-color="#163C55"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="480" height="480" fill="url(#bg)"/>
+  <circle cx="240" cy="240" r="220" fill="#E7EFF6"/>
+
+  <ellipse cx="240" cy="372" rx="138" ry="128" fill="url(#shirt)"/>
+  <circle cx="240" cy="184" r="90" fill="#E9C7A8"/>
+  <path d="M164 182C164 121 199 84 240 84C281 84 316 122 316 182V194H164V182Z" fill="#2D3B4C"/>
+
+  <circle cx="210" cy="184" r="7" fill="#25374A"/>
+  <circle cx="270" cy="184" r="7" fill="#25374A"/>
+  <path d="M207 225C218 237 232 243 240 243C248 243 262 237 273 225" stroke="#B2785A" stroke-width="6" stroke-linecap="round"/>
+
+  <circle cx="168" cy="342" r="44" fill="#183B52" fill-opacity="0.95"/>
+  <ellipse cx="155" cy="332" rx="8" ry="10" fill="white" fill-opacity="0.9"/>
+  <ellipse cx="180" cy="332" rx="8" ry="10" fill="white" fill-opacity="0.9"/>
+  <path d="M147 356C154 365 162 369 168 369C174 369 182 365 189 356" stroke="white" stroke-width="4" stroke-linecap="round"/>
+
+  <rect x="62" y="60" width="156" height="34" rx="17" fill="white" fill-opacity="0.78"/>
+  <text x="79" y="82" fill="#1A3B56" font-family="Arial, sans-serif" font-size="16" font-weight="700">Photo placeholder</text>
+</svg>

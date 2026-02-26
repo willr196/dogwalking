@@ -1,0 +1,35 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Will's Walks OpenGraph image</title>
+  <desc id="desc">Brand banner for Will's Walks, calm dog walking in Fulham SW6.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E9F5FC"/>
+      <stop offset="0.48" stop-color="#D9EAF2"/>
+      <stop offset="1" stop-color="#C6DCE9"/>
+    </linearGradient>
+    <linearGradient id="hill" x1="600" y1="330" x2="600" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#87C2A6"/>
+      <stop offset="1" stop-color="#4D8D75"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <path d="M0 356C153 324 281 334 420 369C582 409 734 455 932 439C1019 432 1108 405 1200 396V630H0V356Z" fill="url(#hill)"/>
+
+  <circle cx="957" cy="114" r="63" fill="#F6E3AE"/>
+  <circle cx="974" cy="377" r="76" fill="#2C6760"/>
+  <rect x="964" y="437" width="20" height="94" rx="10" fill="#2A5B54"/>
+
+  <rect x="86" y="102" width="167" height="38" rx="19" fill="white" fill-opacity="0.78"/>
+  <text x="104" y="127" fill="#18506B" font-family="Arial, sans-serif" font-size="18" font-weight="700">Will's Walks</text>
+
+  <text x="86" y="246" fill="#17384F" font-family="Georgia, 'Times New Roman', serif" font-size="62" font-weight="700">
+    Calm dog walking in Fulham, SW6
+  </text>
+  <text x="86" y="306" fill="#214A63" font-family="Arial, sans-serif" font-size="33" font-weight="600">
+    60-minute solo and small-group walks, max 3 dogs
+  </text>
+  <text x="86" y="352" fill="#214A63" font-family="Arial, sans-serif" font-size="30" font-weight="500">
+    Free meet and greet + photo updates after every walk
+  </text>
+</svg>

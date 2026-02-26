@@ -30,6 +30,13 @@ export const siteConfig = {
     { slug: "hurlingham", name: "Hurlingham", postcode: "SW6" },
   ],
 
+  /** Operating hours */
+  businessHours: {
+    days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    opens: "07:00",
+    closes: "19:00",
+  },
+
   /** Pricing */
   pricing: {
     introPrice: 13,
@@ -158,4 +165,3 @@ export function getAreaSlugs() {
 
 export type Area = (typeof siteConfig.areasServed)[number];
 export type Service = (typeof siteConfig.services)[number];
-
