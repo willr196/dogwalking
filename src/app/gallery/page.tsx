@@ -1,40 +1,31 @@
-import { NavBar } from "@/components/willswalks/NavBar";
-import { Footer } from "@/components/willswalks/Footer";
+import { PageLayout, Section, Breadcrumbs } from "@/components/willswalks/PageLayout";
 
-/**
- * GalleryPage displays a playful gallery of dog-related icons and emojis.
- * Real photos can be added in the future or via user uploads.
- */
 export default function GalleryPage() {
-  // An array of emojis to simulate gallery images.
-  const emojis = ["🐶", "🐾", "🎾", "🦴", "🐕", "🌳", "🏞️", "☀️", "💧", "🦋"];
+  const emojis = ["🐶", "🐾", "🎾", "🦴", "🐕", "🌳", "🏞", "☀", "💧", "🦋"];
 
   return (
-    <>
-      <NavBar />
-      <main className="ww-page">
-        <section className="ww-container">
-          <h1 className="font-serif text-4xl font-bold mb-6 text-ww-deep-green">
-            Gallery
-          </h1>
-          <p className="text-ww-text max-w-xl leading-relaxed mb-8">
-            Take a peek at some of our favourite moments. More photos coming soon!
-          </p>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
-            {emojis.map((emoji, idx) => (
-              <div
-                key={idx}
-                className="flex items-center justify-center aspect-square bg-ww-cream border border-ww-green/20 rounded-2xl shadow-ww-lg text-4xl"
-              >
-                <span role="img" aria-label="gallery emoji">
-                  {emoji}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </>
+    <PageLayout>
+      <Section>
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Gallery" }]} />
+
+        <h1 className="ww-serif mb-4 text-[clamp(2.05rem,4.2vw,3rem)] leading-tight">Gallery</h1>
+        <p className="mb-8 max-w-[680px] leading-relaxed text-[var(--muted)]">
+          A quick visual board of walk-day mood. Full photo updates are shared directly after each booking.
+        </p>
+
+        <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5">
+          {emojis.map((emoji, index) => (
+            <div
+              key={index}
+              className="flex aspect-square items-center justify-center rounded-2xl border border-[var(--line)] bg-white text-4xl shadow-[var(--shadow-soft)]"
+            >
+              <span role="img" aria-label="gallery emoji">
+                {emoji}
+              </span>
+            </div>
+          ))}
+        </div>
+      </Section>
+    </PageLayout>
   );
 }

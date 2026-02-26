@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ReviewsClient } from "./ReviewsClient";
-import { NavBar } from "@/components/willswalks/NavBar";
-import { Footer } from "@/components/willswalks/Footer";
+import { PageLayout } from "@/components/willswalks/PageLayout";
 
 export const metadata: Metadata = {
   title: "Reviews",
@@ -14,10 +13,8 @@ export const metadata: Metadata = {
 
 export default function ReviewsPage() {
   return (
-    <>
-      <NavBar />
+    <PageLayout>
       <ReviewsClient />
-      <Footer />
-    </>
+    </PageLayout>
   );
 }

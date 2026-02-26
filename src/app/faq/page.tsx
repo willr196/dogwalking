@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site.config";
-import {
-  PageLayout,
-  Section,
-  Breadcrumbs,
-} from "@/components/willswalks/PageLayout";
+import { PageLayout, Section, Breadcrumbs } from "@/components/willswalks/PageLayout";
 import { FAQSchema } from "@/components/willswalks/JsonLd";
 
 const faqs = [
@@ -81,54 +77,47 @@ export default function FAQPage() {
       <FAQSchema faqs={faqs} />
       <Section>
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "FAQ" }]} />
-        <h1 className="ww-serif text-[clamp(2rem,4vw,3rem)] leading-tight mb-4">
+
+        <h1 className="ww-serif mb-4 text-[clamp(2.05rem,4.2vw,3.1rem)] leading-tight">
           Frequently Asked Questions
         </h1>
-        <p className="text-[var(--muted)] text-lg leading-relaxed max-w-[600px] mb-10">
-          Everything you need to know about walking with {siteConfig.brandName}.
-          Can&apos;t find your answer?{" "}
-          <Link href="/contact" className="text-[var(--green)] font-medium hover:underline">
-            Get in touch
+        <p className="mb-10 max-w-[680px] text-lg leading-relaxed text-[var(--muted)]">
+          Common questions about booking, walk formats, and safety. Can&apos;t find what you need?{" "}
+          <Link href="/contact" className="font-semibold text-[var(--deep-green)] no-underline">
+            Send a message
           </Link>
           .
         </p>
 
-        <div className="space-y-3 mb-12">
+        <div className="mb-10 space-y-3">
           {faqs.map((faq) => (
-            <details
-              key={faq.question}
-              className="group bg-white rounded-xl border border-[var(--green)]/10 overflow-hidden"
-            >
-              <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none font-medium text-sm hover:bg-[var(--cream)]/40 transition-colors">
+            <details key={faq.question} className="group overflow-hidden rounded-2xl border border-[var(--line)] bg-white">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-sm font-semibold text-[var(--text)] hover:bg-[var(--surface)]">
                 <span className="pr-4">{faq.question}</span>
-                <span className="flex-shrink-0 text-[var(--light)] group-open:rotate-45 transition-transform text-lg">
+                <span className="flex-shrink-0 text-lg text-[var(--light)] transition-transform group-open:rotate-45">
                   +
                 </span>
               </summary>
-              <div className="px-5 pb-4 text-sm text-[var(--muted)] leading-relaxed">
-                {faq.answer}
-              </div>
+              <div className="px-5 pb-4 text-sm leading-relaxed text-[var(--muted)]">{faq.answer}</div>
             </details>
           ))}
         </div>
 
-        <div className="text-center bg-[var(--cream)] rounded-2xl p-10">
-          <h2 className="ww-serif text-xl font-semibold mb-3">
-            Still have questions?
-          </h2>
-          <p className="text-[var(--muted)] mb-6">
-            I&apos;m happy to chat, no pressure.
+        <div className="rounded-[28px] bg-[linear-gradient(140deg,var(--orange),var(--deep-green))] p-8 text-white">
+          <h2 className="ww-serif text-[1.85rem] leading-tight">Still have questions?</h2>
+          <p className="mt-2 max-w-[620px] leading-relaxed text-white/88">
+            Happy to chat through your dog&apos;s routine and recommend the right walk setup.
           </p>
-          <div className="flex justify-center gap-3 flex-wrap">
+          <div className="mt-5 flex flex-wrap gap-3">
             <Link
               href="/contact"
-              className="bg-[var(--green)] text-white px-8 py-3 rounded-full font-semibold hover:opacity-90 transition-opacity shadow-md"
+              className="inline-flex rounded-full bg-white px-8 py-3 text-sm font-bold text-[var(--deep-green)] no-underline"
             >
               Get in Touch
             </Link>
             <Link
               href="/booking"
-              className="bg-white text-[var(--text)] border-2 border-[var(--green)]/20 px-8 py-3 rounded-full font-semibold hover:border-[var(--green)]/40 transition-colors"
+              className="inline-flex rounded-full border border-white/36 bg-white/10 px-8 py-3 text-sm font-semibold text-white no-underline"
             >
               Book a Meet &amp; Greet
             </Link>
@@ -138,4 +127,3 @@ export default function FAQPage() {
     </PageLayout>
   );
 }
-

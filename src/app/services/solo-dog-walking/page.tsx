@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site.config";
-import {
-  PageLayout,
-  Section,
-  Breadcrumbs,
-} from "@/components/willswalks/PageLayout";
+import { PageLayout, Section, Breadcrumbs } from "@/components/willswalks/PageLayout";
 import { ServiceSchema } from "@/components/willswalks/JsonLd";
 
 const service = siteConfig.services.find((s) => s.slug === "solo-dog-walking");
@@ -26,11 +22,8 @@ export default function SoloDogWalkingPage() {
 
   return (
     <PageLayout>
-      <ServiceSchema
-        name={service.name}
-        description={service.description}
-        url="/services/solo-dog-walking"
-      />
+      <ServiceSchema name={service.name} description={service.description} url="/services/solo-dog-walking" />
+
       <Section>
         <Breadcrumbs
           items={[
@@ -40,131 +33,100 @@ export default function SoloDogWalkingPage() {
           ]}
         />
 
-        <div className="grid md:grid-cols-[1fr_300px] gap-10 items-start">
-          <div>
-            <h1 className="ww-serif text-[clamp(2rem,4vw,2.8rem)] leading-tight mb-4">
-              Solo Dog Walking
-            </h1>
-            <p className="text-[var(--muted)] text-lg leading-relaxed mb-8">
-              {service.description}
-            </p>
+        <div className="grid items-start gap-8 lg:grid-cols-[1fr_320px]">
+          <article>
+            <h1 className="ww-serif mb-4 text-[clamp(2rem,4.3vw,3rem)] leading-tight">Solo Dog Walking</h1>
+            <p className="mb-8 text-lg leading-relaxed text-[var(--muted)]">{service.description}</p>
 
-            <h2 className="ww-serif text-xl font-semibold mb-4">
-              What&apos;s included
-            </h2>
-            <div className="space-y-3 mb-8">
-              {service.features.map((f) => (
-                <div key={f} className="flex items-start gap-3">
-                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--green)]/10 text-[var(--green)] flex items-center justify-center text-sm">
+            <div className="ww-card p-6 md:p-7">
+              <h2 className="ww-serif mb-4 text-[1.5rem] leading-tight">What&apos;s Included</h2>
+              <ul className="space-y-3">
+                {service.features.map((feature) => (
+                  <li key={feature} className="flex items-start gap-3 text-sm text-[var(--text)]">
+                    <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[rgba(15,141,135,0.15)] text-[12px] font-semibold text-[var(--deep-green)]">
+                      ✓
+                    </span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+                <li className="flex items-start gap-3 text-sm text-[var(--text)]">
+                  <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[rgba(15,141,135,0.15)] text-[12px] font-semibold text-[var(--deep-green)]">
                     ✓
                   </span>
-                  <span className="text-[var(--text)]">{f}</span>
-                </div>
-              ))}
-              <div className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--green)]/10 text-[var(--green)] flex items-center justify-center text-sm">
-                  ✓
-                </span>
-                <span className="text-[var(--text)]">
-                  {service.duration} of dedicated walking and enrichment
-                </span>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--green)]/10 text-[var(--green)] flex items-center justify-center text-sm">
-                  ✓
-                </span>
-                <span className="text-[var(--text)]">
-                  Reliable pick-up and drop-off times
-                </span>
-              </div>
+                  <span>{service.duration} of dedicated exercise and enrichment</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-[var(--text)]">
+                  <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[rgba(15,141,135,0.15)] text-[12px] font-semibold text-[var(--deep-green)]">
+                    ✓
+                  </span>
+                  <span>Reliable pick-up and drop-off windows</span>
+                </li>
+              </ul>
             </div>
 
-            <h2 className="ww-serif text-xl font-semibold mb-4">
-              Who is this for?
-            </h2>
-            <p className="text-[var(--muted)] leading-relaxed mb-4">
-              Solo walks are ideal for dogs who prefer one-on-one attention, are
-              reactive or anxious around other dogs, are puppies in training, or
-              simply thrive with undivided focus. It&apos;s also perfect if your dog
-              has specific exercise or medical needs that require individual
-              care.
+            <h2 className="ww-serif mb-3 mt-8 text-[1.5rem] leading-tight">Who It&apos;s Best For</h2>
+            <p className="mb-4 leading-relaxed text-[var(--muted)]">
+              Solo walks suit dogs that need full focus: reactive dogs, anxious dogs, puppies still learning,
+              or dogs with specific health and routine needs.
+            </p>
+            <p className="leading-relaxed text-[var(--muted)]">
+              If your dog gets overstimulated in groups or just prefers one-to-one handling, solo walks create
+              calmer progress and better consistency.
             </p>
 
-            <h2 className="ww-serif text-xl font-semibold mb-4 mt-8">
-              How it works
-            </h2>
-            <div className="space-y-4 mb-8">
+            <h2 className="ww-serif mb-4 mt-8 text-[1.5rem] leading-tight">How It Works</h2>
+            <ol className="space-y-3">
               {siteConfig.howItWorks.map((step) => (
-                <div key={step.step} className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--green)] text-white font-bold text-sm flex items-center justify-center">
+                <li key={step.step} className="ww-card flex gap-3 p-4">
+                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(132deg,var(--green),var(--deep-green))] text-sm font-bold text-white">
                     {step.step}
-                  </div>
+                  </span>
                   <div>
-                    <h3 className="font-semibold text-sm mb-1">
-                      {step.title}
-                    </h3>
-                    <p className="text-[var(--muted)] text-sm leading-relaxed">
-                      {step.description}
-                    </p>
+                    <h3 className="text-sm font-semibold text-[var(--text)]">{step.title}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{step.description}</p>
                   </div>
-                </div>
+                </li>
               ))}
-            </div>
-          </div>
+            </ol>
+          </article>
 
-          <aside className="bg-white rounded-2xl border border-[var(--green)]/10 p-6 md:sticky md:top-24">
-            <div className="text-center mb-6">
-              <p className="text-xs text-[var(--orange)] font-semibold uppercase tracking-wide mb-1">
-                {siteConfig.pricing.introLabel}
-              </p>
-              <div className="ww-serif text-4xl font-bold text-[var(--deep-green)]">
-                £{siteConfig.pricing.introPrice}
-              </div>
-              <p className="text-[var(--muted)] text-sm mt-1">
-                per {service.duration} walk
-              </p>
-              <p className="text-xs text-[var(--light)] mt-1">
-                {siteConfig.pricing.introNote}
-              </p>
+          <aside className="ww-card p-6 md:sticky md:top-28">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--deep-green)]/78">
+              Introductory rate
+            </p>
+            <p className="ww-serif mt-2 text-[2.5rem] leading-none text-[var(--deep-green)]">£{siteConfig.pricing.introPrice}</p>
+            <p className="mt-2 text-sm text-[var(--muted)]">per {service.duration} walk</p>
+            <p className="mt-1 text-xs text-[var(--light)]">{siteConfig.pricing.introNote}</p>
+
+            <div className="mt-5 space-y-2 rounded-2xl border border-[var(--line)] bg-white p-4 text-sm text-[var(--muted)]">
+              <p>Max {siteConfig.pricing.maxDogsPerWalk} dogs in group sessions</p>
+              <p>Serving {siteConfig.areasServed.slice(0, 3).map((a) => a.name).join(", ")} and nearby SW6</p>
+              <p>Available seven days a week</p>
             </div>
+
             <Link
               href="/booking"
-              className="block w-full text-center bg-[var(--green)] text-white py-3 rounded-full font-semibold hover:opacity-90 transition-opacity shadow-md mb-3"
+              className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(132deg,var(--green),var(--deep-green))] px-5 py-3 text-sm font-semibold text-white no-underline"
             >
               Book a Meet &amp; Greet
             </Link>
             <Link
               href="/contact"
-              className="block w-full text-center bg-white text-[var(--text)] border-2 border-[var(--green)]/20 py-3 rounded-full font-semibold hover:border-[var(--green)]/40 transition-colors"
+              className="mt-3 inline-flex w-full items-center justify-center rounded-full border border-[var(--line-strong)] bg-white px-5 py-3 text-sm font-semibold text-[var(--text)] no-underline"
             >
               Ask a Question
             </Link>
-            <div className="mt-6 pt-5 border-t border-[var(--green)]/10 space-y-2">
-              <p className="text-xs text-[var(--muted)]">
-                📍 Serving: {siteConfig.areasServed.map((a) => a.name).join(", ")}
-              </p>
-              <p className="text-xs text-[var(--muted)]">🕐 Available 7 days a week</p>
-            </div>
           </aside>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-[var(--green)]/10 flex flex-wrap gap-3">
-          <Link
-            href="/services/small-group-dog-walking"
-            className="text-sm text-[var(--green)] font-medium hover:underline"
-          >
+        <div className="mt-10 flex flex-wrap gap-4 border-t border-[var(--line)] pt-6">
+          <Link href="/services/small-group-dog-walking" className="text-sm font-semibold text-[var(--deep-green)] no-underline">
             Small Group Dog Walking →
           </Link>
-          <Link
-            href="/pricing"
-            className="text-sm text-[var(--green)] font-medium hover:underline"
-          >
+          <Link href="/pricing" className="text-sm font-semibold text-[var(--deep-green)] no-underline">
             Full Pricing →
           </Link>
-          <Link
-            href="/areas"
-            className="text-sm text-[var(--green)] font-medium hover:underline"
-          >
+          <Link href="/areas" className="text-sm font-semibold text-[var(--deep-green)] no-underline">
             Areas Served →
           </Link>
         </div>
@@ -172,4 +134,3 @@ export default function SoloDogWalkingPage() {
     </PageLayout>
   );
 }
-

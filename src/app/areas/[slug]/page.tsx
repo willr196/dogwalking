@@ -225,79 +225,75 @@ export default async function AreaPage({
           ]}
         />
 
-        <h1 className="ww-serif text-[clamp(2rem,4vw,3rem)] leading-tight mb-4">
+        <h1 className="ww-serif mb-4 text-[clamp(2.05rem,4.2vw,3.1rem)] leading-tight">
           Dog Walking in {area.name}
         </h1>
-        <p className="text-[var(--muted)] text-lg leading-relaxed max-w-[640px] mb-10">
+        <p className="mb-10 max-w-[680px] text-lg leading-relaxed text-[var(--muted)]">
           {content.intro}
         </p>
 
-        <div className="grid sm:grid-cols-2 gap-4 mb-10">
+        <div className="mb-10 grid gap-4 sm:grid-cols-2">
           {siteConfig.services.map((s) => (
             <Link
               key={s.slug}
               href={`/services/${s.slug}`}
-              className="group bg-white rounded-xl border border-[var(--green)]/10 p-5 hover:shadow-md hover:border-[var(--green)]/20 transition-all"
+              className="ww-card group block p-5 no-underline"
             >
-              <h3 className="font-semibold text-sm mb-1 group-hover:text-[var(--deep-green)] transition-colors">
+              <h3 className="mb-1 text-sm font-semibold transition-colors group-hover:text-[var(--deep-green)]">
                 {s.name}
               </h3>
-              <p className="text-xs text-[var(--muted)] mb-2">
+              <p className="mb-2 text-xs text-[var(--muted)]">
                 {s.duration} · From £{siteConfig.pricing.introPrice}
               </p>
-              <span className="text-xs text-[var(--green)] font-medium">
-                Learn more →
+              <span className="text-xs font-semibold text-[var(--deep-green)]">
+                Learn more
               </span>
             </Link>
           ))}
         </div>
 
-        <div className="mb-10">
-          <h2 className="ww-serif text-xl font-semibold mb-3">
+        <div className="mb-10 rounded-[26px] border border-[var(--line)] bg-white p-6 md:p-7">
+          <h2 className="ww-serif mb-3 text-[1.5rem] leading-tight">
             Where I Walk in {area.name}
           </h2>
-          <p className="text-[var(--muted)] leading-relaxed mb-4">
+          <p className="mb-4 leading-relaxed text-[var(--muted)]">
             {content.walkingSpots}
           </p>
-          <p className="text-[var(--muted)] leading-relaxed">{content.whyLocal}</p>
+          <p className="leading-relaxed text-[var(--muted)]">{content.whyLocal}</p>
         </div>
 
-        <div className="bg-[var(--cream)] rounded-2xl p-8 mb-10">
-          <h2 className="ww-serif text-xl font-semibold mb-6">How It Works</h2>
-          <div className="grid sm:grid-cols-2 gap-6">
+        <div className="mb-10 rounded-[26px] border border-[var(--line)] bg-white p-6 md:p-7">
+          <h2 className="ww-serif mb-6 text-[1.5rem] leading-tight">How It Works</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
             {siteConfig.howItWorks.map((step) => (
-              <div key={step.step} className="flex gap-3">
-                <div className="flex-shrink-0 w-7 h-7 rounded-full bg-[var(--green)] text-white font-bold text-xs flex items-center justify-center">
+              <div key={step.step} className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
+                <div className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[linear-gradient(132deg,var(--green),var(--deep-green))] text-xs font-bold text-white">
                   {step.step}
                 </div>
-                <div>
-                  <h3 className="font-semibold text-sm mb-1">{step.title}</h3>
-                  <p className="text-[var(--muted)] text-xs leading-relaxed">
-                    {step.description}
-                  </p>
-                </div>
+                <h3 className="mb-1 mt-3 text-sm font-semibold text-[var(--text)]">{step.title}</h3>
+                <p className="text-xs leading-relaxed text-[var(--muted)]">{step.description}</p>
               </div>
             ))}
           </div>
         </div>
 
         <div className="mb-10">
-          <h2 className="ww-serif text-xl font-semibold mb-4">
+          <h2 className="ww-serif mb-4 text-[1.5rem] leading-tight">
             Dog Walking in {area.name} — FAQ
           </h2>
           <div className="space-y-3">
             {content.faqs.map((faq) => (
               <details
                 key={faq.question}
-                className="group bg-white rounded-xl border border-[var(--green)]/10 overflow-hidden"
+                className="group overflow-hidden rounded-2xl border border-[var(--line)] bg-white"
               >
-                <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none font-medium text-sm hover:bg-[var(--cream)]/40 transition-colors">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-sm font-semibold text-[var(--text)] hover:bg-[var(--surface)]">
                   <span className="pr-4">{faq.question}</span>
-                  <span className="flex-shrink-0 text-[var(--light)] group-open:rotate-45 transition-transform text-lg">
+                  <span className="flex-shrink-0 text-lg text-[var(--light)] transition-transform group-open:rotate-45">
                     +
                   </span>
                 </summary>
-                <div className="px-5 pb-4 text-sm text-[var(--muted)] leading-relaxed">
+                <div className="px-5 pb-4 text-sm leading-relaxed text-[var(--muted)]">
                   {faq.answer}
                 </div>
               </details>
@@ -305,52 +301,52 @@ export default async function AreaPage({
           </div>
         </div>
 
-        <div className="text-center bg-[var(--deep-green)] text-white rounded-2xl p-10">
-          <h2 className="ww-serif text-2xl font-semibold mb-3">
+        <div className="rounded-[28px] bg-[linear-gradient(140deg,var(--orange),var(--deep-green))] p-8 text-white">
+          <h2 className="ww-serif text-[1.85rem] leading-tight">
             Dog walking in {area.name} from £{siteConfig.pricing.introPrice}
           </h2>
-          <p className="opacity-85 mb-6 max-w-md mx-auto">
+          <p className="mt-2 max-w-[620px] leading-relaxed text-white/88">
             Start with a free meet &amp; greet. I&apos;ll come to your home in {area.name}{" "}
             to meet your dog.
           </p>
-          <div className="flex justify-center gap-3 flex-wrap">
+          <div className="mt-5 flex flex-wrap gap-3">
             <Link
               href="/booking"
-              className="bg-white text-[var(--deep-green)] px-8 py-3 rounded-full font-semibold hover:opacity-90 transition-opacity"
+              className="inline-flex rounded-full bg-white px-8 py-3 text-sm font-bold text-[var(--deep-green)] no-underline"
             >
               Book a Meet &amp; Greet
             </Link>
             <Link
               href="/contact"
-              className="border-2 border-white/30 text-white px-8 py-3 rounded-full font-semibold hover:border-white/60 transition-colors"
+              className="inline-flex rounded-full border border-white/36 bg-white/10 px-8 py-3 text-sm font-semibold text-white no-underline"
             >
               Get in Touch
             </Link>
           </div>
         </div>
 
-        <div className="mt-8 flex flex-wrap gap-3 justify-center">
+        <div className="mt-7 flex flex-wrap gap-4">
           <Link
             href="/services"
-            className="text-sm text-[var(--green)] font-medium hover:underline"
+            className="text-sm font-semibold text-[var(--deep-green)] no-underline"
           >
             Our Services →
           </Link>
           <Link
             href="/pricing"
-            className="text-sm text-[var(--green)] font-medium hover:underline"
+            className="text-sm font-semibold text-[var(--deep-green)] no-underline"
           >
             Pricing →
           </Link>
           <Link
             href="/areas"
-            className="text-sm text-[var(--green)] font-medium hover:underline"
+            className="text-sm font-semibold text-[var(--deep-green)] no-underline"
           >
             All Areas →
           </Link>
           <Link
             href="/faq"
-            className="text-sm text-[var(--green)] font-medium hover:underline"
+            className="text-sm font-semibold text-[var(--deep-green)] no-underline"
           >
             FAQ →
           </Link>

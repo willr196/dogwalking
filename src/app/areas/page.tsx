@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site.config";
-import {
-  PageLayout,
-  Section,
-  Breadcrumbs,
-} from "@/components/willswalks/PageLayout";
+import { PageLayout, Section, Breadcrumbs } from "@/components/willswalks/PageLayout";
 import { PageShell } from "@/components/PageShell";
 import { SidebarCTA } from "@/components/SidebarCTA";
+import { Icons } from "@/components/willswalks/Icons";
 
 export const metadata: Metadata = {
   title: `Dog Walking Areas in Fulham & SW6 | ${siteConfig.brandName}`,
@@ -20,67 +17,53 @@ export default function AreasPage() {
     <PageLayout>
       <Section className="px-0">
         <PageShell sidebar={<SidebarCTA />}>
-          <Breadcrumbs
-            items={[{ label: "Home", href: "/" }, { label: "Areas" }]}
-          />
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Areas" }]} />
 
-          <h1 className="ww-serif text-[clamp(2rem,4vw,3rem)] leading-tight mb-4">
-            Areas I Cover
-          </h1>
-          <p className="text-[var(--muted)] text-lg leading-relaxed max-w-[600px] mb-10">
-            Based in Fulham, I walk dogs across SW6 and the surrounding
-            neighbourhoods. Each area has its own character, parks, and walking
-            routes.
+          <h1 className="ww-serif mb-4 text-[clamp(2.05rem,4.2vw,3.1rem)] leading-tight">Areas I Cover</h1>
+          <p className="mb-10 max-w-[680px] text-lg leading-relaxed text-[var(--muted)]">
+            Fulham-first coverage across SW6 and nearby streets. Each area has slightly different routes,
+            park options, and walk rhythms.
           </p>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {siteConfig.areasServed.map((area) => (
               <Link
                 key={area.slug}
                 href={`/areas/${area.slug}`}
-                className="group bg-white rounded-2xl border border-[var(--green)]/10 p-6 hover:shadow-lg hover:border-[var(--green)]/25 transition-all"
+                className="ww-card group block p-5 no-underline"
               >
-                <div className="text-2xl mb-3">📍</div>
-                <h2 className="ww-serif text-lg font-semibold mb-1 group-hover:text-[var(--deep-green)] transition-colors">
-                  {area.name}
-                </h2>
-                <p className="text-sm text-[var(--muted)] mb-3">
-                  Dog walking in {area.name}, {area.postcode}
-                </p>
-                <span className="text-sm text-[var(--green)] font-medium group-hover:translate-x-1 inline-block transition-transform">
-                  View details →
+                <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(15,141,135,0.14)] text-[var(--deep-green)]">
+                  <Icons.MapPin size={17} />
+                </div>
+                <h2 className="ww-serif text-[1.25rem] leading-tight text-[var(--text)]">{area.name}</h2>
+                <p className="mt-1 text-sm text-[var(--muted)]">Dog walking in {area.name}, {area.postcode}</p>
+                <span className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-[var(--deep-green)] transition-transform group-hover:translate-x-0.5">
+                  View details
+                  <Icons.ArrowRight size={14} />
                 </span>
               </Link>
             ))}
           </div>
 
-          <div className="bg-[var(--cream)] rounded-2xl p-8 text-center mb-10">
-            <h2 className="ww-serif text-xl font-semibold mb-3">
-              Not sure if I cover your area?
-            </h2>
-            <p className="text-[var(--muted)] mb-5 max-w-md mx-auto">
-              If you&apos;re near SW6 but don&apos;t see your neighbourhood listed, get
-              in touch, I may still be able to help.
+          <div className="mt-10 rounded-[28px] border border-[var(--line)] bg-white p-7 text-center md:p-8">
+            <h2 className="ww-serif text-[1.6rem] leading-tight">Not sure if I cover your area?</h2>
+            <p className="mx-auto mt-2 max-w-[560px] leading-relaxed text-[var(--muted)]">
+              If you&apos;re near SW6 but don&apos;t see your exact neighbourhood listed, send a message and I&apos;ll
+              confirm whether regular routes are possible.
             </p>
             <Link
               href="/contact"
-              className="inline-flex bg-[var(--green)] text-white px-8 py-3 rounded-full font-semibold hover:opacity-90 transition-opacity shadow-md"
+              className="mt-5 inline-flex rounded-full bg-[linear-gradient(132deg,var(--green),var(--deep-green))] px-7 py-3 text-sm font-semibold text-white no-underline"
             >
               Get in Touch
             </Link>
           </div>
 
-          <div className="flex flex-wrap gap-3 justify-center">
-            <Link
-              href="/services"
-              className="text-sm text-[var(--green)] font-medium hover:underline"
-            >
+          <div className="mt-7 flex flex-wrap gap-4">
+            <Link href="/services" className="text-sm font-semibold text-[var(--deep-green)] no-underline">
               Our Services →
             </Link>
-            <Link
-              href="/pricing"
-              className="text-sm text-[var(--green)] font-medium hover:underline"
-            >
+            <Link href="/pricing" className="text-sm font-semibold text-[var(--deep-green)] no-underline">
               Pricing →
             </Link>
           </div>

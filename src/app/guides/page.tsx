@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site.config";
-import {
-  PageLayout,
-  Section,
-  Breadcrumbs,
-} from "@/components/willswalks/PageLayout";
+import { PageLayout, Section, Breadcrumbs } from "@/components/willswalks/PageLayout";
 import { PageShell } from "@/components/PageShell";
 import { SidebarCTA } from "@/components/SidebarCTA";
+import { Icons } from "@/components/willswalks/Icons";
 
 export const metadata: Metadata = {
   title: `Dog Walking Guides | ${siteConfig.brandName}`,
@@ -45,39 +42,29 @@ export default function GuidesPage() {
     <PageLayout>
       <Section className="px-0">
         <PageShell sidebar={<SidebarCTA />}>
-          <Breadcrumbs
-            items={[{ label: "Home", href: "/" }, { label: "Guides" }]}
-          />
-          <h1 className="ww-serif text-[clamp(2rem,4vw,3rem)] leading-tight mb-4">
-            Dog Walking Guides
-          </h1>
-          <p className="text-[var(--muted)] text-lg leading-relaxed max-w-[600px] mb-10">
-            Practical advice for dog owners in Fulham and London. No fluff, just
-            honest guidance from someone who walks dogs every day.
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Guides" }]} />
+
+          <h1 className="ww-serif mb-4 text-[clamp(2.05rem,4.2vw,3.1rem)] leading-tight">Dog Walking Guides</h1>
+          <p className="mb-10 max-w-[680px] text-lg leading-relaxed text-[var(--muted)]">
+            Practical guidance for dog owners in Fulham and London, focused on clear decisions and safer
+            routines.
           </p>
 
           <div className="space-y-4">
-            {guides.map((g) => (
-              <Link
-                key={g.slug}
-                href={`/guides/${g.slug}`}
-                className="group block bg-white rounded-2xl border border-[var(--green)]/10 p-6 hover:shadow-md hover:border-[var(--green)]/20 transition-all"
-              >
-                <time className="text-xs text-[var(--light)] font-medium">
-                  {new Date(g.date).toLocaleDateString("en-GB", {
+            {guides.map((guide) => (
+              <Link key={guide.slug} href={`/guides/${guide.slug}`} className="ww-card group block p-6 no-underline">
+                <time className="text-xs font-semibold uppercase tracking-[0.09em] text-[var(--light)]">
+                  {new Date(guide.date).toLocaleDateString("en-GB", {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
                   })}
                 </time>
-                <h2 className="ww-serif text-lg font-semibold mt-1 mb-2 group-hover:text-[var(--deep-green)] transition-colors">
-                  {g.title}
-                </h2>
-                <p className="text-sm text-[var(--muted)] leading-relaxed">
-                  {g.excerpt}
-                </p>
-                <span className="inline-block mt-3 text-sm text-[var(--green)] font-medium group-hover:translate-x-1 transition-transform">
-                  Read guide →
+                <h2 className="ww-serif mt-2 text-[1.4rem] leading-tight text-[var(--text)]">{guide.title}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{guide.excerpt}</p>
+                <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[var(--deep-green)] transition-transform group-hover:translate-x-0.5">
+                  Read guide
+                  <Icons.ArrowRight size={14} />
                 </span>
               </Link>
             ))}

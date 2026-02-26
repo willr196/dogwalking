@@ -1,69 +1,54 @@
-import { NavBar } from "@/components/willswalks/NavBar";
-import { Footer } from "@/components/willswalks/Footer";
+import { PageLayout, Section, Breadcrumbs } from "@/components/willswalks/PageLayout";
 import { Icons } from "@/components/willswalks/Icons";
 
-/**
- * ProofOfWorkPage explains how we provide transparency for each walk.
- * It details GPS tracking, live photo updates and walk summaries.
- */
 export default function ProofOfWorkPage() {
   const features = [
     {
       title: "GPS Tracking",
       icon: Icons.MapPin,
       description:
-        "Every walk is tracked via GPS so you can see the exact route and distance covered. You’ll receive a map once the walk is completed.",
+        "Every walk is logged with route and distance so you can review where your dog went.",
     },
     {
       title: "Photo Updates",
       icon: Icons.Camera,
       description:
-        "We send photo updates during the walk so you can see your dog enjoying their outing. Expect plenty of happy snaps!",
+        "You receive in-walk or post-walk photos so you can see how the session went.",
     },
     {
       title: "Walk Report",
       icon: Icons.Check,
       description:
-        "At the end of the walk, you receive a summary with duration, distance, and any special notes such as water breaks or social interactions.",
+        "Each walk includes a short summary with timing, notes, and behaviour highlights.",
     },
   ];
 
   return (
-    <>
-      <NavBar />
-      <main className="ww-page">
-        <section className="ww-container">
-          <h1 className="font-serif text-4xl font-bold mb-6 text-ww-deep-green">
-            Proof of Work
-          </h1>
-          <p className="text-ww-text max-w-xl leading-relaxed mb-8">
-            Transparency is important to us. Here’s how we keep you informed during every walk.
-          </p>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((feat) => {
-              const IconComp = feat.icon;
-              return (
-                <div
-                  key={feat.title}
-                  className="flex flex-col items-start p-6 border border-ww-green/20 rounded-2xl shadow-ww-lg bg-ww-cream"
-                >
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-ww-green/10 mb-4 text-ww-deep-green">
-                    {/* Render the icon component */}
-                    <IconComp size={28} />
-                  </div>
-                  <h2 className="font-serif text-2xl font-semibold text-ww-deep-green mb-2">
-                    {feat.title}
-                  </h2>
-                  <p className="text-ww-text">
-                    {feat.description}
-                  </p>
+    <PageLayout>
+      <Section>
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Proof of Work" }]} />
+
+        <h1 className="ww-serif mb-4 text-[clamp(2.05rem,4.2vw,3rem)] leading-tight">Proof of Work</h1>
+        <p className="mb-8 max-w-[680px] leading-relaxed text-[var(--muted)]">
+          Clear visibility on each session. You always know where your dog walked and how they got on.
+        </p>
+
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {features.map((feature) => {
+            const IconComp = feature.icon;
+
+            return (
+              <article key={feature.title} className="ww-card p-6">
+                <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(15,141,135,0.14)] text-[var(--deep-green)]">
+                  <IconComp size={23} />
                 </div>
-              );
-            })}
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </>
+                <h2 className="ww-serif text-[1.4rem] leading-tight text-[var(--deep-green)]">{feature.title}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{feature.description}</p>
+              </article>
+            );
+          })}
+        </div>
+      </Section>
+    </PageLayout>
   );
 }

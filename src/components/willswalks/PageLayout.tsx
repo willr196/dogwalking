@@ -2,16 +2,19 @@ import { NavBar } from "@/components/willswalks/NavBar";
 import { Footer } from "@/components/willswalks/Footer";
 
 /**
- * Standard page wrapper with NavBar, Footer, and consistent padding.
- * Use for all public-facing content pages.
+ * Standard page wrapper with NavBar, Footer, and consistent page spacing.
  */
 export function PageLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <div className="grain-overlay" />
-      <NavBar />
-      <div className="min-h-screen flex flex-col">
-        <main className="flex-1 pt-24 pb-16">{children}</main>
+      <div className="grain-overlay" aria-hidden="true" />
+      <div className="relative flex min-h-screen flex-col overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[280px] bg-[linear-gradient(180deg,rgba(255,255,255,0.58),transparent)]"
+        />
+        <NavBar />
+        <main className="relative z-[1] flex-1 pb-16 pt-28">{children}</main>
         <Footer />
       </div>
     </>
@@ -31,11 +34,8 @@ export function Section({
   id?: string;
 }) {
   return (
-    <section
-      id={id}
-      className={`w-full px-5 py-20 md:py-24 ${bg} ${className}`}
-    >
-      <div className="w-full max-w-[1400px] mx-auto">{children}</div>
+    <section id={id} className={`w-full px-5 py-16 md:py-20 ${bg} ${className}`}>
+      <div className="mx-auto w-full max-w-[1240px]">{children}</div>
     </section>
   );
 }
@@ -47,22 +47,17 @@ export function Breadcrumbs({
   items: { label: string; href?: string }[];
 }) {
   return (
-    <nav aria-label="Breadcrumb" className="text-sm text-[var(--muted)] mb-6">
+    <nav aria-label="Breadcrumb" className="mb-7 text-sm text-[var(--muted)]">
       <ol className="flex flex-wrap items-center gap-1.5">
         {items.map((item, i) => (
           <li key={i} className="flex items-center gap-1.5">
             {i > 0 && <span className="text-[var(--light)]">/</span>}
             {item.href ? (
-              <a
-                href={item.href}
-                className="hover:text-[var(--deep-green)] transition-colors"
-              >
+              <a href={item.href} className="no-underline transition-colors hover:text-[var(--deep-green)]">
                 {item.label}
               </a>
             ) : (
-              <span className="text-[var(--text)] font-medium">
-                {item.label}
-              </span>
+              <span className="font-semibold text-[var(--text)]">{item.label}</span>
             )}
           </li>
         ))}

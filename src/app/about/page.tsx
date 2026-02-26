@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site.config";
-import {
-  PageLayout,
-  Section,
-  Breadcrumbs,
-} from "@/components/willswalks/PageLayout";
+import { PageLayout, Section, Breadcrumbs } from "@/components/willswalks/PageLayout";
 
 export const metadata: Metadata = {
   title: `About Will | ${siteConfig.brandName}`,
@@ -19,100 +15,81 @@ export default function AboutPage() {
       <Section>
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "About" }]} />
 
-        <div className="grid md:grid-cols-[280px_1fr] gap-10 items-start mb-12">
-          <div className="w-full max-w-[280px] mx-auto md:mx-0">
+        <div className="mb-12 grid items-start gap-8 md:grid-cols-[280px_1fr]">
+          <div className="mx-auto w-full max-w-[280px] md:mx-0">
             <div
-              className="w-full aspect-[4/5] rounded-2xl flex items-center justify-center text-6xl"
-              style={{
-                background:
-                  "linear-gradient(145deg, var(--orange), var(--deep-orange))",
-              }}
+              className="aspect-[4/5] w-full rounded-[26px] border border-[rgba(255,255,255,0.22)] bg-[linear-gradient(145deg,var(--orange),var(--deep-orange))] p-5 text-6xl shadow-[var(--shadow)]"
+              aria-label="Illustration of Will"
             >
-              🧑
+              <div className="flex h-full items-center justify-center rounded-2xl bg-white/10">🧑</div>
             </div>
-            <p className="text-center text-xs text-[var(--light)] mt-3">
-              📍 Based in Fulham, SW6
+            <p className="mt-3 text-center text-xs font-semibold uppercase tracking-[0.08em] text-[var(--muted)]">
+              Based in Fulham, SW6
             </p>
           </div>
 
-          <div>
-            <h1 className="ww-serif text-[clamp(2rem,4vw,2.8rem)] leading-tight mb-4">
-              Hi, I&apos;m Will
-            </h1>
-            <p className="text-[var(--muted)] text-lg leading-relaxed mb-4">
-              {siteConfig.owner.bio}
+          <article>
+            <h1 className="ww-serif mb-4 text-[clamp(2.05rem,4.2vw,3rem)] leading-tight">Hi, I&apos;m Will</h1>
+            <p className="mb-4 text-lg leading-relaxed text-[var(--muted)]">{siteConfig.owner.bio}</p>
+            <p className="mb-4 leading-relaxed text-[var(--muted)]">
+              I started {siteConfig.brandName} because I kept seeing dogs packed into big groups with limited
+              attention. My approach keeps walks focused, structured, and matched to each dog.
             </p>
-            <p className="text-[var(--muted)] leading-relaxed mb-4">
-              I started {siteConfig.brandName} because I saw too many dog walkers
-              taking on large packs where individual dogs get lost in the
-              shuffle. My approach is different: small groups (max{" "}
-              {siteConfig.pricing.maxDogsPerWalk} dogs), structured walks, and
-              genuine care for every dog that walks with me.
+            <p className="mb-4 leading-relaxed text-[var(--muted)]">
+              I&apos;m building this business carefully. That means honest communication, consistent handling,
+              and never overloading sessions at the cost of care.
             </p>
-            <p className="text-[var(--muted)] leading-relaxed mb-4">
-              I won&apos;t pretend I have years of professional dog walking
-              experience, I&apos;m building this business from the ground up. What I
-              can promise is that every dog in my care gets my full attention,
-              consistent routines, and honest communication with their owner.
+            <p className="leading-relaxed text-[var(--muted)]">
+              When your dog is with me, they get clear routines, appropriate exercise, and proper one-to-one focus.
             </p>
-            <p className="text-[var(--muted)] leading-relaxed">
-              When your dog is with me, they&apos;re not competing for attention.
-              They get dedicated exercise, mental stimulation, and plenty of
-              fuss.
-            </p>
-          </div>
+          </article>
         </div>
 
-        <div className="bg-[var(--cream)] rounded-2xl p-8 mb-12">
-          <h2 className="ww-serif text-xl font-semibold mb-6">My Approach</h2>
-          <div className="grid sm:grid-cols-2 gap-6">
-            {siteConfig.trustSignals.map((ts) => (
-              <div key={ts.title}>
-                <h3 className="font-semibold text-sm mb-1">{ts.title}</h3>
-                <p className="text-[var(--muted)] text-sm leading-relaxed">
-                  {ts.description}
-                </p>
-              </div>
+        <div className="mb-12 rounded-[26px] border border-[var(--line)] bg-white p-7 md:p-8">
+          <h2 className="ww-serif mb-6 text-[1.5rem] leading-tight">My Approach</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {siteConfig.trustSignals.map((signal) => (
+              <article key={signal.title} className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
+                <h3 className="text-sm font-semibold text-[var(--text)]">{signal.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{signal.description}</p>
+              </article>
             ))}
           </div>
         </div>
 
         <div className="mb-12">
-          <h2 className="ww-serif text-xl font-semibold mb-4">Where I Walk</h2>
-          <p className="text-[var(--muted)] mb-4">
-            Based in Fulham, I cover the following areas in SW6 and surrounds:
+          <h2 className="ww-serif mb-3 text-[1.5rem] leading-tight">Where I Walk</h2>
+          <p className="mb-4 leading-relaxed text-[var(--muted)]">
+            Fulham-based coverage across SW6 and nearby routes.
           </p>
-          <div className="flex flex-wrap gap-2">
-            {siteConfig.areasServed.map((a) => (
+          <div className="flex flex-wrap gap-2.5">
+            {siteConfig.areasServed.map((area) => (
               <Link
-                key={a.slug}
-                href={`/areas/${a.slug}`}
-                className="bg-white border border-[var(--green)]/15 px-4 py-2 rounded-full text-sm font-medium text-[var(--deep-green)] hover:bg-[var(--green)]/5 transition-colors"
+                key={area.slug}
+                href={`/areas/${area.slug}`}
+                className="rounded-full border border-[var(--line)] bg-white px-4 py-2 text-sm font-semibold text-[var(--deep-green)] no-underline transition-colors hover:border-[var(--green)]/45"
               >
-                {a.name}
+                {area.name}
               </Link>
             ))}
           </div>
         </div>
 
-        <div className="text-center">
-          <h2 className="ww-serif text-2xl font-semibold mb-3">
-            Want to meet me?
-          </h2>
-          <p className="text-[var(--muted)] mb-6 max-w-md mx-auto">
-            Every new client starts with a free meet &amp; greet. It&apos;s the best way
-            to see if we&apos;re a good fit.
+        <div className="rounded-[28px] bg-[linear-gradient(140deg,var(--orange),var(--deep-green))] p-8 text-white">
+          <h2 className="ww-serif text-[1.85rem] leading-tight">Want to meet first?</h2>
+          <p className="mt-2 max-w-[620px] leading-relaxed text-white/88">
+            Every new client starts with a free meet &amp; greet so we can confirm fit, routine, and preferences.
           </p>
-          <div className="flex justify-center gap-3 flex-wrap">
+          <div className="mt-5 flex flex-wrap gap-3">
             <Link
               href="/booking"
-              className="inline-flex items-center gap-2 bg-[var(--green)] text-white px-8 py-3.5 rounded-full font-semibold hover:opacity-90 transition-opacity shadow-md"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold text-[var(--deep-green)] no-underline"
             >
               Book a Meet &amp; Greet
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 bg-white text-[var(--text)] border-2 border-[var(--green)]/20 px-8 py-3.5 rounded-full font-semibold hover:border-[var(--green)]/40 transition-colors"
+              className="inline-flex items-center gap-2 rounded-full border border-white/36 bg-white/10 px-7 py-3 text-sm font-semibold text-white no-underline"
             >
               Get in Touch
             </Link>
@@ -122,4 +99,3 @@ export default function AboutPage() {
     </PageLayout>
   );
 }
-

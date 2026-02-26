@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site.config";
-import {
-  PageLayout,
-  Section,
-  Breadcrumbs,
-} from "@/components/willswalks/PageLayout";
+import { PageLayout, Section, Breadcrumbs } from "@/components/willswalks/PageLayout";
 import { PageShell } from "@/components/PageShell";
 import { SidebarCTA } from "@/components/SidebarCTA";
 
@@ -15,156 +11,127 @@ export const metadata: Metadata = {
   alternates: { canonical: `${siteConfig.siteUrl}/pricing` },
 };
 
+const pricingFaqs = [
+  {
+    q: "Are there any extra fees?",
+    a: "No. The per-walk price includes pick-up, walk time, drop-off, and updates.",
+  },
+  {
+    q: "How long will the founding rate be available?",
+    a: "It stays available until the first five regular client spaces are filled.",
+  },
+  {
+    q: "Do larger dogs cost more?",
+    a: "No. Pricing is based on the session, not breed size.",
+  },
+  {
+    q: "What is the cancellation policy?",
+    a: "Changes with at least 24 hours notice are free. Late cancellations may be charged.",
+  },
+];
+
 export default function PricingPage() {
   return (
     <PageLayout>
       <Section className="px-0">
         <PageShell sidebar={<SidebarCTA />}>
-          <Breadcrumbs
-            items={[{ label: "Home", href: "/" }, { label: "Pricing" }]}
-          />
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Pricing" }]} />
 
-          <h1 className="ww-serif text-[clamp(2rem,4vw,3rem)] leading-tight mb-4">
-            Simple, Honest Pricing
-          </h1>
-          <p className="text-[var(--muted)] text-lg leading-relaxed max-w-[600px] mb-10">
-            No hidden fees, no contracts. Every walk is{" "}
-            {siteConfig.pricing.walkDuration} minutes and includes photo updates.
-            Cancel or reschedule with 24 hours&apos; notice.
+          <h1 className="ww-serif mb-4 text-[clamp(2.05rem,4.2vw,3.1rem)] leading-tight">Simple, Honest Pricing</h1>
+          <p className="mb-9 max-w-[680px] text-lg leading-relaxed text-[var(--muted)]">
+            Clear rates, no hidden add-ons. Every walk is {siteConfig.pricing.walkDuration} minutes with
+            update photos and notes included.
           </p>
 
-          <div className="relative bg-white rounded-2xl border-2 border-[var(--green)]/30 p-8 md:p-10 mb-6 shadow-sm">
-            <div className="absolute -top-3 left-6">
-              <span className="bg-[var(--orange)] text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide">
-                {siteConfig.pricing.introLabel}
-              </span>
-            </div>
+          <div className="ww-card relative mb-8 overflow-hidden p-7 md:p-9">
+            <span className="absolute right-5 top-5 rounded-full bg-[var(--orange)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white">
+              {siteConfig.pricing.introLabel}
+            </span>
 
-            <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div className="grid gap-6 md:grid-cols-2 md:items-end">
               <div>
-                <h2 className="ww-serif text-2xl font-semibold mb-2">
-                  Dog Walking
-                </h2>
-                <p className="text-[var(--muted)] leading-relaxed mb-4">
-                  Both solo and small-group walks (max{" "}
-                  {siteConfig.pricing.maxDogsPerWalk} dogs) at an introductory
-                  rate. Available to our founding clients only.
+                <h2 className="ww-serif text-[1.7rem] leading-tight">Dog Walking</h2>
+                <p className="mt-3 max-w-[520px] leading-relaxed text-[var(--muted)]">
+                  Solo walks and small-group sessions (max {siteConfig.pricing.maxDogsPerWalk} dogs), each with
+                  the same structured approach and communication standards.
                 </p>
-                <p className="text-xs text-[var(--orange)] font-medium">
-                  ⚡ {siteConfig.pricing.introNote}
+                <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--deep-orange)]">
+                  {siteConfig.pricing.introNote}
                 </p>
               </div>
 
-              <div className="text-center md:text-right">
-                <div className="ww-serif text-5xl font-bold text-[var(--deep-green)] mb-1">
-                  £{siteConfig.pricing.introPrice}
-                </div>
-                <p className="text-[var(--muted)]">
-                  per {siteConfig.pricing.walkDuration}-minute walk
-                </p>
-                {siteConfig.pricing.standardPrice >
-                  siteConfig.pricing.introPrice && (
-                  <p className="text-sm text-[var(--light)] mt-2 line-through">
-                    Standard rate: £{siteConfig.pricing.standardPrice}
-                  </p>
-                )}
+              <div className="md:text-right">
+                <p className="ww-serif text-[3.3rem] leading-none text-[var(--deep-green)]">£{siteConfig.pricing.introPrice}</p>
+                <p className="mt-2 text-sm text-[var(--muted)]">per {siteConfig.pricing.walkDuration}-minute walk</p>
+                {siteConfig.pricing.standardPrice > siteConfig.pricing.introPrice ? (
+                  <p className="mt-2 text-sm text-[var(--light)] line-through">Standard rate £{siteConfig.pricing.standardPrice}</p>
+                ) : null}
               </div>
             </div>
           </div>
 
-          <div className="bg-[var(--cream)] rounded-2xl p-8 mb-10">
-            <h3 className="font-semibold mb-4">Every walk includes:</h3>
-            <div className="grid sm:grid-cols-2 gap-3">
+          <div className="mb-9 rounded-[26px] border border-[var(--line)] bg-white p-6 md:p-7">
+            <h2 className="ww-serif mb-5 text-[1.45rem] leading-tight">Every Walk Includes</h2>
+            <div className="grid gap-3 sm:grid-cols-2">
               {[
                 `${siteConfig.pricing.walkDuration} minutes of exercise and enrichment`,
-                "Photo updates sent to you",
-                "Pick-up and drop-off from your home",
-                "Secure lead handling at all times",
-                `Max ${siteConfig.pricing.maxDogsPerWalk} dogs per group walk`,
-                "Familiar, consistent routes",
-                "Free meet & greet before first walk",
-                "Easy 24-hour cancellation",
+                "Photo updates after each walk",
+                "Home pick-up and drop-off",
+                "Secure lead handling and route planning",
+                `Max ${siteConfig.pricing.maxDogsPerWalk} dogs on group walks`,
+                "Consistent local routes",
+                "Free meet & greet before starting",
+                "24-hour cancellation flexibility",
               ].map((item) => (
-                <div key={item} className="flex items-start gap-2">
-                  <span className="text-[var(--green)] mt-0.5">✓</span>
-                  <span className="text-sm text-[var(--text)]">{item}</span>
+                <div key={item} className="flex items-start gap-2 text-sm text-[var(--text)]">
+                  <span className="mt-0.5 text-[var(--green)]">✓</span>
+                  <span>{item}</span>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="mb-10">
-            <h3 className="ww-serif text-xl font-semibold mb-6">Pricing FAQ</h3>
-            <div className="space-y-4">
-              {[
-                {
-                  q: "Are there any additional fees?",
-                  a: "No. The price per walk covers everything — pick-up, the walk itself, drop-off, and photo updates. There are no sign-up fees or monthly minimums.",
-                },
-                {
-                  q: "How long is the founding client rate available?",
-                  a: "The introductory rate is available to my first 5 regular clients. Once those spots are filled, new clients will be charged the standard rate.",
-                },
-                {
-                  q: "Do you charge more for larger dogs?",
-                  a: "No. The price is the same regardless of breed or size.",
-                },
-                {
-                  q: "What's your cancellation policy?",
-                  a: "Just let me know at least 24 hours in advance and there's no charge. Last-minute cancellations may be charged at the full rate.",
-                },
-              ].map((faq) => (
-                <details
-                  key={faq.q}
-                  className="group bg-white rounded-xl border border-[var(--green)]/10 overflow-hidden"
-                >
-                  <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none font-medium text-sm hover:bg-[var(--cream)]/40 transition-colors">
-                    {faq.q}
-                    <span className="text-[var(--light)] group-open:rotate-45 transition-transform text-lg">
-                      +
-                    </span>
+            <h2 className="ww-serif mb-4 text-[1.45rem] leading-tight">Pricing FAQ</h2>
+            <div className="space-y-3">
+              {pricingFaqs.map((faq) => (
+                <details key={faq.q} className="group overflow-hidden rounded-2xl border border-[var(--line)] bg-white">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-sm font-semibold text-[var(--text)] hover:bg-[var(--surface)]">
+                    <span>{faq.q}</span>
+                    <span className="text-lg text-[var(--light)] transition-transform group-open:rotate-45">+</span>
                   </summary>
-                  <div className="px-5 pb-4 text-sm text-[var(--muted)] leading-relaxed">
-                    {faq.a}
-                  </div>
+                  <div className="px-5 pb-4 text-sm leading-relaxed text-[var(--muted)]">{faq.a}</div>
                 </details>
               ))}
             </div>
           </div>
 
-          <div className="text-center bg-[var(--deep-green)] text-white rounded-2xl p-10">
-            <h2 className="ww-serif text-2xl font-semibold mb-3">
-              Ready to book?
-            </h2>
-            <p className="opacity-85 mb-6 max-w-md mx-auto">
-              Start with a free meet &amp; greet. No commitment, just a chance
-              for me to meet your dog and for you to ask any questions.
+          <div className="rounded-[28px] bg-[linear-gradient(140deg,var(--orange),var(--deep-green))] p-8 text-white">
+            <h2 className="ww-serif text-[1.85rem] leading-tight">Ready to book?</h2>
+            <p className="mt-2 max-w-[620px] leading-relaxed text-white/88">
+              Start with a free meet &amp; greet so we can set up the right routine for your dog.
             </p>
-            <Link
-              href="/booking"
-              className="inline-flex items-center gap-2 bg-white text-[var(--deep-green)] px-8 py-3.5 rounded-full font-semibold hover:opacity-90 transition-opacity"
-            >
-              Book a Meet &amp; Greet
-            </Link>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link
+                href="/booking"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold text-[var(--deep-green)] no-underline"
+              >
+                Book a Meet &amp; Greet
+              </Link>
+              <Link
+                href="/services"
+                className="inline-flex items-center gap-2 rounded-full border border-white/36 bg-white/10 px-7 py-3 text-sm font-semibold text-white no-underline"
+              >
+                View Services
+              </Link>
+            </div>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3 justify-center">
-            <Link
-              href="/services"
-              className="text-sm text-[var(--green)] font-medium hover:underline"
-            >
-              Our Services →
+          <div className="mt-7 flex flex-wrap gap-4">
+            <Link href="/faq" className="text-sm font-semibold text-[var(--deep-green)] no-underline">
+              More FAQ →
             </Link>
-            <Link
-              href="/faq"
-              className="text-sm text-[var(--green)] font-medium hover:underline"
-            >
-              More FAQs →
-            </Link>
-            <Link
-              href="/areas"
-              className="text-sm text-[var(--green)] font-medium hover:underline"
-            >
+            <Link href="/areas" className="text-sm font-semibold text-[var(--deep-green)] no-underline">
               Areas Served →
             </Link>
           </div>

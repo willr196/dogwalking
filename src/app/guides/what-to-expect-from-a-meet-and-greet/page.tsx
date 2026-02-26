@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site.config";
-import {
-  PageLayout,
-  Section,
-  Breadcrumbs,
-} from "@/components/willswalks/PageLayout";
+import { PageLayout, Section, Breadcrumbs } from "@/components/willswalks/PageLayout";
 
 export const metadata: Metadata = {
   title: `What to Expect from a Meet & Greet | ${siteConfig.brandName}`,
@@ -27,115 +23,78 @@ export default function GuideMeetAndGreet() {
             { label: "Meet & Greet Guide" },
           ]}
         />
-        <article className="max-w-[680px]">
-          <time className="text-xs text-[var(--light)] font-medium">
-            8 February 2026
-          </time>
-          <h1 className="ww-serif text-[clamp(1.8rem,4vw,2.6rem)] leading-tight mt-2 mb-6">
+
+        <article className="max-w-[760px]">
+          <time className="text-xs font-semibold uppercase tracking-[0.09em] text-[var(--light)]">8 February 2026</time>
+          <h1 className="ww-serif mb-6 mt-2 text-[clamp(1.95rem,4vw,2.8rem)] leading-tight">
             What to Expect from a Meet &amp; Greet
           </h1>
 
-          <div className="space-y-5 text-[var(--muted)] leading-relaxed">
+          <div className="space-y-5 leading-relaxed text-[var(--muted)]">
             <p>
-              Before I walk any dog for the first time, I require a meet &amp; greet.
-              It&apos;s free, there&apos;s no obligation, and it&apos;s the most important step
-              in making sure your dog has a great experience. Here&apos;s what to
-              expect.
+              Before any first walk, I require a meet &amp; greet. It&apos;s free, no-pressure, and crucial for
+              getting the setup right.
             </p>
 
-            <h2 className="ww-serif text-xl font-semibold text-[var(--text)] mt-8 mb-3">
-              I come to you
-            </h2>
+            <h2 className="ww-serif pt-3 text-[1.45rem] leading-tight text-[var(--text)]">I come to your home</h2>
             <p>
-              The meet &amp; greet happens at your home. This is deliberate, I want to
-              see your dog in their own environment where they&apos;re most
-              comfortable. It also means I know exactly where I&apos;ll be picking up
-              and dropping off for future walks.
+              Meeting in your dog&apos;s environment gives a more accurate view of behaviour, comfort, and routine.
+              It also confirms practical handover details for future walks.
             </p>
 
-            <h2 className="ww-serif text-xl font-semibold text-[var(--text)] mt-8 mb-3">
-              It takes about 15 to 20 minutes
-            </h2>
+            <h2 className="ww-serif pt-3 text-[1.45rem] leading-tight text-[var(--text)]">It takes around 15 to 20 minutes</h2>
             <p>
-              There&apos;s no rush. I&apos;ll spend time letting your dog approach me at
-              their own pace, watch how they move and interact, and get a sense of
-              their energy level. Some dogs warm up instantly; others need a few
-              minutes. Both are absolutely fine.
+              I let your dog set the pace, observe interactions, and assess energy and handling needs. Some dogs
+              warm up instantly, others take a little longer.
             </p>
 
-            <h2 className="ww-serif text-xl font-semibold text-[var(--text)] mt-8 mb-3">
-              What I&apos;ll ask you
-            </h2>
+            <h2 className="ww-serif pt-3 text-[1.45rem] leading-tight text-[var(--text)]">What I&apos;ll ask you</h2>
             <p>
-              I&apos;ll want to know about your dog&apos;s routine, how they are on the
-              lead, whether they have any triggers or anxieties, and how they get
-              on with other dogs. I&apos;ll also ask about any medical conditions or
-              dietary needs. The more I know, the better the walk will be.
+              We cover routine, lead behaviour, triggers, social confidence, and medical notes. The clearer the
+              picture, the safer and smoother walks become.
             </p>
 
-            <h2 className="ww-serif text-xl font-semibold text-[var(--text)] mt-8 mb-3">
-              What you should ask me
-            </h2>
+            <h2 className="ww-serif pt-3 text-[1.45rem] leading-tight text-[var(--text)]">What you should ask me</h2>
             <p>
-              This is your chance to ask anything. Where will I walk? What
-              happens if it rains? What&apos;s my policy on off-lead? How do I handle
-              emergencies? I&apos;d rather you asked too many questions than too few,
-              it shows you care, and I respect that.
+              Ask as much as you need: route plans, wet weather policy, off-lead rules, and emergency handling.
+              Clear expectations are always better.
             </p>
 
-            <h2 className="ww-serif text-xl font-semibold text-[var(--text)] mt-8 mb-3">
-              After the meet &amp; greet
-            </h2>
+            <h2 className="ww-serif pt-3 text-[1.45rem] leading-tight text-[var(--text)]">After the visit</h2>
             <p>
-              If we&apos;re both happy, we&apos;ll agree on a schedule. I&apos;ll confirm the
-              regular days and times that work for you, and we can start from the
-              next available slot. If your dog needs a solo walk rather than a
-              group, I&apos;ll let you know and explain why.
-            </p>
-            <p>
-              There&apos;s no pressure to commit. If you want to think it over or try
-              a single walk first, that&apos;s completely fine.
+              If everyone is comfortable, we set a schedule and choose solo or group format. If you prefer,
+              you can start with a single walk before committing.
             </p>
 
-            <h2 className="ww-serif text-xl font-semibold text-[var(--text)] mt-8 mb-3">
-              Why I require it
-            </h2>
+            <h2 className="ww-serif pt-3 text-[1.45rem] leading-tight text-[var(--text)]">Why I require it</h2>
             <p>
-              Honestly, any dog walker who doesn&apos;t do a meet &amp; greet is cutting
-              corners. I need to know your dog before I take responsibility for
-              them. It&apos;s about safety, trust, and making sure the walk is
-              genuinely good for your dog, not just a service you pay for.
+              It protects your dog and improves outcomes from day one. Skipping this step usually means guessing,
+              and I don&apos;t run walks on guesses.
             </p>
           </div>
 
-          <div className="mt-10 p-6 bg-[var(--cream)] rounded-xl">
-            <p className="font-semibold text-sm mb-2">
-              Ready to book a meet &amp; greet?
-            </p>
-            <p className="text-sm text-[var(--muted)] mb-4">
-              It&apos;s free and there&apos;s no obligation. I&apos;ll come to your home in{" "}
-              {siteConfig.areasServed[0].name} or surrounding areas.
+          <div className="mt-10 rounded-[24px] border border-[var(--line)] bg-white p-6">
+            <p className="text-sm font-semibold text-[var(--text)]">Ready to set up your meet &amp; greet?</p>
+            <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+              I&apos;ll come to your home in {siteConfig.areasServed[0].name} or nearby areas.
             </p>
             <Link
               href="/booking"
-              className="inline-flex bg-[var(--green)] text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:opacity-90 transition-opacity"
+              className="mt-4 inline-flex rounded-full bg-[linear-gradient(132deg,var(--green),var(--deep-green))] px-6 py-2.5 text-sm font-semibold text-white no-underline"
             >
               Book a Meet &amp; Greet
             </Link>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-7 flex flex-wrap gap-4">
             <Link
               href="/guides/how-to-choose-a-dog-walker-in-london"
-              className="text-sm text-[var(--green)] font-medium hover:underline"
+              className="text-sm font-semibold text-[var(--deep-green)] no-underline"
             >
               How to Choose a Dog Walker →
             </Link>
-            <Link
-              href="/faq"
-              className="text-sm text-[var(--green)] font-medium hover:underline"
-            >
-              More FAQs →
+            <Link href="/faq" className="text-sm font-semibold text-[var(--deep-green)] no-underline">
+              More FAQ →
             </Link>
           </div>
         </article>
@@ -143,4 +102,3 @@ export default function GuideMeetAndGreet() {
     </PageLayout>
   );
 }
-

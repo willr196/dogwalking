@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site.config";
-import {
-  PageLayout,
-  Section,
-  Breadcrumbs,
-} from "@/components/willswalks/PageLayout";
+import { PageLayout, Section, Breadcrumbs } from "@/components/willswalks/PageLayout";
 import { getDogBreedsForDictionary } from "@/lib/dog-breeds.server";
 import { BreedDictionary } from "./BreedDictionary";
 
@@ -32,39 +28,31 @@ export default async function DogBreedsPage() {
   return (
     <PageLayout>
       <Section>
-        <Breadcrumbs
-          items={[{ label: "Home", href: "/" }, { label: "Dog Breeds" }]}
-        />
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Dog Breeds" }]} />
 
-        <h1 className="ww-serif text-[clamp(2rem,4vw,2.8rem)] leading-tight mb-4">
-          Dog Breed Dictionary
-        </h1>
-        <p className="text-[var(--muted)] text-lg leading-relaxed max-w-[720px] mb-8">
-          Browse a large dog-breed dictionary with quick filters and search.
-          Click any breed card to pop open a detail bubble with temperament,
-          exercise, and care notes, then jump into full breed profile pages.
+        <h1 className="ww-serif mb-4 text-[clamp(2.05rem,4.2vw,3rem)] leading-tight">Dog Breed Dictionary</h1>
+        <p className="mb-8 max-w-[760px] text-lg leading-relaxed text-[var(--muted)]">
+          Browse breeds with filters for size and category. Open any card for quick care notes, then move into
+          full breed profiles.
         </p>
 
         <BreedDictionary breeds={breeds} />
 
-        <div className="mt-14 rounded-2xl bg-[var(--cream)] p-8">
-          <h2 className="ww-serif text-2xl font-semibold mb-3">
-            Need help choosing the right walk style?
-          </h2>
-          <p className="text-[var(--muted)] mb-6 max-w-[680px]">
-            Every dog is different. A quick meet and greet helps us plan the
-            right pace, duration, and routine for your dog.
+        <div className="mt-14 rounded-[28px] bg-[linear-gradient(140deg,var(--orange),var(--deep-green))] p-8 text-white">
+          <h2 className="ww-serif text-[1.85rem] leading-tight">Need help choosing the right walk format?</h2>
+          <p className="mt-2 max-w-[620px] leading-relaxed text-white/88">
+            A short meet &amp; greet helps us set pace, structure, and handling that fit your dog.
           </p>
-          <div className="flex flex-wrap gap-3">
+          <div className="mt-5 flex flex-wrap gap-3">
             <Link
               href="/booking"
-              className="inline-flex items-center gap-2 bg-[var(--green)] text-white px-7 py-3 rounded-full font-semibold hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold text-[var(--deep-green)] no-underline"
             >
               Book a Meet &amp; Greet
             </Link>
             <Link
               href="/services"
-              className="inline-flex items-center gap-2 bg-white text-[var(--text)] border-2 border-[var(--green)]/20 px-7 py-3 rounded-full font-semibold hover:border-[var(--green)]/40 transition-colors"
+              className="inline-flex items-center gap-2 rounded-full border border-white/36 bg-white/10 px-7 py-3 text-sm font-semibold text-white no-underline"
             >
               View Services
             </Link>

@@ -8,14 +8,11 @@ export function PageShell({
   sidebar?: ReactNode;
 }) {
   return (
-    <div className="mx-auto w-full max-w-[1400px] px-6">
-      <div className="grid gap-8 lg:grid-cols-[1.7fr_1fr] items-start">
+    <div className="mx-auto w-full max-w-[1240px] px-5 sm:px-6">
+      <div className="grid items-start gap-8 lg:gap-10 xl:grid-cols-[minmax(0,1.62fr)_minmax(320px,0.88fr)]">
         <main className="min-w-0">{children}</main>
-        {sidebar ? (
-          <aside className="lg:sticky lg:top-24">{sidebar}</aside>
-        ) : null}
+        {sidebar ? <aside className="lg:sticky lg:top-28">{sidebar}</aside> : null}
       </div>
     </div>
   );
 }
-

@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site.config";
-import {
-  PageLayout,
-  Section,
-  Breadcrumbs,
-} from "@/components/willswalks/PageLayout";
+import { PageLayout, Section, Breadcrumbs } from "@/components/willswalks/PageLayout";
 
 export const metadata: Metadata = {
   title: `Solo vs Small-Group Dog Walking | ${siteConfig.brandName}`,
@@ -27,105 +23,75 @@ export default function GuideSoloVsGroup() {
             { label: "Solo vs Group Walking" },
           ]}
         />
-        <article className="max-w-[680px]">
-          <time className="text-xs text-[var(--light)] font-medium">
-            5 February 2026
-          </time>
-          <h1 className="ww-serif text-[clamp(1.8rem,4vw,2.6rem)] leading-tight mt-2 mb-6">
+
+        <article className="max-w-[760px]">
+          <time className="text-xs font-semibold uppercase tracking-[0.09em] text-[var(--light)]">5 February 2026</time>
+          <h1 className="ww-serif mb-6 mt-2 text-[clamp(1.95rem,4vw,2.8rem)] leading-tight">
             Solo vs Small-Group Dog Walking
           </h1>
 
-          <div className="space-y-5 text-[var(--muted)] leading-relaxed">
+          <div className="space-y-5 leading-relaxed text-[var(--muted)]">
             <p>
-              One of the first decisions you&apos;ll make when hiring a dog walker is
-              whether your dog should walk solo or join a small group. Both have
-              genuine advantages, the right choice depends on your dog&apos;s
-              personality, not on which option is cheaper.
+              One of the first decisions when booking a dog walker is whether your dog should walk solo or
+              in a small group. Both options can work, but the right choice depends on your dog&apos;s behaviour,
+              confidence, and needs.
             </p>
 
-            <h2 className="ww-serif text-xl font-semibold text-[var(--text)] mt-8 mb-3">
-              When solo walks make sense
-            </h2>
+            <h2 className="ww-serif pt-3 text-[1.45rem] leading-tight text-[var(--text)]">When solo walks are best</h2>
             <p>
-              Solo walks are ideal for dogs who are reactive or anxious around
-              other dogs, puppies who are still learning the basics, dogs with
-              specific medical or behavioural needs, and dogs who simply thrive
-              with undivided attention. If your dog is nervous in groups or needs
-              a more controlled environment, solo is the way to go.
+              Solo sessions are ideal for reactive or anxious dogs, puppies still learning basics, and dogs
+              with specific health or behaviour plans. They also suit dogs that simply perform better with
+              undivided attention.
             </p>
             <p>
-              It&apos;s also a good fit if your dog has a lot of energy and needs the
-              full hour of focused exercise without the dynamics of a group
-              slowing things down.
+              If your dog has high energy and needs focused structure, solo walks usually deliver a clearer
+              and calmer result.
             </p>
 
-            <h2 className="ww-serif text-xl font-semibold text-[var(--text)] mt-8 mb-3">
-              When small-group walks work well
-            </h2>
+            <h2 className="ww-serif pt-3 text-[1.45rem] leading-tight text-[var(--text)]">When small groups work well</h2>
             <p>
-              Some dogs genuinely benefit from walking with others. Socialisation
-              is important, and a well-managed small group (max{" "}
-              {siteConfig.pricing.maxDogsPerWalk} dogs) gives your dog a chance to
-              interact safely with compatible companions. Group walks can help
-              build confidence, burn energy through play, and provide mental
-              stimulation that solo walks sometimes can&apos;t match.
+              Some dogs benefit from social interaction and shared movement. A well-managed small group
+              (max {siteConfig.pricing.maxDogsPerWalk} dogs) can improve confidence and provide useful
+              mental stimulation.
             </p>
             <p>
-              The key word is small. A group of 2 to 3 dogs is very different from
-              a pack of 6 to 8. In a small group, every dog still gets individual
-              attention and the walker can manage behaviour effectively.
+              The key is careful matching. A controlled group of 2 to 3 dogs is very different from a large,
+              overpacked walk.
             </p>
 
-            <h2 className="ww-serif text-xl font-semibold text-[var(--text)] mt-8 mb-3">
-              Why the meet &amp; greet matters
-            </h2>
+            <h2 className="ww-serif pt-3 text-[1.45rem] leading-tight text-[var(--text)]">Why meet &amp; greet matters</h2>
             <p>
-              You might think your dog would be great in a group, or you might
-              assume they need to walk solo. Either way, the meet &amp; greet is
-              where I can actually assess their temperament and make a
-              recommendation. Sometimes dogs surprise you. A dog that seems
-              anxious might actually relax in a well-matched group, while an
-              outgoing dog might be better suited to solo walks if they tend to
-              overstimulate.
+              You may think your dog clearly needs one format, but behaviour in real settings can differ.
+              The meet &amp; greet lets us assess fit, triggers, and confidence properly before choosing a plan.
             </p>
 
-            <h2 className="ww-serif text-xl font-semibold text-[var(--text)] mt-8 mb-3">
-              You don&apos;t have to choose forever
-            </h2>
+            <h2 className="ww-serif pt-3 text-[1.45rem] leading-tight text-[var(--text)]">You can change over time</h2>
             <p>
-              Your dog&apos;s needs might change. A puppy that starts with solo walks
-              might graduate to group walks as they gain confidence. An older dog
-              might switch from group to solo as their energy changes. Flexibility
-              is important.
+              Walk style is not permanent. Dogs often move between solo and group formats as they mature,
+              gain confidence, or change routine.
             </p>
           </div>
 
-          <div className="mt-10 p-6 bg-[var(--cream)] rounded-xl">
-            <p className="font-semibold text-sm mb-2">
-              Not sure which is right for your dog?
-            </p>
-            <p className="text-sm text-[var(--muted)] mb-4">
-              Book a free meet &amp; greet and I&apos;ll help you work it out. No
-              pressure, no commitment.
+          <div className="mt-10 rounded-[24px] border border-[var(--line)] bg-white p-6">
+            <p className="text-sm font-semibold text-[var(--text)]">Not sure which format fits your dog?</p>
+            <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+              Book a free meet &amp; greet and we&apos;ll choose the right setup based on your dog&apos;s behaviour.
             </p>
             <Link
               href="/booking"
-              className="inline-flex bg-[var(--green)] text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:opacity-90 transition-opacity"
+              className="mt-4 inline-flex rounded-full bg-[linear-gradient(132deg,var(--green),var(--deep-green))] px-6 py-2.5 text-sm font-semibold text-white no-underline"
             >
               Book a Meet &amp; Greet
             </Link>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/services/solo-dog-walking"
-              className="text-sm text-[var(--green)] font-medium hover:underline"
-            >
+          <div className="mt-7 flex flex-wrap gap-4">
+            <Link href="/services/solo-dog-walking" className="text-sm font-semibold text-[var(--deep-green)] no-underline">
               Solo Walking Details →
             </Link>
             <Link
               href="/services/small-group-dog-walking"
-              className="text-sm text-[var(--green)] font-medium hover:underline"
+              className="text-sm font-semibold text-[var(--deep-green)] no-underline"
             >
               Group Walking Details →
             </Link>
@@ -135,4 +101,3 @@ export default function GuideSoloVsGroup() {
     </PageLayout>
   );
 }
-

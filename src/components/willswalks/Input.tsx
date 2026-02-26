@@ -17,12 +17,11 @@ export function Input({
   multiline = false,
   rows = 5,
 }: InputProps) {
-  const fieldClasses =
-    "w-full px-4 py-3 rounded-2xl border-2 border-[var(--light)] bg-[var(--cream)] text-[var(--text)] text-sm transition-colors duration-200 focus:border-[var(--green)] focus:outline-none placeholder:text-[var(--light)]";
+  const fieldClasses = "ww-input";
 
   return (
     <div>
-      <label className="block text-sm font-medium mb-2 text-[var(--text)]">{label}</label>
+      <label className="mb-2 block text-sm font-medium text-[var(--text)]">{label}</label>
       {multiline ? (
         <textarea
           value={value}

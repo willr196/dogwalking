@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { BookingClient } from "@/app/booking/BookingClient";
+import { NavBar } from "@/components/willswalks/NavBar";
+import { Footer } from "@/components/willswalks/Footer";
 
 export default function BookingPage() {
   const { status } = useSession();
@@ -15,15 +17,17 @@ export default function BookingPage() {
     }
   }, [status, router]);
 
-  if (status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--cream)]">
-        <div className="spinner" />
-      </div>
-    );
-  }
-
-  if (status !== "authenticated") return null;
-
-  return <BookingClient />;
+  return (
+    <>
+      <NavBar />
+      {status === "loading" ? (
+        <div className="flex min-h-screen items-center justify-center px-5 pt-28 pb-16">
+          <div className="spinner" />
+        </div>
+      ) : status === "authenticated" ? (
+        <BookingClient />
+      ) : null}
+      <Footer />
+    </>
+  );
 }

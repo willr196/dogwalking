@@ -21,6 +21,8 @@ type DbBreed = {
   imageUrl: string | null;
 };
 
+let loggedMissingDogBreedTable = false;
+
 function isDogSize(size: string): size is DogSize {
   return DOG_SIZES.some((candidate) => candidate === size);
 }
@@ -52,6 +54,19 @@ function mapDbBreedToProfile(breed: DbBreed): BreedProfile {
   };
 }
 
+function getPrismaErrorCode(error: unknown): string | null {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    typeof (error as { code: unknown }).code === "string"
+  ) {
+    return (error as { code: string }).code;
+  }
+
+  return null;
+}
+
 /**
  * Returns breeds for the public dictionary.
  * Falls back to code defaults if the DB table is empty/unavailable.
@@ -81,7 +96,21 @@ export async function getDogBreedsForDictionary(): Promise<BreedProfile[]> {
 
     return breeds.map(mapDbBreedToProfile);
   } catch (error) {
-    console.warn("Dog breed table unavailable, using default breed list.", error);
+    if (getPrismaErrorCode(error) === "P2021") {
+      if (!loggedMissingDogBreedTable) {
+        console.warn(
+          "DogBreed table is missing in the current database. Using built-in default breed list."
+        );
+        loggedMissingDogBreedTable = true;
+      }
+
+      return DOG_BREEDS;
+    }
+
+    console.warn(
+      "Dog breed query failed unexpectedly. Using built-in default breed list.",
+      error
+    );
     return DOG_BREEDS;
   }
 }

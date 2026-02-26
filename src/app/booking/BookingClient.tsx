@@ -28,43 +28,48 @@ export function BookingClient() {
 
   const addToast = useCallback((msg: string, type: "success" | "error" = "success") => {
     const id = Date.now();
-    setToasts((t) => [...t, { id, msg, type }]);
-    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 3500);
+    setToasts((current) => [...current, { id, msg, type }]);
+    setTimeout(() => setToasts((current) => current.filter((item) => item.id !== id)), 3500);
   }, []);
 
   const dates = Array.from({ length: 14 }, (_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() + i + 1);
-    return d.toISOString().split("T")[0];
+    const date = new Date();
+    date.setDate(date.getDate() + i + 1);
+    return date.toISOString().split("T")[0];
   });
 
   useEffect(() => {
     const controller = new AbortController();
+
     const load = async () => {
       try {
         const res = await fetch("/api/bookings", { signal: controller.signal });
         if (!res.ok) return;
+
         const data: { date: string; timeSlot: string; status: string }[] = await res.json();
         const slots = data
-          .filter((b) => b.status !== "cancelled")
-          .map((b) => {
-            const iso = new Date(b.date).toISOString().split("T")[0];
-            return `${iso}-${b.timeSlot}`;
+          .filter((booking) => booking.status !== "cancelled")
+          .map((booking) => {
+            const iso = new Date(booking.date).toISOString().split("T")[0];
+            return `${iso}-${booking.timeSlot}`;
           });
+
         setBookedSlots(slots);
       } catch {
-        // Aborted or network error
+        // ignore abort/network noise
       }
     };
+
     load();
     return () => controller.abort();
   }, []);
 
   const isSlotBooked = (date: string, time: string) => bookedSlots.includes(`${date}-${time}`);
-  const update = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }));
+  const update = (field: string, value: string) => setForm((current) => ({ ...current, [field]: value }));
 
   const submit = async () => {
     setLoading(true);
+
     try {
       const res = await fetch("/api/bookings", {
         method: "POST",
@@ -81,8 +86,9 @@ export function BookingClient() {
           notes: form.notes,
         }),
       });
+
       if (res.ok) {
-        addToast("Walk booked successfully! 🐾");
+        addToast("Walk booked successfully.");
         setStep(4);
       } else {
         const data = await res.json().catch(() => ({}));
@@ -91,42 +97,60 @@ export function BookingClient() {
     } catch {
       addToast("Network error. Please try again.", "error");
     }
+
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen px-5 pt-[100px] pb-[60px] bg-[var(--cream)]">
-      <div className="max-w-[640px] mx-auto">
-        <Link href="/" className="flex items-center gap-2 text-[var(--muted)] mb-6 text-[15px] no-underline hover:text-[var(--deep-green)] transition-colors">
+    <div className="px-5 pb-14 pt-28">
+      <div className="mx-auto w-full max-w-[760px]">
+        <Link href="/" className="ww-btn ww-btn-ghost mb-6 text-sm">
           <Icons.ArrowLeft size={18} /> Home
         </Link>
 
-        <h1 className="ww-serif text-[clamp(1.8rem,4vw,2.4rem)] mb-2">Book a Walk</h1>
-        <p className="text-[var(--muted)] mb-8">
-          £{WALK_PRICE} per solo walk · 1 hour of dedicated one-on-one time
+        <h1 className="ww-serif mb-2 text-[clamp(2rem,4vw,2.8rem)] leading-tight">Book a Walk</h1>
+        <p className="mb-8 leading-relaxed text-[var(--muted)]">
+          £{WALK_PRICE} per walk, {" "}
+          <span className="font-semibold text-[var(--text)]">one hour of dedicated care</span>
         </p>
 
-        {/* Step indicators */}
-        <div className="flex gap-2 mb-8" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={4}>
-          {[1, 2, 3, 4].map((s) => (
+        <div className="mb-8 flex gap-2" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={4}>
+          {[1, 2, 3, 4].map((currentStep) => (
             <div
-              key={s}
-              className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
-                s <= step ? "bg-[var(--green)]" : "bg-[var(--light)]"
+              key={currentStep}
+              className={`h-1 flex-1 rounded-full transition-colors ${
+                currentStep <= step ? "bg-[var(--green)]" : "bg-[var(--line)]"
               }`}
             />
           ))}
         </div>
 
-        {/* Step 1: Your Details */}
-        {step === 1 && (
-          <div className="bg-[var(--warm-white)] rounded-3xl p-8 shadow-[var(--shadow)] anim-fade-up">
-            <h2 className="ww-serif text-[1.3rem] mb-6">Your Details</h2>
+        {step === 1 ? (
+          <div className="anim-fade-up ww-card p-7 md:p-8">
+            <h2 className="ww-serif mb-6 text-[1.45rem] leading-tight">Your Details</h2>
             <div className="flex flex-col gap-4">
-              <Input label="Your Name *" value={form.ownerName} onChange={(v) => update("ownerName", v)} placeholder="e.g. Sarah Johnson" />
-              <Input label="Email *" type="email" value={form.email} onChange={(v) => update("email", v)} placeholder="sarah@example.com" />
-              <Input label="Phone *" type="tel" value={form.phone} onChange={(v) => update("phone", v)} placeholder="07123 456789" />
+              <Input
+                label="Your Name *"
+                value={form.ownerName}
+                onChange={(value) => update("ownerName", value)}
+                placeholder="e.g. Sarah Johnson"
+              />
+              <Input
+                label="Email *"
+                type="email"
+                value={form.email}
+                onChange={(value) => update("email", value)}
+                placeholder="sarah@example.com"
+              />
+              <Input
+                label="Phone *"
+                type="tel"
+                value={form.phone}
+                onChange={(value) => update("phone", value)}
+                placeholder="07123 456789"
+              />
             </div>
+
             <button
               onClick={() => {
                 if (!form.ownerName || !form.email || !form.phone) {
@@ -135,31 +159,42 @@ export function BookingClient() {
                 }
                 setStep(2);
               }}
-              className="mt-6 w-full bg-[var(--green)] text-white py-[14px] rounded-full font-semibold text-[15px] transition-all duration-200 hover:bg-[var(--deep-green)] cursor-pointer border-none"
+              className="ww-btn ww-btn-primary mt-6 w-full"
             >
-              Next →
+              Next
             </button>
           </div>
-        )}
+        ) : null}
 
-        {/* Step 2: Dog Details */}
-        {step === 2 && (
-          <div className="bg-[var(--warm-white)] rounded-3xl p-8 shadow-[var(--shadow)] anim-fade-up">
-            <h2 className="ww-serif text-[1.3rem] mb-6">About Your Dog</h2>
+        {step === 2 ? (
+          <div className="anim-fade-up ww-card p-7 md:p-8">
+            <h2 className="ww-serif mb-6 text-[1.45rem] leading-tight">About Your Dog</h2>
             <div className="flex flex-col gap-4">
-              <Input label="Dog's Name *" value={form.dogName} onChange={(v) => update("dogName", v)} placeholder="e.g. Bella" />
-              <Input label="Breed" value={form.dogBreed} onChange={(v) => update("dogBreed", v)} placeholder="e.g. Labrador (optional)" />
+              <Input
+                label="Dog's Name *"
+                value={form.dogName}
+                onChange={(value) => update("dogName", value)}
+                placeholder="e.g. Bella"
+              />
+              <Input
+                label="Breed"
+                value={form.dogBreed}
+                onChange={(value) => update("dogBreed", value)}
+                placeholder="e.g. Labrador"
+              />
+
               <div>
-                <label className="block text-sm font-medium mb-2 text-[var(--text)]">Dog Size *</label>
-                <div className="flex gap-2 flex-wrap">
+                <label className="mb-2 block text-sm font-medium text-[var(--text)]">Dog Size *</label>
+                <div className="flex flex-wrap gap-2">
                   {DOG_SIZES.map((size) => (
                     <button
                       key={size}
+                      type="button"
                       onClick={() => update("dogSize", size)}
-                      className={`px-5 py-2.5 rounded-full text-sm font-medium border-2 transition-all duration-200 cursor-pointer ${
+                      className={`rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors ${
                         form.dogSize === size
-                          ? "bg-[var(--green)] text-white border-[var(--green)]"
-                          : "bg-transparent text-[var(--text)] border-[var(--light)] hover:border-[var(--green)]"
+                          ? "border-[var(--green)] bg-[var(--green)] text-white"
+                          : "border-[var(--line)] bg-white text-[var(--text)] hover:border-[var(--green)]/45"
                       }`}
                     >
                       {size}
@@ -168,9 +203,13 @@ export function BookingClient() {
                 </div>
               </div>
             </div>
-            <div className="flex gap-3 mt-6">
-              <button onClick={() => setStep(1)} className="flex-1 py-[14px] rounded-full font-semibold text-[15px] border-2 border-[var(--light)] text-[var(--muted)] bg-transparent cursor-pointer transition-colors hover:border-[var(--green)]">
-                ← Back
+
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={() => setStep(1)}
+                className="w-full rounded-full border border-[var(--line-strong)] bg-white px-5 py-3 text-sm font-semibold text-[var(--muted)]"
+              >
+                Back
               </button>
               <button
                 onClick={() => {
@@ -180,68 +219,80 @@ export function BookingClient() {
                   }
                   setStep(3);
                 }}
-                className="flex-1 bg-[var(--green)] text-white py-[14px] rounded-full font-semibold text-[15px] transition-all duration-200 hover:bg-[var(--deep-green)] cursor-pointer border-none"
+                className="ww-btn ww-btn-primary w-full"
               >
-                Next →
+                Next
               </button>
             </div>
           </div>
-        )}
+        ) : null}
 
-        {/* Step 3: Date & Time */}
-        {step === 3 && (
-          <div className="bg-[var(--warm-white)] rounded-3xl p-8 shadow-[var(--shadow)] anim-fade-up">
-            <h2 className="ww-serif text-[1.3rem] mb-6">Choose Date & Time</h2>
+        {step === 3 ? (
+          <div className="anim-fade-up ww-card p-7 md:p-8">
+            <h2 className="ww-serif mb-6 text-[1.45rem] leading-tight">Choose Date &amp; Time</h2>
 
-            <label className="block text-sm font-medium mb-3 text-[var(--text)]">Date *</label>
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-2 mb-6">
-              {dates.map((d) => (
+            <label className="mb-3 block text-sm font-medium text-[var(--text)]">Date *</label>
+            <div className="mb-6 grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-2">
+              {dates.map((date) => (
                 <button
-                  key={d}
-                  onClick={() => update("date", d)}
-                  className={`py-3 px-2 rounded-2xl text-sm font-medium transition-all duration-200 cursor-pointer border-2 ${
-                    form.date === d
-                      ? "bg-[var(--green)] text-white border-[var(--green)]"
-                      : "bg-[var(--cream)] text-[var(--text)] border-transparent hover:border-[var(--green)]"
+                  key={date}
+                  type="button"
+                  onClick={() => update("date", date)}
+                  className={`rounded-2xl border px-2 py-3 text-sm font-semibold transition-colors ${
+                    form.date === date
+                      ? "border-[var(--green)] bg-[var(--green)] text-white"
+                      : "border-[var(--line)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--green)]/45"
                   }`}
                 >
-                  {formatDate(d)}
+                  {formatDate(date)}
                 </button>
               ))}
             </div>
 
-            {form.date && (
+            {form.date ? (
               <>
-                <label className="block text-sm font-medium mb-3 text-[var(--text)]">Time *</label>
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-2 mb-6">
-                  {TIME_SLOTS.map((t) => {
-                    const booked = isSlotBooked(form.date, t);
+                <label className="mb-3 block text-sm font-medium text-[var(--text)]">Time *</label>
+                <div className="mb-6 grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-2">
+                  {TIME_SLOTS.map((time) => {
+                    const booked = isSlotBooked(form.date, time);
+
                     return (
                       <button
-                        key={t}
-                        onClick={() => !booked && update("time", t)}
+                        key={time}
+                        type="button"
+                        onClick={() => {
+                          if (!booked) update("time", time);
+                        }}
                         disabled={booked}
-                        className={`py-3 px-2 rounded-2xl text-sm font-medium transition-all duration-200 border-2 ${
+                        className={`rounded-2xl border px-2 py-3 text-sm font-semibold transition-colors ${
                           booked
-                            ? "bg-[var(--cream)] text-[var(--light)] border-transparent cursor-not-allowed line-through"
-                            : form.time === t
-                            ? "bg-[var(--green)] text-white border-[var(--green)] cursor-pointer"
-                            : "bg-[var(--cream)] text-[var(--text)] border-transparent hover:border-[var(--green)] cursor-pointer"
+                            ? "cursor-not-allowed border-[var(--line)] bg-[var(--surface)] text-[var(--light)] line-through"
+                            : form.time === time
+                              ? "border-[var(--green)] bg-[var(--green)] text-white"
+                              : "border-[var(--line)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--green)]/45"
                         }`}
                       >
-                        {t}
+                        {time}
                       </button>
                     );
                   })}
                 </div>
               </>
-            )}
+            ) : null}
 
-            <Input label="Notes (optional)" value={form.notes} onChange={(v) => update("notes", v)} placeholder="Anything I should know?" />
+            <Input
+              label="Notes (optional)"
+              value={form.notes}
+              onChange={(value) => update("notes", value)}
+              placeholder="Anything I should know?"
+            />
 
-            <div className="flex gap-3 mt-6">
-              <button onClick={() => setStep(2)} className="flex-1 py-[14px] rounded-full font-semibold text-[15px] border-2 border-[var(--light)] text-[var(--muted)] bg-transparent cursor-pointer transition-colors hover:border-[var(--green)]">
-                ← Back
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={() => setStep(2)}
+                className="w-full rounded-full border border-[var(--line-strong)] bg-white px-5 py-3 text-sm font-semibold text-[var(--muted)]"
+              >
+                Back
               </button>
               <button
                 onClick={() => {
@@ -252,44 +303,42 @@ export function BookingClient() {
                   submit();
                 }}
                 disabled={loading}
-                className="flex-1 bg-[var(--green)] text-white py-[14px] rounded-full font-semibold text-[15px] transition-all duration-200 hover:bg-[var(--deep-green)] cursor-pointer border-none disabled:opacity-60 disabled:cursor-not-allowed"
+                className="ww-btn ww-btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? <span className="spinner" /> : `Confirm · £${WALK_PRICE}`}
               </button>
             </div>
           </div>
-        )}
+        ) : null}
 
-        {/* Step 4: Confirmation */}
-        {step === 4 && (
-          <div className="bg-[var(--warm-white)] rounded-3xl p-8 shadow-[var(--shadow)] text-center anim-fade-up">
-            <div className="text-6xl mb-4">🎉</div>
-            <h2 className="ww-serif text-[1.6rem] mb-3">Walk Booked!</h2>
-            <p className="text-[var(--muted)] mb-2">
-              <strong>{form.dogName}</strong> is booked for{" "}
-              <strong>{formatDate(form.date)}</strong> at <strong>{form.time}</strong>
+        {step === 4 ? (
+          <div className="anim-fade-up ww-card p-8 text-center">
+            <p className="mb-4 text-6xl">🎉</p>
+            <h2 className="ww-serif mb-3 text-[1.7rem] leading-tight">Walk Booked</h2>
+            <p className="mb-2 leading-relaxed text-[var(--muted)]">
+              <strong>{form.dogName}</strong> is booked for <strong>{formatDate(form.date)}</strong> at{" "}
+              <strong>{form.time}</strong>.
             </p>
-            <p className="text-[var(--muted)] mb-6 text-sm">A confirmation has been sent to {form.email}</p>
+            <p className="mb-6 text-sm text-[var(--muted)]">Confirmation sent to {form.email}</p>
             <Link
               href="/"
-              className="inline-block bg-[var(--green)] text-white px-7 py-[14px] rounded-full font-semibold text-[15px] transition-all duration-200 hover:bg-[var(--deep-green)] no-underline"
+              className="inline-flex rounded-full bg-[linear-gradient(132deg,var(--green),var(--deep-green))] px-7 py-3 text-sm font-semibold text-white no-underline"
             >
               Back to Home
             </Link>
           </div>
-        )}
+        ) : null}
       </div>
 
-      {/* Toasts */}
-      {toasts.length > 0 && (
+      {toasts.length > 0 ? (
         <div className="toast-container" role="status" aria-live="polite">
-          {toasts.map((t) => (
-            <div key={t.id} className={`toast ${t.type === "error" ? "error" : ""}`}>
-              {t.type === "error" ? "⚠️" : "✅"} {t.msg}
+          {toasts.map((toast) => (
+            <div key={toast.id} className={`toast ${toast.type === "error" ? "error" : ""}`}>
+              {toast.type === "error" ? "⚠" : "✓"} {toast.msg}
             </div>
           ))}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
