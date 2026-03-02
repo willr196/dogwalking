@@ -10,6 +10,7 @@ const navItems = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
   { href: "/about", label: "About" },
+  { href: "/dog-breeds", label: "Dog Breeds" },
   { href: "/reviews", label: "Reviews" },
 ] as const;
 

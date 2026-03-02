@@ -9,8 +9,10 @@ const navItems = [
   { href: "/services", label: "Services" },
   { href: "/about", label: "About" },
   { href: "/areas", label: "Areas" },
+  { href: "/dog-breeds", label: "Dog Breeds" },
   { href: "/reviews", label: "Reviews" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/contact", label: "Contact" },
 ];
 
 function linkIsActive(pathname: string, href: string) {
@@ -77,7 +79,7 @@ export function NavBar() {
             </span>
           </Link>
 
-          <div className="hidden items-center gap-1.5 md:flex">
+          <div className="hidden items-center gap-1.5 lg:flex">
             {navItems.map((item) => {
               const active = linkIsActive(pathname, item.href);
 
@@ -98,7 +100,7 @@ export function NavBar() {
             })}
           </div>
 
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="hidden items-center gap-2 lg:flex">
             <Link href="/booking" className="ww-btn ww-btn-primary px-4 py-2 text-[12px]">
               Book now
             </Link>
@@ -106,7 +108,7 @@ export function NavBar() {
 
           <button
             onClick={() => setMobileMenu((value) => !value)}
-            className="inline-flex rounded-xl border border-[var(--line)] bg-[rgba(255,255,255,0.88)] p-2 text-[var(--deep-green)] shadow-[0_8px_18px_rgba(11,34,50,0.08)] md:hidden"
+            className="inline-flex rounded-xl border border-[var(--line)] bg-[rgba(255,255,255,0.88)] p-2 text-[var(--deep-green)] shadow-[0_8px_18px_rgba(11,34,50,0.08)] lg:hidden"
             aria-expanded={mobileMenu}
             aria-controls="mobile-menu"
             aria-label={mobileMenu ? "Close menu" : "Open menu"}
