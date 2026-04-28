@@ -70,7 +70,7 @@ export default function PricingPage() {
             </div>
           </div>
 
-          <div className="mb-9 rounded-[26px] border border-[var(--line)] bg-white p-6 md:p-7">
+          <div className="mb-9 rounded-lg border border-[var(--line)] bg-white p-6 md:p-7">
             <h2 className="ww-serif mb-5 text-[1.45rem] leading-tight">Every Walk Includes</h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {[
@@ -106,14 +106,14 @@ export default function PricingPage() {
             </div>
           </div>
 
-          <div className="rounded-[28px] bg-[linear-gradient(140deg,var(--orange),var(--deep-green))] p-8 text-white">
+          <div className="rounded-lg bg-[linear-gradient(140deg,var(--orange),var(--deep-green))] p-8 text-white">
             <h2 className="ww-serif text-[1.85rem] leading-tight">Ready to book?</h2>
             <p className="mt-2 max-w-[620px] leading-relaxed text-white/88">
               Start with a free meet &amp; greet so we can set up the right routine for your dog.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
-                href="/booking"
+                href="/book"
                 className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold text-[var(--deep-green)] no-underline"
               >
                 Book a Meet &amp; Greet

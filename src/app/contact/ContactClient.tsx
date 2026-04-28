@@ -72,7 +72,7 @@ export function ContactClient() {
           {/* ── LEFT: Info sidebar ── */}
           <div className="anim-fade-up">
             <p className="ww-kicker mb-4">Contact</p>
-            <h1 className="ww-serif text-[clamp(2rem,4.5vw,3.4rem)] leading-[1.05] tracking-[-0.025em] text-[var(--text)]">
+            <h1 className="ww-serif text-4xl leading-tight text-[var(--text)] sm:text-5xl">
               Let&apos;s talk about your dog
             </h1>
             <p className="mt-4 max-w-[440px] text-[15px] leading-relaxed text-[var(--muted)]">

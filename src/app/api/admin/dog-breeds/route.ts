@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { BREED_CATEGORIES, DOG_SIZES } from "@/lib/dog-breeds";
+import { BREED_CATEGORIES, DOG_SIZES } from "@/lib/dog-breeds.shared";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 
 const baseBreedSchema = z.object({

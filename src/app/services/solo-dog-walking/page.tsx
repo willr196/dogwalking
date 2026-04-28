@@ -105,7 +105,7 @@ export default function SoloDogWalkingPage() {
             </div>
 
             <Link
-              href="/booking"
+              href="/book"
               className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(132deg,var(--green),var(--deep-green))] px-5 py-3 text-sm font-semibold text-white no-underline"
             >
               Book a Meet &amp; Greet

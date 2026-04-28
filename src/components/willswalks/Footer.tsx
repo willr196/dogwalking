@@ -8,19 +8,20 @@ export function Footer() {
     { href: "/pricing", label: "Pricing" },
     { href: "/reviews", label: "Reviews" },
     { href: "/contact", label: "Contact" },
+    { href: "/book", label: "Book" },
   ];
 
   return (
     <footer className="px-5 py-12 md:py-14">
       <div className="mx-auto w-full max-w-[1240px]">
-        <div className="rounded-[30px] border border-[var(--line)] bg-[linear-gradient(155deg,rgba(255,255,255,0.93),rgba(244,250,247,0.82))] px-6 py-8 shadow-[0_18px_44px_rgba(11,34,50,0.1)] md:px-8 md:py-9">
+        <div className="rounded-lg border-2 border-[rgba(23,98,79,0.13)] bg-[linear-gradient(155deg,rgba(255,253,247,0.96),rgba(232,251,242,0.86))] px-6 py-8 shadow-[0_18px_40px_rgba(76,55,30,0.1)] md:px-8 md:py-9">
           <div className="grid gap-7 md:grid-cols-[1.2fr_0.9fr_1fr] md:items-start">
             <div>
-              <p className="ww-serif text-[1.72rem] leading-none tracking-[-0.02em] text-[var(--deep-green)]">
+              <p className="ww-serif text-[1.72rem] leading-none text-[var(--deep-green)]">
                 Will&apos;s Walks
               </p>
               <p className="mt-2.5 max-w-[38ch] text-sm text-[var(--muted)]">
-                Calm, personal dog walking for Fulham and SW6 with a small regular client list.
+                Happy solo and tiny group dog walking for Fulham and SW6 with a calm routine behind every tail wag.
               </p>
               <div className="mt-5 flex flex-wrap gap-2.5">
                 <span className="home-chip">Max 3 dogs</span>
@@ -50,7 +51,7 @@ export function Footer() {
                 {siteConfig.owner.email}
               </Link>
               <div className="mt-4">
-                <Link href="/booking" className="ww-btn ww-btn-primary px-4 py-2 text-[12px]">
+                <Link href="/book" className="ww-btn ww-btn-primary px-4 py-2 text-[12px]">
                   Book meet &amp; greet
                 </Link>
               </div>

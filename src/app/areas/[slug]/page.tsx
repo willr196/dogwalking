@@ -252,7 +252,7 @@ export default async function AreaPage({
           ))}
         </div>
 
-        <div className="mb-10 rounded-[26px] border border-[var(--line)] bg-white p-6 md:p-7">
+        <div className="mb-10 rounded-lg border border-[var(--line)] bg-white p-6 md:p-7">
           <h2 className="ww-serif mb-3 text-[1.5rem] leading-tight">
             Where I Walk in {area.name}
           </h2>
@@ -262,7 +262,7 @@ export default async function AreaPage({
           <p className="leading-relaxed text-[var(--muted)]">{content.whyLocal}</p>
         </div>
 
-        <div className="mb-10 rounded-[26px] border border-[var(--line)] bg-white p-6 md:p-7">
+        <div className="mb-10 rounded-lg border border-[var(--line)] bg-white p-6 md:p-7">
           <h2 className="ww-serif mb-6 text-[1.5rem] leading-tight">How It Works</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {siteConfig.howItWorks.map((step) => (
@@ -301,7 +301,7 @@ export default async function AreaPage({
           </div>
         </div>
 
-        <div className="rounded-[28px] bg-[linear-gradient(140deg,var(--orange),var(--deep-green))] p-8 text-white">
+        <div className="rounded-lg bg-[linear-gradient(140deg,var(--orange),var(--deep-green))] p-8 text-white">
           <h2 className="ww-serif text-[1.85rem] leading-tight">
             Dog walking in {area.name} from £{siteConfig.pricing.introPrice}
           </h2>
@@ -311,7 +311,7 @@ export default async function AreaPage({
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
-              href="/booking"
+              href="/book"
               className="inline-flex rounded-full bg-white px-8 py-3 text-sm font-bold text-[var(--deep-green)] no-underline"
             >
               Book a Meet &amp; Greet

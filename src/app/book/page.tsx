@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { siteConfig } from "@/lib/site.config";
 import { Container } from "@/components/Container";
 import { Nav } from "@/components/Nav";
+import { Footer } from "@/components/Footer";
 import { BookClient } from "@/app/book/BookClient";
+import { Icons } from "@/components/willswalks/Icons";
 
 export const metadata: Metadata = {
   title: "Book Now",
@@ -23,10 +25,15 @@ export default function BookPage() {
       <Nav />
 
       <main>
-        <section className="py-16 sm:py-20">
+        <section className="py-14 sm:py-20">
           <Container>
-            <h1 className="text-4xl leading-tight text-slate-900 sm:text-5xl">Book your meet and greet</h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
+            <p className="puppy-tag">
+              <Icons.Calendar size={14} /> Meet and greet
+            </p>
+            <h1 className="mt-5 text-5xl leading-none text-[var(--text)] sm:text-6xl">
+              Let&apos;s get your dog&apos;s first walk started.
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-[var(--muted)]">
               Start with a free meet and greet before your first walk. Fulham and SW6 only.
             </p>
           </Container>
@@ -34,6 +41,8 @@ export default function BookPage() {
 
         <BookClient />
       </main>
+
+      <Footer />
     </>
   );
 }

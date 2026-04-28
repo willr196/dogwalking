@@ -76,7 +76,7 @@ export default function SmallGroupDogWalkingPage() {
               solo sessions.
             </p>
 
-            <div className="mt-8 rounded-[26px] border border-[var(--line)] bg-white p-6">
+            <div className="mt-8 rounded-lg border border-[var(--line)] bg-white p-6">
               <h2 className="ww-serif mb-4 text-[1.45rem] leading-tight">Safety Standards</h2>
               <div className="grid gap-4 sm:grid-cols-2">
                 {siteConfig.trustSignals.map((signal) => (
@@ -119,7 +119,7 @@ export default function SmallGroupDogWalkingPage() {
             </div>
 
             <Link
-              href="/booking"
+              href="/book"
               className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(132deg,var(--green),var(--deep-green))] px-5 py-3 text-sm font-semibold text-white no-underline"
             >
               Book a Meet &amp; Greet

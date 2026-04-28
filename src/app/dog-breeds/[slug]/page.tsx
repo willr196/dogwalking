@@ -6,12 +6,18 @@ import { notFound } from "next/navigation";
 import { siteConfig } from "@/lib/site.config";
 import { PageLayout, Section, Breadcrumbs } from "@/components/willswalks/PageLayout";
 import { getDogBreedBySlug, getDogBreedsForDictionary } from "@/lib/dog-breeds.server";
+import { isPlaceholderBreedImage } from "@/lib/dog-breeds.shared";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
 export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const breeds = await getDogBreedsForDictionary();
+  return breeds.map((breed) => ({ slug: breed.slug }));
+}
 
 function fallbackBreedImage(name: string) {
   const initials = name
@@ -21,7 +27,7 @@ function fallbackBreedImage(name: string) {
     .map((part) => part[0]?.toUpperCase() ?? "")
     .join("");
 
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='420' height='320' viewBox='0 0 420 320'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%230f8d87'/><stop offset='100%' stop-color='%2317506a'/></linearGradient></defs><rect width='420' height='320' rx='28' fill='url(%23g)'/><circle cx='210' cy='120' r='62' fill='rgba(255,255,255,0.18)'/><text x='210' y='130' text-anchor='middle' font-family='Arial, sans-serif' font-size='40' font-weight='700' fill='white'>DOG</text><text x='210' y='232' text-anchor='middle' font-family='Arial, sans-serif' font-size='56' font-weight='700' fill='white'>${initials}</text></svg>`;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='420' height='320' viewBox='0 0 420 320'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#0f8d87'/><stop offset='100%' stop-color='#17506a'/></linearGradient></defs><rect width='420' height='320' rx='28' fill='url(#g)'/><circle cx='210' cy='120' r='62' fill='#ffffff' opacity='0.18'/><text x='210' y='130' text-anchor='middle' font-family='Arial, sans-serif' font-size='40' font-weight='700' fill='white'>DOG</text><text x='210' y='232' text-anchor='middle' font-family='Arial, sans-serif' font-size='56' font-weight='700' fill='white'>${initials}</text></svg>`;
 
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
@@ -56,7 +62,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function DogBreedDetailPage({ params }: Props) {
   const { slug } = await params;
-  const [breed, breeds] = await Promise.all([getDogBreedBySlug(slug), getDogBreedsForDictionary()]);
+  const breeds = await getDogBreedsForDictionary();
+  const breed = breeds.find((candidate) => candidate.slug === slug);
 
   if (!breed) {
     notFound();
@@ -66,7 +73,10 @@ export default async function DogBreedDetailPage({ params }: Props) {
     .filter((candidate) => candidate.slug !== breed.slug && candidate.category === breed.category)
     .slice(0, 6);
 
-  const imageSrc = breed.imageUrl || fallbackBreedImage(breed.name);
+  const imageSrc =
+    breed.imageUrl && !isPlaceholderBreedImage(breed.imageUrl)
+      ? breed.imageUrl
+      : fallbackBreedImage(breed.name);
 
   return (
     <PageLayout>
@@ -80,7 +90,7 @@ export default async function DogBreedDetailPage({ params }: Props) {
         />
 
         <div className="mb-10 grid items-start gap-8 lg:grid-cols-[360px_1fr]">
-          <div className="overflow-hidden rounded-[28px] border border-[var(--line)] bg-white shadow-[var(--shadow)]">
+          <div className="overflow-hidden rounded-lg border border-[var(--line)] bg-white shadow-[var(--shadow)]">
             <img src={imageSrc} alt={`${breed.name} breed profile`} className="h-[320px] w-full object-cover" />
           </div>
 
@@ -116,7 +126,7 @@ export default async function DogBreedDetailPage({ params }: Props) {
 
             <div className="flex flex-wrap gap-3">
               <Link
-                href="/booking"
+                href="/book"
                 className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(132deg,var(--green),var(--deep-green))] px-7 py-3 text-sm font-semibold text-white no-underline"
               >
                 Book a Meet &amp; Greet

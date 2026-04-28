@@ -8,7 +8,7 @@ import {
   DOG_SIZES,
   type BreedCategory,
   type DogSize,
-} from "@/lib/dog-breeds";
+} from "@/lib/dog-breeds.shared";
 
 type BreedRecord = {
   id: string;

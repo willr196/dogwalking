@@ -11,7 +11,7 @@ export function PageLayout({ children }: { children: React.ReactNode }) {
       <div className="relative flex min-h-screen flex-col overflow-hidden">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[340px] bg-[linear-gradient(180deg,rgba(255,255,255,0.68),rgba(255,255,255,0.16),transparent)]"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[360px] bg-[linear-gradient(180deg,rgba(255,217,93,0.2),rgba(232,251,242,0.34),transparent)]"
         />
         <NavBar />
         <main className="relative z-[1] flex-1 pb-20 pt-32 md:pt-36">{children}</main>

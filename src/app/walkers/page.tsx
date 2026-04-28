@@ -47,7 +47,7 @@ export default async function WalkersPage() {
         </p>
 
         {walkers.length === 0 ? (
-          <div className="rounded-[26px] border border-[var(--line)] bg-white p-8">
+          <div className="rounded-lg border border-[var(--line)] bg-white p-8">
             <h2 className="ww-serif mb-3 text-[1.7rem] leading-tight">No walker profiles live yet</h2>
             <p className="mb-6 max-w-[640px] leading-relaxed text-[var(--muted)]">
               The directory is ready, but there are no approved public walker profiles at the moment.
@@ -60,7 +60,7 @@ export default async function WalkersPage() {
                 Join as a Walker
               </Link>
               <Link
-                href="/booking"
+                href="/book"
                 className="inline-flex items-center gap-2 rounded-full border border-[var(--line-strong)] bg-white px-7 py-3 text-sm font-semibold text-[var(--text)] no-underline"
               >
                 Book a Walk
@@ -131,7 +131,7 @@ export default async function WalkersPage() {
                 </div>
 
                 <Link
-                  href="/booking"
+                  href="/book"
                   className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(132deg,var(--green),var(--deep-green))] px-6 py-2.5 text-sm font-semibold text-white no-underline"
                 >
                   Book a Meet &amp; Greet

@@ -38,14 +38,14 @@ export default async function DogBreedsPage() {
 
         <BreedDictionary breeds={breeds} />
 
-        <div className="mt-14 rounded-[28px] bg-[linear-gradient(140deg,var(--orange),var(--deep-green))] p-8 text-white">
+        <div className="mt-14 rounded-lg bg-[linear-gradient(140deg,var(--orange),var(--deep-green))] p-8 text-white">
           <h2 className="ww-serif text-[1.85rem] leading-tight">Need help choosing the right walk format?</h2>
           <p className="mt-2 max-w-[620px] leading-relaxed text-white/88">
             A short meet &amp; greet helps us set pace, structure, and handling that fit your dog.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
-              href="/booking"
+              href="/book"
               className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold text-[var(--deep-green)] no-underline"
             >
               Book a Meet &amp; Greet

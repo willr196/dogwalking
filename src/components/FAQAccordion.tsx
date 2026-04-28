@@ -15,7 +15,7 @@ export function FAQAccordion({ items }: FAQAccordionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <div className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
+    <div className="ww-card divide-y divide-[var(--line)] overflow-hidden">
       {items.map((item, index) => {
         const isOpen = openIndex === index;
         const buttonId = `faq-button-${index}`;
@@ -27,14 +27,14 @@ export function FAQAccordion({ items }: FAQAccordionProps) {
               <button
                 id={buttonId}
                 type="button"
-                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-sm font-semibold text-slate-900"
+                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-sm font-extrabold text-[var(--text)] transition-colors hover:bg-[rgba(255,217,93,0.16)]"
                 aria-expanded={isOpen}
                 aria-controls={panelId}
                 onClick={() => setOpenIndex((current) => (current === index ? null : index))}
               >
                 {item.question}
-                <span aria-hidden="true" className="text-slate-500">
-                  {isOpen ? "−" : "+"}
+                <span aria-hidden="true" className="text-lg leading-none text-[var(--deep-orange)]">
+                  {isOpen ? "-" : "+"}
                 </span>
               </button>
             </h3>
@@ -44,7 +44,7 @@ export function FAQAccordion({ items }: FAQAccordionProps) {
               role="region"
               aria-labelledby={buttonId}
               hidden={!isOpen}
-              className="px-5 pb-4 text-sm leading-6 text-slate-600"
+              className="px-5 pb-4 text-sm leading-6 text-[var(--muted)]"
             >
               {item.answer}
             </div>

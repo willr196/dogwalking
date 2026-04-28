@@ -8,10 +8,11 @@ import {
   BREED_CATEGORY_FILTERS,
   DOG_SIZES,
   DOG_SIZE_FILTERS,
+  isPlaceholderBreedImage,
   type BreedCategoryFilter,
   type BreedProfile,
   type DogSizeFilter,
-} from "@/lib/dog-breeds";
+} from "@/lib/dog-breeds.shared";
 
 function fallbackBreedImage(name: string) {
   const initials = name
@@ -21,7 +22,7 @@ function fallbackBreedImage(name: string) {
     .map((part) => part[0]?.toUpperCase() ?? "")
     .join("");
 
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%230f8d87'/><stop offset='100%' stop-color='%2317506a'/></linearGradient></defs><rect width='120' height='120' rx='18' fill='url(%23g)'/><circle cx='60' cy='42' r='22' fill='rgba(255,255,255,0.18)'/><text x='60' y='49' text-anchor='middle' font-family='Arial, sans-serif' font-size='18' font-weight='700' fill='white'>DOG</text><text x='60' y='88' text-anchor='middle' font-family='Arial, sans-serif' font-size='22' font-weight='700' fill='white'>${initials}</text></svg>`;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#0f8d87'/><stop offset='100%' stop-color='#17506a'/></linearGradient></defs><rect width='120' height='120' rx='18' fill='url(#g)'/><circle cx='60' cy='42' r='22' fill='#ffffff' opacity='0.18'/><text x='60' y='49' text-anchor='middle' font-family='Arial, sans-serif' font-size='18' font-weight='700' fill='white'>DOG</text><text x='60' y='88' text-anchor='middle' font-family='Arial, sans-serif' font-size='22' font-weight='700' fill='white'>${initials}</text></svg>`;
 
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
@@ -336,7 +337,10 @@ type BreedCardProps = {
 function BreedCard({ breed, isOpen, isBroken, onToggle, onClose, onImageError }: BreedCardProps) {
   const bubbleId = `${breed.slug}-bubble`;
   const rareChip = breed.category === "Rare Gems";
-  const imageSrc = isBroken || !breed.imageUrl ? fallbackBreedImage(breed.name) : breed.imageUrl;
+  const imageSrc =
+    isBroken || !breed.imageUrl || isPlaceholderBreedImage(breed.imageUrl)
+      ? fallbackBreedImage(breed.name)
+      : breed.imageUrl;
 
   return (
     <article className="relative">

@@ -9,7 +9,7 @@ export const siteConfig = {
   brandName: "Will's Walks",
   tagline: "Happy dogs, happy walks in Fulham",
   description:
-    "Professional dog walking in Fulham and SW6. Solo and small-group walks (max 3 dogs). Meet & greet required. Founding client rate: £13 per walk.",
+    "Happy dog walking in Fulham and SW6. Solo and tiny group walks (max 3 dogs). Meet & greet required. Founding client rate: £13 per walk.",
 
   /** Owner / About */
   owner: {
@@ -147,7 +147,7 @@ export const siteConfig = {
     titleTemplate: "%s | Will's Walks",
     defaultTitle: "Dog Walking in Fulham | Will's Walks",
     defaultDescription:
-      "Professional dog walking in Fulham, SW6. Solo and small-group walks, max 3 dogs. Meet & greet required. Founding client rate from £13.",
+      "Happy dog walking in Fulham, SW6. Solo and tiny group walks, max 3 dogs. Meet & greet required. Founding client rate from £13.",
     locale: "en_GB",
     type: "website",
   },

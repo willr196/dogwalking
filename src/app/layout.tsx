@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 import "./globals.css";
-import { Providers } from "@/app/providers";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -16,7 +15,7 @@ const manrope = Manrope({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#d7e8f7",
+  themeColor: "#fff8e8",
   width: "device-width",
   initialScale: 1,
 };
@@ -28,7 +27,7 @@ export const metadata: Metadata = {
     template: "%s | Will's Walks",
   },
   description:
-    "Calm, professional dog walking in Fulham and SW6. Solo and small-group walks, max three dogs, photo updates, and a required meet and greet.",
+    "Happy, safety-first dog walking in Fulham and SW6. Solo and tiny group walks, max three dogs, photo updates, and a required meet and greet.",
   keywords: [
     "dog walking Fulham",
     "dog walking SW6",
@@ -45,13 +44,13 @@ export const metadata: Metadata = {
     url: "https://willswalks.co.uk",
     siteName: "Will's Walks",
     title: "Will's Walks | Dog Walking in Fulham and SW6",
-    description: "Solo and small-group dog walks in Fulham with clear updates, safety-first handling, and max three dogs.",
+    description: "Solo and tiny group dog walks in Fulham with clear updates, safety-first handling, and max three dogs.",
     images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: "Will's Walks in Fulham, SW6" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Will's Walks | Dog Walking in Fulham and SW6",
-    description: "Calm solo and small-group dog walks in SW6 with max three dogs and clear updates.",
+    description: "Happy solo and tiny group dog walks in SW6 with max three dogs and clear updates.",
     images: ["/og-image.svg"],
   },
   robots: {
@@ -66,7 +65,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={`${fraunces.variable} ${manrope.variable}`}>
       <body className="antialiased">
-        <Providers>{children}</Providers>
+        {children}
       </body>
     </html>
   );

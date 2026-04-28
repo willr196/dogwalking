@@ -1,32 +1,26 @@
-export const DOG_SIZES = ["Small", "Medium", "Large"] as const;
-export type DogSize = (typeof DOG_SIZES)[number];
+import type {
+  BreedCategory,
+  BreedProfile,
+  DogSize,
+} from "@/lib/dog-breeds.shared";
+
+export {
+  BREED_CATEGORIES,
+  BREED_CATEGORY_FILTERS,
+  DOG_SIZE_FILTERS,
+  DOG_SIZES,
+  type BreedCategory,
+  type BreedCategoryFilter,
+  type BreedProfile,
+  type DogSize,
+  type DogSizeFilter,
+} from "@/lib/dog-breeds.shared";
 
 /**
  * Default breed source:
  * - Used as fallback when DB breed records are unavailable/empty.
  * - Used by the admin "Import default breeds" action.
  */
-
-export const BREED_CATEGORIES = [
-  "Compact Companions",
-  "Family Favourites",
-  "Athletes & Workers",
-  "Rare Gems",
-] as const;
-export type BreedCategory = (typeof BREED_CATEGORIES)[number];
-
-export type BreedProfile = {
-  slug: string;
-  name: string;
-  size: DogSize;
-  category: BreedCategory;
-  temperament: string;
-  exercise: string;
-  coatCare: string;
-  idealFor: string;
-  note: string;
-  imageUrl: string;
-};
 
 type BreedSeed = {
   slug: string;
@@ -1138,7 +1132,7 @@ const BREED_SEEDS: BreedSeed[] = [
   },
 ];
 
-export const DOG_BREEDS: BreedProfile[] = BREED_SEEDS.map((breed, index) => ({
+export const DOG_BREEDS: BreedProfile[] = BREED_SEEDS.map((breed) => ({
   slug: breed.slug,
   name: breed.name,
   size: breed.size,
@@ -1148,11 +1142,5 @@ export const DOG_BREEDS: BreedProfile[] = BREED_SEEDS.map((breed, index) => ({
   coatCare: breed.coatCare ?? COAT_CARE_BY_SIZE[breed.size],
   idealFor: breed.idealFor ?? IDEAL_HOME_BY_CATEGORY[breed.category],
   note: breed.note ?? NOTE_BY_CATEGORY[breed.category],
-  imageUrl: breed.imageUrl ?? `https://placedog.net/180/180?id=${520 + index}`,
+  imageUrl: breed.imageUrl ?? "",
 })).sort((a, b) => a.name.localeCompare(b.name));
-
-export const DOG_SIZE_FILTERS = ["All", ...DOG_SIZES] as const;
-export type DogSizeFilter = (typeof DOG_SIZE_FILTERS)[number];
-
-export const BREED_CATEGORY_FILTERS = ["All", ...BREED_CATEGORIES] as const;
-export type BreedCategoryFilter = (typeof BREED_CATEGORY_FILTERS)[number];

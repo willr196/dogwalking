@@ -73,14 +73,14 @@ export default function GuideChooseDogWalker() {
             </p>
           </div>
 
-          <div className="mt-10 rounded-[24px] border border-[var(--line)] bg-white p-6">
+          <div className="mt-10 rounded-lg border border-[var(--line)] bg-white p-6">
             <p className="text-sm font-semibold text-[var(--text)]">Looking for a Fulham-based walker?</p>
             <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
               I offer solo and small-group walks (max {siteConfig.pricing.maxDogsPerWalk} dogs). Every client starts
               with a free meet &amp; greet.
             </p>
             <Link
-              href="/booking"
+              href="/book"
               className="mt-4 inline-flex rounded-full bg-[linear-gradient(132deg,var(--green),var(--deep-green))] px-6 py-2.5 text-sm font-semibold text-white no-underline"
             >
               Book a Meet &amp; Greet

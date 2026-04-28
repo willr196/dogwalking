@@ -45,7 +45,7 @@ export default function AreasPage() {
             ))}
           </div>
 
-          <div className="mt-10 rounded-[28px] border border-[var(--line)] bg-white p-7 text-center md:p-8">
+          <div className="mt-10 rounded-lg border border-[var(--line)] bg-white p-7 text-center md:p-8">
             <h2 className="ww-serif text-[1.6rem] leading-tight">Not sure if I cover your area?</h2>
             <p className="mx-auto mt-2 max-w-[560px] leading-relaxed text-[var(--muted)]">
               If you&apos;re near SW6 but don&apos;t see your exact neighbourhood listed, send a message and I&apos;ll

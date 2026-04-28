@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import {
   BREED_CATEGORIES,
@@ -71,7 +72,7 @@ function getPrismaErrorCode(error: unknown): string | null {
  * Returns breeds for the public dictionary.
  * Falls back to code defaults if the DB table is empty/unavailable.
  */
-export async function getDogBreedsForDictionary(): Promise<BreedProfile[]> {
+export const getDogBreedsForDictionary = cache(async (): Promise<BreedProfile[]> => {
   try {
     const breeds = await prisma.dogBreed.findMany({
       where: { isActive: true },
@@ -113,7 +114,7 @@ export async function getDogBreedsForDictionary(): Promise<BreedProfile[]> {
     );
     return DOG_BREEDS;
   }
-}
+});
 
 export async function getDogBreedBySlug(slug: string): Promise<BreedProfile | null> {
   const breeds = await getDogBreedsForDictionary();

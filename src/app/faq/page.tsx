@@ -103,7 +103,7 @@ export default function FAQPage() {
           ))}
         </div>
 
-        <div className="rounded-[28px] bg-[linear-gradient(140deg,var(--orange),var(--deep-green))] p-8 text-white">
+        <div className="rounded-lg bg-[linear-gradient(140deg,var(--orange),var(--deep-green))] p-8 text-white">
           <h2 className="ww-serif text-[1.85rem] leading-tight">Still have questions?</h2>
           <p className="mt-2 max-w-[620px] leading-relaxed text-white/88">
             Happy to chat through your dog&apos;s routine and recommend the right walk setup.
@@ -116,7 +116,7 @@ export default function FAQPage() {
               Get in Touch
             </Link>
             <Link
-              href="/booking"
+              href="/book"
               className="inline-flex rounded-full border border-white/36 bg-white/10 px-8 py-3 text-sm font-semibold text-white no-underline"
             >
               Book a Meet &amp; Greet

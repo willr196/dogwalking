@@ -1,6 +1,6 @@
 <svg width="480" height="480" viewBox="0 0 480 480" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">Will portrait placeholder</title>
-  <desc id="desc">A simple portrait illustration placeholder for Will, local dog walker.</desc>
+  <title id="title">Will with a dog</title>
+  <desc id="desc">A friendly illustration of Will, local dog walker, with a happy dog.</desc>
   <defs>
     <linearGradient id="bg" x1="240" y1="0" x2="240" y2="480" gradientUnits="userSpaceOnUse">
       <stop stop-color="#E8F3FA"/>
@@ -28,6 +28,6 @@
   <ellipse cx="180" cy="332" rx="8" ry="10" fill="white" fill-opacity="0.9"/>
   <path d="M147 356C154 365 162 369 168 369C174 369 182 365 189 356" stroke="white" stroke-width="4" stroke-linecap="round"/>
 
-  <rect x="62" y="60" width="156" height="34" rx="17" fill="white" fill-opacity="0.78"/>
-  <text x="79" y="82" fill="#1A3B56" font-family="Arial, sans-serif" font-size="16" font-weight="700">Photo placeholder</text>
+  <path d="M76 88C110 54 160 42 206 62" stroke="#FF8A5B" stroke-width="10" stroke-linecap="round" opacity="0.74"/>
+  <path d="M375 104C345 78 304 68 266 80" stroke="#2F9F82" stroke-width="10" stroke-linecap="round" opacity="0.72"/>
 </svg>

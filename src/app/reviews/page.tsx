@@ -5,6 +5,7 @@ import { Container } from "@/components/Container";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { TestimonialCard } from "@/components/TestimonialCard";
+import { Icons } from "@/components/willswalks/Icons";
 
 export const metadata: Metadata = {
   title: "Reviews",
@@ -57,16 +58,26 @@ export default function ReviewsPage() {
       <Nav />
 
       <main>
-        <section className="py-16 sm:py-20">
+        <section className="py-14 sm:py-20">
           <Container>
-            <h1 className="text-4xl leading-tight text-slate-900 sm:text-5xl">Client reviews</h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
-              Feedback from owners who wanted calm, consistent walks in Fulham and SW6.
-            </p>
+            <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+              <div>
+                <p className="puppy-tag">
+                  <Icons.Star size={14} filled /> Reviews
+                </p>
+                <h1 className="mt-5 text-5xl leading-none text-[var(--text)] sm:text-6xl">
+                  Happy dogs, happy humans.
+                </h1>
+              </div>
+              <p className="max-w-2xl text-lg leading-8 text-[var(--muted)]">
+                Feedback from owners who wanted playful, consistent walks with small groups and clear updates in
+                Fulham and SW6.
+              </p>
+            </div>
           </Container>
         </section>
 
-        <section className="py-16">
+        <section className="py-12">
           <Container>
             <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {reviews.map((review) => (
@@ -76,21 +87,28 @@ export default function ReviewsPage() {
           </Container>
         </section>
 
-        <section className="py-16">
+        <section className="py-12">
           <Container>
-            <h2 className="text-3xl leading-tight text-slate-900">How reviews work</h2>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600">
-              Reviews are gathered from active clients after regular walks and meet and greet onboarding.
-            </p>
+            <div className="ww-card grid gap-5 p-6 md:grid-cols-3 md:p-7">
+              <div className="md:col-span-1">
+                <h2 className="text-3xl leading-tight text-[var(--text)]">How reviews work</h2>
+              </div>
+              <p className="text-sm leading-7 text-[var(--muted)] md:col-span-2">
+                Reviews are gathered from active clients after regular walks and meet and greet onboarding. The useful
+                details are simple: settled dogs, clear communication, and a routine owners can trust.
+              </p>
+            </div>
           </Container>
         </section>
 
-        <section className="py-16 sm:py-20">
+        <section className="py-14 sm:py-20">
           <Container>
-            <h2 className="text-3xl leading-tight text-slate-900">Ready to book your meet and greet?</h2>
-            <Link href="/book" className="btn-primary mt-6">
-              Book now
-            </Link>
+            <div className="ww-card ww-card-accent p-7 md:p-9">
+              <h2 className="text-4xl leading-tight text-[var(--text)]">Ready to book your meet and greet?</h2>
+              <Link href="/book" className="btn-primary mt-6">
+                <Icons.Calendar size={18} /> Book now
+              </Link>
+            </div>
           </Container>
         </section>
       </main>
